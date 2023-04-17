@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>v.JS test</title>
+    <script src="../src/v.js"></script>
+</head>
+<body>
+
+    <span id="span2">yyy</span>
+    <div id="test">ssss<span id="span1">xx</span></div>
+
+    
+    <script>
+
+VJS.register();
+
+let el = $('test');
+
+console.log(el, el instanceof Element, el instanceof HTMLElement);
+console.log($('span1', el));
+// console.log(window instanceof Window, window instanceof HTMLElement, window instanceof Element);
+// console.log(document instanceof Document, document instanceof HTMLElement, document instanceof Element);
+console.log($q('span', el));
+
+console.log($t('span'));
+
+$cels('<b>Uus!</b>', el);
+
+
+    </script>
+</body>
+</html>

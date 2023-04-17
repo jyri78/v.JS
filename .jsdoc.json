@@ -1,0 +1,48 @@
+{
+    "tags": {
+        "allowUnknownTags": false
+    },
+    "source": {
+        "include": ["./README.md", "./src/v.js"],
+        "includePattern": "",
+        "excludePattern": ""
+    },
+    "plugins": [
+        "plugins/markdown"
+    ],
+    "opts": {
+        "template": "docdash",
+        "encoding": "utf8",
+        "destination": "./docs/",
+        "recurse": true,
+        "verbose": true
+    },
+    "templates": {
+        "dateFormat": "Y-m-d H:i",
+        "cleverLinks": false,
+        "monospaceLinks": false,
+        "useLongnameInNav": false,
+        "showInheritedInNav": true
+    },
+    "docdash": {
+        "static": true,
+        "search": true,
+        "commonNav": false,
+        "collapse": true,
+        "wrap": true,
+        "typedefs": false,
+        "navLevel": -1,
+        "private": false,
+        "removeQuotes": "all",
+        "scripts": [],
+        "ShortenTypes": false,
+        "menu": {
+            "@GitHub": {
+                "href":"https://github.com/jyri78/v.js",
+                "target":"_blank",
+                "class":"menu-item",
+                "id":"website_link"
+            }
+        }
+    }
+}
