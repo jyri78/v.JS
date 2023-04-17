@@ -15,25 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with v.JS.  If not, see <http://www.gnu.org/licenses/>.
 
-/*
-    @ https://vanilla.js.org/
-    @ https://vanillajs.net/
-    @ https://youmightnotneedjquery.com/
-
-    @ https://github.com/zloirock/core-js
-
-    @ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes
-
-
-    @ https://github.com/jsdoc/jsdoc
-
-    @ https://devhints.io/jsdoc
-    @ https://devdocs.io/jsdoc/
-    @ https://github.com/google/closure-compiler/wiki/Annotating-JavaScript-for-the-Closure-Compiler
-
-    @ https://spdx.org/licenses/GPL-3.0-or-later.html
-*/
-
 
 /**
  * Vanilla JS (`VJS`) class with common methods plus some syntactic sugars.
