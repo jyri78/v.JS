@@ -2,7 +2,9 @@
 
 Simple plain Javascript `class` with a set of functions.
 
-*NB!* This project is under early development stage.
+*Warning!* This project is under early development stage.
+
+TODO: Add documentation
 
 ## Licence
 
