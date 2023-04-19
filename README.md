@@ -2,7 +2,7 @@
 
 Simple plain Javascript `class` with a set of functions.
 
-*Warning!* This project is under early development stage.
+**Warning!** This project is under early development stage.
 
 ## Usage
 
@@ -22,7 +22,12 @@ Include `v.JS` into HTML file and call `register()`:
 </html>
 ```
 
-And you are ready to use functions.
+And you are ready to use functions, for example:
+
+```JavaScript
+// Gets element by ID "myElem"
+const myElem = $("myElem");
+```
 
 ## Licence
 
