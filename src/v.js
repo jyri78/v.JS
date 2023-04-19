@@ -39,6 +39,8 @@ class VJS
     /**
      * `getElementById` - returns HTMLElement by ID.
      * 
+     * **Note!** If you want to use jQuery `$()` like functionality, use the {@link $$|$$()} instead.
+     * 
      * @method  $
      * @see     alias {@link getElemById|getElemById()}
      * 
@@ -61,11 +63,28 @@ class VJS
      * 
      * @method  $$
      * 
-     * @param   {string}  queryString
+     * @param   {string}  selector
      * 
      * @return  {(HTMLElement|HTMLCollection|NodeList)}
      */
     $$(s) { return VJS.__e(s, document, true); }
+
+    /**
+     * `getElementsByName` - returns a live NodeList of all found elements by name attribute.
+     * 
+     * @method  $n
+     * @see     alias {@link getElemsByName|getElemsByName()}
+     * 
+     * @param   {string}   name
+     * 
+     * @return  {NodeList}
+     */
+    $n(n) { return VJS.__n(n); }
+    /**
+     * @method  getElemsByName
+     * @see     read more {@link $n|$n()}
+     */
+    getElemsByName (n) { return VJS.__n(n); }
 
     /**
      * `getElementsByTagName` - returns a live HTMLCollection of all found elements or first HTMLElement by tag name.
@@ -116,16 +135,16 @@ class VJS
      * 
      * @param   {string}                         queryString
      * @param   {(Document|HTMLElement|string)}  [element=document]  Document/HTMLElement or ID of element
-     * @param   {boolean}                        [all=false]         Return all found elements (HTMLCollection/NodeList) or only first one
+     * @param   {boolean}                        [all=false]         Return all found elements (NodeList) or only first one
      * 
      * @return  {(HTMLElement|HTMLCollection|NodeList)}
      */
-    $q(q, e = document, a = false) { return VJS.__e(q, e, a); }
+    $q(q, e = document, a = false) { return VJS.__q(e, q, a); }
     /**
      * @method  querySel
      * @see     read more {@link $q|$q()}
      */
-    querySel(q, e = document, a = false) { return VJS.__e(q, e, a); }
+    querySel(q, e = document, a = false) { return VJS.__q(e, q, a); }
 
     /**
      * `filter` - returns an array of a static (not live) NodeList or live HTMLCollection of filtered (by function) elements.
@@ -220,7 +239,7 @@ class VJS
      * `hasAttribute` - returns boolean value if element has attribute, or any attributes at all (if attribute name not given).
      *
      * @method  $ha
-     * @see     alias {@link hasAttr|hasAttr()}
+     * @see     alias {@link hasAttrib|hasAttrib)}
      * 
      * @param   {(HTMLElement|string)}  element           Document/HTMLElement or ID of element
      * @param   {string=}               [attributeName]   Name of the elements attribute
@@ -233,16 +252,16 @@ class VJS
         return (!n ? e.hasAttributes() : e.hasAttribute(n));
     }
     /**
-     * @method  hasAttr
+     * @method  hasAttrib
      * @see     read more {@link $ha|$ha()}
      */
-    hasAttr(e, n = '') { return VJS.__i().$ha(e, n); }
+    hasAttrib(e, n = '') { return VJS.__i().$ha(e, n); }
 
     /**
      * `getAttribute` - returns elements attribute value or empty string.
      *
      * @method  $ga
-     * @see     alias {@link getAttr|getAttr()}
+     * @see     alias {@link getAttrib|getAttrib()}
      * 
      * @param   {(HTMLElement|string)}  element        Document/HTMLElement or ID of element
      * @param   {string}                attributeName  Name of the elements attribute
@@ -255,16 +274,16 @@ class VJS
         return (VJS.__i().$ha(e, n) ? e.getAttribute(n) : '');
     }
     /**
-     * @method  getAttr
+     * @method  getAttrib
      * @see     read more {@link $ga|$ga()}
      */
-    getAttr(e, n) { return VJS.__i().$ga(e, n); }
+    getAttrib(e, n) { return VJS.__i().$ga(e, n); }
 
     /**
      * `setAttribute` - sets elements attribute value; attributes with boolean value don't need value.
      *
      * @method  $sa
-     * @see     alias {@link setAttr|setAttr()}
+     * @see     alias {@link setAttrib|setAttrib()}
      * 
      * @param   {(HTMLElement|string)}  element        Document/HTMLElement or ID of element
      * @param   {string}                attributeName  Name of the elements attribute
@@ -277,16 +296,16 @@ class VJS
         else e.setAttribute(n, v);
     }
     /**
-     * @method  setAttr
+     * @method  setAttrib
      * @see     read more {@link $sa|$sa()}
      */
-    setAttr(e, n, v = true) { VJS.__i().$sa(e, n, v); }
+    setAttrib(e, n, v = true) { VJS.__i().$sa(e, n, v); }
 
     /**
      * `removeAttribute` - removes attribute from element.
      *
      * @method  $ra
-     * @see     alias {@link remAttr|remAttr()}
+     * @see     alias {@link remAttrib|remAttrib()}
      * 
      * @param   {(HTMLElement|string)}  element        Document/HTMLElement or ID of element
      * @param   {string}                attributeName  Name of the elements attribute
@@ -296,10 +315,10 @@ class VJS
         if (e) e.removeAttribute(n);
     }
     /**
-     * @method  remAttr
+     * @method  remAttrib
      * @see     read more {@link $ra|$ra()}
      */
-    remAttr(e, n) { VJS.__i().$ra(e, n); }
+    remAttrib(e, n) { VJS.__i().$ra(e, n); }
 
     /**
      * `setTimeout` / `setInterval` - sets timeout or interval to call a function.
@@ -339,7 +358,7 @@ class VJS
      * `hasDataAttribute` - returns boolean value if element has data attribute, or any attributes at all (if attribute name is empty string).
      *
      * @method  $hda
-     * @see     alias {@link hasDataAttr|hasDataAttr()}
+     * @see     alias {@link hasDataAttrib|hasDataAttrib()}
      * 
      * @param   {(HTMLElement|string)}  element        Document/HTMLElement or ID of element
      * @param   {string}                attributeName  Name of the elements attribute
@@ -352,16 +371,16 @@ class VJS
         return VJS.__i().$ha(e, VJS.__d(n, p));
     }
     /**
-     * @method  hasDataAttr
+     * @method  hasDataAttrib
      * @see     read more {@link $hda|$hda()}
      */
-    hasDataAttr(e, n, p = '') { return VJS.__i().$hda(e, n, p); }
+    hasDataAttrib(e, n, p = '') { return VJS.__i().$hda(e, n, p); }
 
     /**
      * `getDataAttribute` - returns elements data attribute value or empty string.
      *
      * @method  $gda
-     * @see     alias {@link getDataAttr|getDataAttr()}
+     * @see     alias {@link getDataAttrib|getDataAttrib()}
      * 
      * @param   {(HTMLElement|string)}  element        Document/HTMLElement or ID of element
      * @param   {string}                attributeName  Name of the elements attribute
@@ -374,16 +393,16 @@ class VJS
         return VJS.__i().$ga(e, VJS.__d(n, p));
     }
     /**
-     * @method  getDataAttr
+     * @method  getDataAttrib
      * @see     read more {@link $gda|$gda()}
      */
-    getDataAttr(e, n, p = '') { return VJS.__i().$gda(e, n, p); }
+    getDataAttrib(e, n, p = '') { return VJS.__i().$gda(e, n, p); }
 
     /**
      * `setDataAttribute` - sets elements data attribute value.
      *
      * @method  $sda
-     * @see     alias {@link setDataAttr|setDataAttr()}
+     * @see     alias {@link setDataAttrib|setDataAttrib()}
      * 
      * @param   {(HTMLElement|string)}  element        Document/HTMLElement or ID of element
      * @param   {string}                attributeName  Name of the elements attribute
@@ -397,16 +416,16 @@ class VJS
         }
     }
     /**
-     * @method  setDataAttr
+     * @method  setDataAttrib
      * @see     read more {@link $sda|$sda()}
      */
-    setDataAttr(e, n, p = '', v = true) { VJS.__i().$dsa(e, n, p, v); }
+    setDataAttrib(e, n, p = '', v = true) { VJS.__i().$dsa(e, n, p, v); }
 
     /**
      * `removeDataAttribute` - removes attribute from element.
      *
      * @method  $rda
-     * @see     alias {@link remDataAttr|remDataAttr()}
+     * @see     alias {@link remDataAttrib|remDataAttrib()}
      * 
      * @param   {(HTMLElement|string)}  element        Document/HTMLElement or ID of element
      * @param   {string}                attributeName  Name of the elements attribute
@@ -414,10 +433,10 @@ class VJS
      */
     $rda(e, n, p = '') { if (n) VJS.__i().$ra(e, VJS.__d(n, p)); }
     /**
-     * @method  remDataAttr
+     * @method  remDataAttrib
      * @see     read more {@link $rda|$rda()}
      */
-    remDataAttr(e, n, p = '') { VJS.__i().$rda(e, n, p); }
+    remDataAttrib(e, n, p = '') { VJS.__i().$rda(e, n, p); }
 
     /**
      * `classContains` - returns boolean value if the element contains class name or not.
@@ -491,7 +510,7 @@ class VJS
      * `classToggle` - toggles class name in the element.
      *
      * @method  $clt
-     * @see     alias {@link classTogg|classTogg()}
+     * @see     alias {@link classToggle|classToggle()}
      * 
      * @param   {(HTMLElement|string)}  element    HTMLElement or ID of element
      * @param   {string}                className  Class name to toggle
@@ -502,16 +521,16 @@ class VJS
         VJS.__c(e, c, 'toggle');
     }
     /**
-     * @method  classTogg
+     * @method  classToggle
      * @see     read more {@link $clt|$clt()}
      */
-    classTogg(e, c, f) { VJS.__i().$clt(e, c, f); }
+    classToggle(e, c, f) { VJS.__i().$clt(e, c, f); }
 
     /**
      * `addEventListener` - adds event listener to the element or elements.
      *
      * @method  $ael
-     * @see     alias {@link addEvtListen|addEvtListen()}
+     * @see     alias {@link addEvtListener|addEvtListener()}
      * @see     Look also {@link $aels|$aels()} (alias {@link addEvtListens|addEvtListens()})
      * 
      * @param   {Function}              function          Function to call, if event occurs
@@ -526,16 +545,16 @@ class VJS
         e.addEventListener(v, f);
     }
     /**
-     * @method  addEvtListen
+     * @method  addEvtListener
      * @see     read more {@link $ael|$ael()}
      */
-    addEvtListen(f, v = 'load', e = window) { VJS.__i().$ael(f, v, e); }
+    addEvtListener(f, v = 'load', e = window) { VJS.__i().$ael(f, v, e); }
 
     /**
      * `removeEventListener` - removes event listener from the element or elements.
      *
      * @method  $rel
-     * @see     alias {@link remEvtListen|remEvtListen()}
+     * @see     alias {@link remEvtListener|remEvtListener()}
      * @see     Look also {@link $rels|$rels()} (alias {@link addEvtListens|addEvtListens()})
      * 
      * @param   {Function}              function          Function to call, if event occurs
@@ -550,16 +569,16 @@ class VJS
         e.removeEventListener(v, f);
     }
     /**
-     * @method  remEvtListen
+     * @method  remEvtListener
      * @see     read more {@link $rel|$rel()}
      */
-    remEvtListen(f, v = 'load', e = window) { VJS.__i().$rel(f, v, e); }
+    remEvtListener(f, v = 'load', e = window) { VJS.__i().$rel(f, v, e); }
 
     /**
      * `addEventListeners` - adds event listener to several elements at once.
      *
      * @method  $aels
-     * @see     alias {@link addEvtListens|addEvtListens()}
+     * @see     alias {@link addEvtListeners|addEvtListeners()}
      * @see     Look also {@link $ael|$ael()} (alias {@link addEvtListen|addEvtListen()})
      * 
      * @param   {Function}                  function       Function to call, if event occurs
@@ -571,16 +590,16 @@ class VJS
         else VJS.__i().$ael(f, v, e);  // just-in-case
     }
     /**
-     * @method  addEvtListens
+     * @method  addEvtListeners
      * @see     read more {@link $aels|$aels()}
      */
-    addEvtListens(f, v, e = []) { VJS.__i().$aels(f, v, e); }
+    addEvtListeners(f, v, e = []) { VJS.__i().$aels(f, v, e); }
 
     /**
      * `removeEventListeners` - removes event listener from several elements at once.
      *
      * @method  $rels
-     * @see     alias {@link remEvtListens|remEvtListens()}
+     * @see     alias {@link remEvtListeners|remEvtListeners()}
      * @see     Look also {@link $ael|$ael()} (alias {@link remEvtListen|remEvtListen()})
      * 
      * @param   {Function}                  function       Function to call, if event occurs
@@ -592,10 +611,55 @@ class VJS
         else VJS.__i().$rel(f, v, e);  // just-in-case
     }
     /**
-     * @method  remEvtListens
+     * @method  remEvtListeners
      * @see     read more {@link $rels|$rels()}
      */
-    remEvtListens(f, v, e = []) { VJS.__i().$rels(f, v, e); }
+    remEvtListeners(f, v, e = []) { VJS.__i().$rels(f, v, e); }
+
+    /**
+     * Returns static (not live) NodeList of all child elements of selector.
+     *
+     * @method  $children
+     * 
+     * @param   {string}  selector
+     *
+     * @return  {NodeList}
+     */
+    children(s) { return VJS.__i().$q(`:scope ${s}`); }
+
+    /**
+     * Checks if collection is live or not.
+     *
+     * @param   {(HTMLCollection|NodeList)}  collection  HTMLCollection or NodeList to check
+     *
+     * @return  {boolean}
+     */
+    isLive(c) {
+        if (c instanceof HTMLCollection) return true;
+        let l = c.length;
+        if (!l) return false;  //? or better `undefined`, since inconclusive
+        let e = c.item(0);
+        let p = e.parentNode;
+        let n = e.cloneNode();
+        n.style = "display:none!important";
+        p.appendChild(n);
+        let i = c.length !== l;
+        p.removeChild(n);
+        return i;
+    }
+
+    /**
+     * Converts HTMLCollection/NodeList or HTMLElement to the array.
+     *
+     * @param   {(HTMLCollection|NodeList|HTMLElement|string)}  element
+     *
+     * @return  {Array.<*>}
+     */
+    toArray(e) {
+        e = VJS.__o(e);
+        if (e instanceof NodeList || e instanceof HTMLCollection) return [...e];
+        return [e];
+    }
 
 
 
@@ -606,6 +670,7 @@ class VJS
     /** @ignore @readonly */static get E() { return 'VJS class works only in Browser!'; }
     /** @private */static __v;
     /** @private */static __$(i) { return document.getElementById(i); }
+    /** @private */static __$n(n) { return document.getElementsByName(n); }
     /** @private */static __$t(e, t) { return e.getElementsByTagName(t); }
     /** @private */static __$c(e, c) { return e.getElementsByClassName(c); }
     /** @private */static __$q(e, q, a) { return e[`querySelector${a ? 'All' : ''}`](q); }
@@ -689,10 +754,10 @@ class VJS
     /**
      * Registers VJS Methods to the window object (makes global functions).
      * 
-     * *Warning!* To avoid conflicts don't use this method with jQuery.
+     * **Warning!** To avoid conflicts don't use this function with jQuery.
      * 
      * @static
-     * @method  register
+     * @function  register
      * 
      * @return  {void}
      */
