@@ -59,7 +59,10 @@ class VJS
     getElemById(i) { return VJS.__i().$(i); }
 
     /**
-     * Similar to jQuery `$` function, but simplified version of it.
+     * Similar to jQuery `$` function, but much simplified version of it.
+     * At first function tries to find single Element (by ID, by class name etc.), then live HTMLCollection, and finally static NodeList; all based `selector` string.
+     * 
+     * **Note!** If `selector` string begins with symbol `=`, then function tries to find live NodeList of elements by name attribute.
      * 
      * @method  $$
      * 
@@ -617,9 +620,43 @@ class VJS
     remEvtListeners(f, v, e = []) { VJS.__i().$rels(f, v, e); }
 
     /**
+     * Inserts or returns elements HTML string.
+     * 
+     * @method  $html
+     *
+     * @param   {(HTMLElement|string)}  element
+     * @param   {string=}               [text]      HTML string to add to the element; if empty, then returns
+     * @param   {string=}               [position]  If empty string, then replaces child elements, or inserts HTML string by next values: `beforebegin` – before element itself; `afterbegin` – before its first child; `beforeend` – after its last child; `afterend` – after element itself
+     *
+     * @return  {(string|undefined)}
+     */
+    $html(e, t = '', p = '') {
+        e = VJS.__o(e);
+        if (e) {
+            if (t) {
+                if (e instanceof Element) {
+                    try {
+                        if (p) {
+                            if (!['beforebegin', 'afterbegin', 'beforeend', 'afterend'].includes(p)) p = 'beforeend';
+                            e.insertAdjacentHTML(p, t);
+                        }
+                        else e.innerHTML = t;
+                    }
+                    catch (e) {
+                        throw new DOMException(e.message);
+                    }
+                }
+                else throw new DOMException('Not valid Element given.');
+            }
+            else return e.innerHTML;
+        }
+        else if (t) throw new DOMException('No valid Element found.');
+    }
+
+    /**
      * Returns static (not live) NodeList of all child elements of selector.
      *
-     * @method  $children
+     * @method  children
      * 
      * @param   {string}  selector
      *
@@ -630,6 +667,8 @@ class VJS
     /**
      * Checks if collection is live or not.
      *
+     * @method  isLive
+     * 
      * @param   {(HTMLCollection|NodeList)}  collection  HTMLCollection or NodeList to check
      *
      * @return  {boolean}
@@ -651,6 +690,8 @@ class VJS
     /**
      * Converts HTMLCollection/NodeList or HTMLElement to the array.
      *
+     * @method  toArray
+     * 
      * @param   {(HTMLCollection|NodeList|HTMLElement|string)}  element
      *
      * @return  {Array.<*>}
@@ -707,16 +748,20 @@ class VJS
         let d = document;
 
         if (typeof s === 'string') {
-            s = s.toLowerCase();
+            s = s.toLowerCase().trim();
 
-            if (s === 'document') return d;
-            else if (s === 'window') return window;
-            else if (s.match(/^\#[a-z0-9_\-]+$/i)) return VJS.__$(s.substring(1));
-            else if (s.match(/^\.[a-z0-9_\-]+$/i)) {
+            if (s.match(/^\#?document$/)) return d;
+            else if (s.match(/^\#?window$/)) return window;
+            else if (s.match(/^\#[a-z][\w\-]+$/)) return VJS.__$(s.substring(1));
+            else if (s.match(/^\.[a-z][\w\-]+$/)) {
                 let r = VJS.__$c(VJS.__o(e, d), s.substring(1));
                 return a ? r : r.item(0);
             }
-            else if (s.match(/^(?:h[1-6]|[abipqsu]|[a-z]{2,})$/i)) {
+            else if (s.match(/^\=["']?[a-z][\w\-]+["']?$/)) {
+                let r = VJS.__$t(VJS.__o(e, d), s.substring(1));
+                return a ? r : r.item(0);
+            }
+            else if (s.match(/^(?:h[1-6]|[abipqsu]|[a-z]{2,})$/)) {
                 let r = VJS.__$t(VJS.__o(e, d), s);
                 return a ? r : r.item(0);
             }
