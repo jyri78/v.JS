@@ -142,7 +142,7 @@ class VJS
      * 
      * @return  {(HTMLElement|HTMLCollection|NodeList)}
      */
-    $q(q, e = document, a = false) { return VJS.__q(e, q, a); }
+    $q(q, e = document, a = false) { return VJS.__$q(e, q, a); }
     /**
      * @method  querySel
      * @see     read more {@link $q|$q()}
@@ -664,6 +664,71 @@ class VJS
      */
     children(s) { return VJS.__i().$q(`:scope ${s}`); }
 
+
+    /**
+     * Returns or sets elements height
+     *
+     * @method  height
+     * 
+     * @param   {(HTMLElement|string)}  element
+     * @param   {string=}               [type]   Type of height to return:  `inner` – elements visible area height with padding;  `outer` – elements visible area height with padding, border and scrollbar;  `with-margin` – `outer` + margin
+     * @param   {(string|number)}       [value]  Value to set as elements height, `type` is ignored
+     *
+     * @return  {number}
+     */
+    height(e, t = '', v = null) {
+        e = VJS.__o(e);
+        if (!e) return 0;
+        if (!v) {
+            let r;
+            if (t === 'inner') r = e.clientHeight;
+            else if (t === 'outer') r = e.getBoundingClientRect().height;//e.offsetHeight;
+            else if (t === 'with-margin') {
+                let s = getComputedStyle(e);
+                r = e.getBoundingClientRect().height + parseInt(s.marginTop) + parseInt(s.marginBottom);
+            }
+            else r = parseInt(e.style.height);
+            return r;
+        }
+        else {
+            if (typeof v === 'function') v = v();
+            if (typeof v === 'string') e.style.height = v;
+            else e.style.height = `${v}px`;
+        }
+    }
+
+    /**
+     * Returns or sets elements width
+     *
+     * @method  width
+     * 
+     * @param   {(HTMLElement|string)}  element
+     * @param   {string=}               [type]   Type of width to return:  `inner` – elements visible area width with padding;  `outer` – elements visible area width with padding, border and scrollbar;  `with-margin` – `outer` + margin
+     * @param   {(string|number)}       [value]  Value to set as elements height, `type` is ignored
+     *
+     * @return  {number}
+     */
+    width(e, t = '', v = null) {
+        e = VJS.__o(e);
+        if (!e) return 0;
+        if (!v) {
+            let r;
+            if (t === 'inner') r = e.clientWidth;
+            else if (t === 'outer') r = e.getBoundingClientRect().width;//e.offsetWidth;
+            else if (t === 'with-margin') {
+                let s = getComputedStyle(e);
+                r = e.getBoundingClientRect().width + parseInt(s.marginLeft) + parseInt(s.marginRight);
+            }
+            else r = parseInt(e.style.width);
+            return r;
+        }
+        else {
+            if (typeof v === 'function') v = v();
+            if (typeof v === 'string') e.style.width = v;
+            else e.style.width = `${v}px`;
+        }
+    }
+
     /**
      * Checks if collection is live or not.
      *
@@ -686,6 +751,31 @@ class VJS
         p.removeChild(n);
         return i;
     }
+
+    /**
+     * Checks if element is hidden or not.
+     *
+     * @method  isHidden
+     * 
+     * @param   {(HTMLElement|string)}  element
+     *
+     * @return  {boolean}
+     */
+    isHidden(e) {
+        e = VJS.__o(e);
+        return !(e.offsetWidth || e.offsetHeight || e.getClientRects().height);
+    }
+
+    /**
+     * Checks if element is visible or not.
+     *
+     * @method  isVisible
+     * 
+     * @param   {(HTMLElement|string)}  element
+     *
+     * @return  {boolean}
+     */
+    isVisible(e) { return !VJS.__i().isHidden(e); }
 
     /**
      * Converts HTMLCollection/NodeList or HTMLElement to the array.

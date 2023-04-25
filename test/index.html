@@ -12,6 +12,10 @@
     <span id="span2">yyy</span>
     <div id="test">ssss<span id="span1">xx</span></div>
 
+    <div id="conteiner" style="display: flex;width:100%;height: 50px;">
+        <div id="size-test" style="flex-grow:1;height:100px;padding:20px;border:5px solid gray;margin:30px">&nbsp;</div>
+    </div>
+
     
     <script>
 
@@ -28,6 +32,9 @@ console.log($q('span', el));
 console.log($t('span'));
 
 $cels('<b>Uus!</b>', el);
+
+let st = $('size-test');
+console.log(st.clientHeight, st.offsetHeight, st.getBoundingClientRect().height, st.style.height);
 
 
     </script>
