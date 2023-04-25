@@ -17,6 +17,13 @@
 
 
 /**
+ * @typedef  {Object} Position
+ * @property {number} top
+ * @property {number} left
+ */
+
+
+/**
  * Vanilla JS (`VJS`) class with common methods plus some syntactic sugars.
  * 
  * Targeted browsers: released since about mid 2016, like Chrome 50+, Edge 14+, Firefox 46+, Opera 37+, and Safari 10+. 
@@ -530,6 +537,22 @@ class VJS
     classToggle(e, c, f) { VJS.__i().$clt(e, c, f); }
 
     /**
+     * Returns elements position relative to viewport.
+     *
+     * @method  $pos
+     * 
+     * @param   {(HTMLElement|string)}  element
+     *
+     * @return  {(Position|undefined)}
+     */
+    $pos(e) {
+        e = VJS.__o(e);
+        if (!e) return undefined;
+        let {top, left} = e.getBoundingClientRect();
+        return {top, left};
+    }
+
+    /**
      * `addEventListener` - adds event listener to the element or elements.
      *
      * @method  $ael
@@ -671,7 +694,7 @@ class VJS
      * @method  height
      * 
      * @param   {(HTMLElement|string)}  element
-     * @param   {string=}               [type]   Type of height to return:  `inner` – elements visible area height with padding;  `outer` – elements visible area height with padding, border and scrollbar;  `with-margin` – computed `outer` + margin
+     * @param   {string=}               [type]   Type of height to return:  `inner` – elements height with padding;  `outer` – elements height with padding, border and scrollbar;  `with-margin` – computed `outer` + margin
      * @param   {(string|number)}       [value]  Value to set as elements height, `type` is ignored
      *
      * @return  {number}
@@ -703,7 +726,7 @@ class VJS
      * @method  width
      * 
      * @param   {(HTMLElement|string)}  element
-     * @param   {string=}               [type]   Type of width to return:  `inner` – elements visible area width with padding;  `outer` – elements visible area width with padding, border and scrollbar;  `with-margin` – computed `outer` + margin
+     * @param   {string=}               [type]   Type of width to return:  `inner` – elements width with padding;  `outer` – elements width with padding, border and scrollbar;  `with-margin` – computed `outer` + margin
      * @param   {(string|number)}       [value]  Value to set as elements height, `type` is ignored
      *
      * @return  {number}
@@ -726,6 +749,46 @@ class VJS
             if (typeof v === 'function') v = v();
             if (typeof v === 'string') e.style.width = v;
             else e.style.width = `${v}px`;
+        }
+    }
+
+    /**
+     * Returns elements offset.
+     *
+     * @method  offset
+     * 
+     * @param   {(HTMLElement|string)}  element
+     *
+     * @return  {(Position|undefined)}
+     */
+    offset(e) {
+        e = VJS.__o(e);
+        if (!e) return undefined;
+
+        let b = VJS.__i().$pos(e), d = document.documentElement, w = window;
+        return {
+            top:   b.top + w.scrollY - d.clientTop,
+            left:  b.left + w.scrollX - d.clientLeft
+        }
+    }
+
+    /**
+     * Returns elements position.
+     *
+     * @method  offset
+     * 
+     * @param   {(HTMLElement|string)}  element
+     *
+     * @return  {(Position|undefined)}
+     */
+    position(e) {
+        e = VJS.__o(e);
+        if (!e) return undefined;
+
+        let b = VJS.__i().$pos(e), s = getComputedStyle(e);
+        return {
+            top:   b.top - parseInt(s.marginTop),
+            left:  b.left - parseInt(s.marginLeft)
         }
     }
 

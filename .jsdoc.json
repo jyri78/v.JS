@@ -30,7 +30,7 @@
         "commonNav": false,
         "collapse": true,
         "wrap": true,
-        "typedefs": false,
+        "typedefs": true,
         "navLevel": -1,
         "private": false,
         "removeQuotes": "all",
