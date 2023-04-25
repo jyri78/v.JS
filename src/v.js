@@ -671,7 +671,7 @@ class VJS
      * @method  height
      * 
      * @param   {(HTMLElement|string)}  element
-     * @param   {string=}               [type]   Type of height to return:  `inner` – elements visible area height with padding;  `outer` – elements visible area height with padding, border and scrollbar;  `with-margin` – `outer` + margin
+     * @param   {string=}               [type]   Type of height to return:  `inner` – elements visible area height with padding;  `outer` – elements visible area height with padding, border and scrollbar;  `with-margin` – computed `outer` + margin
      * @param   {(string|number)}       [value]  Value to set as elements height, `type` is ignored
      *
      * @return  {number}
@@ -682,7 +682,7 @@ class VJS
         if (!v) {
             let r;
             if (t === 'inner') r = e.clientHeight;
-            else if (t === 'outer') r = e.getBoundingClientRect().height;//e.offsetHeight;
+            else if (t === 'outer') r = e.offsetHeight;
             else if (t === 'with-margin') {
                 let s = getComputedStyle(e);
                 r = e.getBoundingClientRect().height + parseInt(s.marginTop) + parseInt(s.marginBottom);
@@ -703,7 +703,7 @@ class VJS
      * @method  width
      * 
      * @param   {(HTMLElement|string)}  element
-     * @param   {string=}               [type]   Type of width to return:  `inner` – elements visible area width with padding;  `outer` – elements visible area width with padding, border and scrollbar;  `with-margin` – `outer` + margin
+     * @param   {string=}               [type]   Type of width to return:  `inner` – elements visible area width with padding;  `outer` – elements visible area width with padding, border and scrollbar;  `with-margin` – computed `outer` + margin
      * @param   {(string|number)}       [value]  Value to set as elements height, `type` is ignored
      *
      * @return  {number}
@@ -714,7 +714,7 @@ class VJS
         if (!v) {
             let r;
             if (t === 'inner') r = e.clientWidth;
-            else if (t === 'outer') r = e.getBoundingClientRect().width;//e.offsetWidth;
+            else if (t === 'outer') r = e.offsetWidth;
             else if (t === 'with-margin') {
                 let s = getComputedStyle(e);
                 r = e.getBoundingClientRect().width + parseInt(s.marginLeft) + parseInt(s.marginRight);
