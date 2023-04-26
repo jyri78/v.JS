@@ -94,7 +94,7 @@ class VJS
      * @method  getElemsByName
      * @see     read more {@link $n|$n()}
      */
-    getElemsByName (n) { return VJS.__n(n); }
+    getElemsByName (n) { return VJS.__$n(n); }
 
     /**
      * `getElementsByTagName` - returns a live HTMLCollection of all found elements or first HTMLElement by tag name.
@@ -173,6 +173,40 @@ class VJS
      * @see     read more {@link $f|$f()}
      */
     filter(s, c) { return this.$f(s, c); }
+
+    /**
+     * `height` - returns or sets elements height.
+     *
+     * @method  $h
+     * @see     alias {@link height|height()}
+     * 
+     * @param   {(HTMLElement|string)}  element
+     * @param   {string=}               [type]   Type of height to return:  `inner` – elements height with padding;  `outer` – elements height with padding, border and scrollbar;  `with-margin` – computed `outer` + margin
+     * @param   {(string|number)}       [value]  Value to set as elements height, `type` is ignored
+     *
+     * @return  {number}
+     */
+    $h(e, t = '', v = null) {
+        let r = VJS.__h(e, t, v);
+        if (!v) return r;
+    }
+
+    /**
+     * `width` - returns or sets elements width.
+     *
+     * @method  $w
+     * @see     alias {@link width|width()}
+     * 
+     * @param   {(HTMLElement|string)}  element
+     * @param   {string=}               [type]   Type of width to return:  `inner` – elements width with padding;  `outer` – elements width with padding, border and scrollbar;  `with-margin` – computed `outer` + margin
+     * @param   {(string|number)}       [value]  Value to set as elements height, `type` is ignored
+     *
+     * @return  {number}
+     */
+    $w(e, t = '', v = null) {
+        let r = VJS.__w(e, t, v);
+        if (!v) return r;
+    }
 
     /**
      * `createElement` - creates new HTML Element by tagName, or an HTMLUnknownElement if tagName isn't recognized.
@@ -708,9 +742,10 @@ class VJS
 
 
     /**
-     * Returns or sets elements height
+     * Returns or sets elements height.
      *
      * @method  height
+     * @see     alias {@link $h|$h()}
      * 
      * @param   {(HTMLElement|string)}  element
      * @param   {string=}               [type]   Type of height to return:  `inner` – elements height with padding;  `outer` – elements height with padding, border and scrollbar;  `with-margin` – computed `outer` + margin
@@ -719,30 +754,15 @@ class VJS
      * @return  {number}
      */
     height(e, t = '', v = null) {
-        e = VJS.__o(e);
-        if (!e) return 0;
-        if (!v) {
-            let r;
-            if (t === 'inner') r = e.clientHeight;
-            else if (t === 'outer') r = e.offsetHeight;
-            else if (t === 'with-margin') {
-                let s = getComputedStyle(e);
-                r = e.getBoundingClientRect().height + parseInt(s.marginTop) + parseInt(s.marginBottom);
-            }
-            else r = parseInt(e.style.height);
-            return r;
-        }
-        else {
-            if (typeof v === 'function') v = v();
-            if (typeof v === 'string') e.style.height = v;
-            else e.style.height = `${v}px`;
-        }
+        let r = VJS.__h(e, t, v);
+        if (!v) return r;
     }
 
     /**
-     * Returns or sets elements width
+     * Returns or sets elements width.
      *
      * @method  width
+     * @see     alias {@link $w|$w()}
      * 
      * @param   {(HTMLElement|string)}  element
      * @param   {string=}               [type]   Type of width to return:  `inner` – elements width with padding;  `outer` – elements width with padding, border and scrollbar;  `with-margin` – computed `outer` + margin
@@ -751,24 +771,8 @@ class VJS
      * @return  {number}
      */
     width(e, t = '', v = null) {
-        e = VJS.__o(e);
-        if (!e) return 0;
-        if (!v) {
-            let r;
-            if (t === 'inner') r = e.clientWidth;
-            else if (t === 'outer') r = e.offsetWidth;
-            else if (t === 'with-margin') {
-                let s = getComputedStyle(e);
-                r = e.getBoundingClientRect().width + parseInt(s.marginLeft) + parseInt(s.marginRight);
-            }
-            else r = parseInt(e.style.width);
-            return r;
-        }
-        else {
-            if (typeof v === 'function') v = v();
-            if (typeof v === 'string') e.style.width = v;
-            else e.style.width = `${v}px`;
-        }
+        let r = VJS.__w(e, t, v);
+        if (!v) return r;
     }
 
     /**
@@ -937,6 +941,34 @@ class VJS
         if (!(c instanceof Array)) c = [c];
         else e.classList[f](...c);
     }
+
+    static __hw(f, e, t, v) {
+        e = VJS.__o(e);
+        if (!e) return !v ? 0 : undefined;
+
+        let ff = f.toLowerCase(),
+            b = f === 'Height' ? ['Top', 'Bottom'] : ['Left', 'Right'];
+
+        if (!v) {
+            let r;
+            if (t === 'inner') r = e[`client${f}`];
+            else if (t === 'outer') r = e[`offset${f}`];
+            else if (t === 'with-margin') {
+                let s = getComputedStyle(e);
+                r = e.getBoundingClientRect()[ff] + parseInt(s[`margin${b[0]}`]) + parseInt(s[`margin${b[1]}`]);
+            }
+            else r = parseInt(e.style[ff]);
+            return r;
+        }
+        else {
+            if (typeof v === 'function') v = v();
+            if (typeof v === 'string') e.style[ff] = v;
+            else e.style[ff] = `${v}px`;
+            return undefined;
+        }
+    }
+    /** @private */static __h(e, t, v) { return VJS.__hw('Height', e, t, v); }
+    /** @private */static __w(e, t, v) { return VJS.__hw('Width', e, t, v); }
 
     /** @private */
     static __e(s, e = null, a = false) {
