@@ -540,6 +540,7 @@ class VJS
      * Returns elements position relative to viewport or undefined if element not found.
      *
      * @method  $pos
+     * @see     also {@link position|position()} and {@link offset|offset()} 
      * 
      * @param   {(HTMLElement|string)}  element
      *
@@ -774,6 +775,7 @@ class VJS
      * Returns elements offset or undefined if element not found.
      *
      * @method  offset
+     * @see     also {@link position|position()} and {@link $pos|$pos()} 
      * 
      * @param   {(HTMLElement|string)}  element
      *
@@ -793,7 +795,8 @@ class VJS
     /**
      * Returns elements position or undefined if element not found.
      *
-     * @method  offset
+     * @method  position
+     * @see     also {@link $pos|$pos()} and {@link offset|offset()} 
      * 
      * @param   {(HTMLElement|string)}  element
      *
