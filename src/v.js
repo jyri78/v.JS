@@ -537,7 +537,7 @@ class VJS
     classToggle(e, c, f) { VJS.__i().$clt(e, c, f); }
 
     /**
-     * Returns elements position relative to viewport.
+     * Returns elements position relative to viewport or undefined if element not found.
      *
      * @method  $pos
      * 
@@ -550,6 +550,24 @@ class VJS
         if (!e) return undefined;
         let {top, left} = e.getBoundingClientRect();
         return {top, left};
+    }
+
+    /**
+     * Returns elements value(s).
+     *
+     * @method  $val
+     * 
+     * @param   {(HTMLElement|string)}  e  [e description]
+     *
+     * @return  {(string|string[])}
+     */
+    $val(e) {
+        e = VJS.__o(e);
+        if (!e) return '';
+
+        if (e.options && e.multiple)
+            return e.options.filter(o => o.selected).map(o => o.value);
+        else return e.value;
     }
 
     /**
@@ -753,7 +771,7 @@ class VJS
     }
 
     /**
-     * Returns elements offset.
+     * Returns elements offset or undefined if element not found.
      *
      * @method  offset
      * 
@@ -773,7 +791,7 @@ class VJS
     }
 
     /**
-     * Returns elements position.
+     * Returns elements position or undefined if element not found.
      *
      * @method  offset
      * 
@@ -790,6 +808,27 @@ class VJS
             top:   b.top - parseInt(s.marginTop),
             left:  b.left - parseInt(s.marginLeft)
         }
+    }
+
+    /**
+     * Returns serialized form data.
+     *
+     * @method  serialize
+     * 
+     * @param   {(HTMLElement|string)}  formElement
+     * @param   {object}                extraData    Extra data to add to the form data
+     *
+     * @return  {string}
+     */
+    serialize(f, e = {}) {
+        f = VJS.__o(e);
+        if (!f) return '';
+
+        let u = new URLSearchParams(new FormData(f));
+        if (typeof e === 'object' && Object.keys(e).length) {
+            for (let [k, v] in e) u.append(k, v);
+        }
+        return u.toString();
     }
 
     /**
