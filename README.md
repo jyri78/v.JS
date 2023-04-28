@@ -1,8 +1,12 @@
 # [Vanilla JavaScript](https://github.com/jyri78/v.JS)
 
-Simple plain Javascript `class` with a set of functions.
+Simple plain Javascript `class` with a set of common functions.
 
 **Warning!** This project is under early development stage.
+
+## Browser support
+
+Targeted are ES11 (ECMAScript 2020) supporting browsers, released since about mid 2020, like Chrome 85+, Edge 85+, Firefox 77+, Opera 71+, and Safari 13.1+.
 
 ## Usage
 
