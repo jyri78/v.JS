@@ -26,7 +26,7 @@
 /**
  * Vanilla JS (`VJS`) class with common methods plus some syntactic sugars.
  * 
- * Targeted browsers: released since about mid 2016, like Chrome 50+, Edge 14+, Firefox 46+, Opera 37+, and Safari 10+. 
+ * Targeted ES11/ES2020 supporting browsers: released since about mid 2020, like Chrome 85+, Edge 85+, Firefox 77+, Opera 71+, and Safari 13.1+. 
  * 
  * @version    0.1
  * @author     Jüri Kormik
@@ -39,7 +39,8 @@ class VJS
 {
     /** @ignore */
     constructor() {
-        if (typeof window === 'undefined') throw new Error(VJS.E);
+        if (typeof window === 'undefined') throw new Error(VJS.E1);
+        if (typeof String.prototype.replaceAll !== 'function') throw new Error(VJS.E2);
     }
 
 
@@ -907,7 +908,8 @@ class VJS
     //    So-called private static helper methods (should not called outside)
     // =========================================================================
 
-    /** @ignore @readonly */static get E() { return 'VJS class works only in Browser!'; }
+    /** @ignore @readonly */static get E1() { return 'VJS class works only in Browser!'; }
+    /** @ignore @readonly */static get E2() { return 'Your Browser does not support ECMAScript11 (2020)!'; }
     /** @private */static __v;
     /** @private */static __$(i) { return document.getElementById(i); }
     /** @private */static __$n(n) { return document.getElementsByName(n); }
