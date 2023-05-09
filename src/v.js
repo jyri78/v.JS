@@ -31,6 +31,9 @@
  * @version    0.1
  * @author     Jüri Kormik
  * 
+ * @todo    Add proper testing.
+ * @todo    Update documentation.
+ * 
  * @class
  * @throws           {Error}  If script is not runned in Browser (ex. Node.js)
  * @hideconstructor
@@ -400,6 +403,50 @@ class VJS
     }
 
     /**
+     * Returns form data.
+     * 
+     * @method  $fd
+     * @throws  {(DOMException|Error)}  If form not found, then function throws `DOMException` **NotFoundError**. If missing some required fields and validation classes not given, then function throws `Error`.
+     *
+     * @todo    Add to parameter `required` extra validation data and update validation functionality.
+     * 
+     * @param   {(HTMLElement|string)}               form               Form element or ID of form
+     * @param   {string[]}                           [required=[]]      IDs of required fields
+     * @param   {object}                             [extraData={}]     Additional data to be added
+     * @param   {string}                             [type=FormData]    Type of returned data. Accepted values are:  `string`, `json`, or `FormData`
+     * @param   {{error: string, success: string}=}  [validationClass]  Validation class to be set; for example for Bootstrap it would be `{error: 'is-invalid', success: 'is-valid'}`
+     *
+     * @return  {(FormData|object|string)}
+     */
+    $fd(f, r = [], e = {}, t = '', v = null) {
+        t = t.toLowerCase();
+        if (['string', 'json'].includes(t)) t = t.substring(0, 1);
+        else t = 'fd';
+
+        let o = VJS.__fd(f, r, e, t);
+
+        if (o.err === 'nfe') throw new DOMException('Form not found', 'NotFoundError');
+        if (o.err === 'mrf') {  // "Missing Required Field(s)"
+            if (v && v.error && v.success) {console.log(o)
+                o.ids.forEach(i => {
+                    if (o.data.includes(i)) {
+                        VJS.__c(i, [v.success], 'remove');
+                        VJS.__c(i, [v.error], 'add');
+                    }
+                    else {
+                        VJS.__c(i, [v.error], 'remove');
+                        VJS.__c(i, [v.success], 'add');
+                    }
+                });
+                return null;
+            }
+            else throw new Error('Fill up required fields');
+        }
+
+        return o.data;
+    }
+
+    /**
      * `hasDataAttribute` - returns boolean value if element has data attribute, or any attributes at all (if attribute name is empty string).
      *
      * @method  $hda
@@ -720,14 +767,14 @@ class VJS
                         else e.innerHTML = t;
                     }
                     catch (e) {
-                        throw new DOMException(e.message);
+                        throw new DOMException(e.message, e.name);
                     }
                 }
-                else throw new DOMException('Not valid Element given.');
+                else throw new DOMException('Not valid Element given.', 'NotSupportedError');
             }
             else return e.innerHTML;
         }
-        else if (t) throw new DOMException('No valid Element found.');
+        else if (t) throw new DOMException('No valid Element found.', 'NotFoundError');
     }
 
     /**
@@ -917,26 +964,26 @@ class VJS
     /** @private */static __$c(e, c) { return e.getElementsByClassName(c); }
     /** @private */static __$q(e, q, a) { return e[`querySelector${a ? 'All' : ''}`](q); }
 
-    /** @private */
+    /** @private */  //* instance
     static __i() {
         if (!VJS.__v) VJS.__v = new VJS();
         return VJS.__v;
     }
 
-    /** @private */
+    /** @private */  //* object  (params: `element`, `default`)
     static __o(e, d = null) {
         if (typeof e === 'string' && e[0] !== '#') e = `#${e}`;
         return this.__e(e) ?? d;
     }
 
-    /** @private */
+    /** @private */  //* data  (params: `name`, `prefix`)
     static __d(n, p = '') {
         if (!n) return '';
         if (p) return `data-${p}-${n}`;
         return `data-${n}`;
     }
 
-    /** @private */
+    /** @private */  //* class  (params: `element`, `classList`, `function`)
     static __c(e, c, f) {
         e = this.__o(e);
         if (!e) return;
@@ -944,6 +991,7 @@ class VJS
         else e.classList[f](...c);
     }
 
+    /** @private */  //* heightWeight  (params:  `function`, `element`, `type`, `value`)
     static __hw(f, e, t, v) {
         e = VJS.__o(e);
         if (!e) return !v ? 0 : undefined;
@@ -972,25 +1020,26 @@ class VJS
     /** @private */static __h(e, t, v) { return VJS.__hw('Height', e, t, v); }
     /** @private */static __w(e, t, v) { return VJS.__hw('Width', e, t, v); }
 
-    /** @private */
+    /** @private */  //* element  (params: `stringQuery`, `element`, `all`)
     static __e(s, e = null, a = false) {
         let d = document;
 
         if (typeof s === 'string') {
-            s = s.toLowerCase().trim();
+            s = s.trim();
+            let _s = s.toLowerCase();
 
-            if (s.match(/^\#?document$/)) return d;
-            else if (s.match(/^\#?window$/)) return window;
-            else if (s.match(/^\#[a-z][\w\-]+$/)) return VJS.__$(s.substring(1));
-            else if (s.match(/^\.[a-z][\w\-]+$/)) {
+            if (_s.match(/^\#?document$/)) return d;
+            else if (_s.match(/^\#?window$/)) return window;
+            else if (_s.match(/^\#[a-z][\w\-]+$/)) return VJS.__$(s.substring(1));
+            else if (_s.match(/^\.[a-z][\w\-]+$/)) {
                 let r = VJS.__$c(VJS.__o(e, d), s.substring(1));
                 return a ? r : r.item(0);
             }
-            else if (s.match(/^\=["']?[a-z][\w\-]+["']?$/)) {
+            else if (_s.match(/^\=["']?[a-z][\w\-]+["']?$/)) {
                 let r = VJS.__$t(VJS.__o(e, d), s.substring(1));
                 return a ? r : r.item(0);
             }
-            else if (s.match(/^(?:h[1-6]|[abipqsu]|[a-z]{2,})$/)) {
+            else if (_s.match(/^(?:h[1-6]|[abipqsu]|[a-z]{2,})$/)) {
                 let r = VJS.__$t(VJS.__o(e, d), s);
                 return a ? r : r.item(0);
             }
@@ -1002,6 +1051,55 @@ class VJS
         }
         else if (s instanceof Document || s instanceof HTMLElement) return s;
         else return d;  // default to `document`
+    }
+
+
+    /** @private */  //* formData  (params: `form`, `required`, `extraData`, `type`)
+    static __fd(f, r = [], e = {}, t = 's') {  // `t` values: "s" (string), "j" (JSON), or "fd" (FormData)
+        if (!(f instanceof FormData)) { // try to convert to FormData
+            if (f.constructor === {}.constructor) {  // is JSON
+                let _f = new FormData();
+                for (let k in f) _f.append(k, f[k]);
+                f = _f;
+            }
+            else {
+                let _f = VJS.__o(f);
+                if (!(_f instanceof HTMLFormElement)) return {err: 'nfe'};
+                f = new FormData(_f);
+            }
+        }
+
+        /// Check for existence of required fields
+        let _r = [...r], i = [];
+        // d = [...f.entries()].map(([k, v]) => {
+        for (let [k, v] of f) {
+            let _i = _r.indexOf(k);
+            i.push(k);
+
+            if (typeof v === 'string') {
+                v = encodeURI(v.trim());
+                f.set(k, v);
+            }
+            if (!v) {
+                if (VJS.__i().$ha(k, 'required')) _r.push(k);
+            }
+            else if (_i > -1) _r.splice(_i, 1);
+        }
+        // });
+
+        if (!!r && _r.length) return {err: 'mrf', data: _r, ids: i};
+
+        /// Add extra data to FormData
+        if (typeof e === 'object') {
+            for (let k in e) f.append(k, e[k].trim());
+        }
+
+        let d;
+        if (t === 's') d = new URLSearchParams(f).toString();
+        else if (t === 'j') d = Object.fromEntries(f);
+        else d = f;
+
+        return {err: '', data: d};
     }
 
 
