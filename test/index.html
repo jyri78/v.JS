@@ -1,99 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>v.JS test</title>
+    <meta charset="utf-8" />
+    <title>Vanilla JS Tests</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
         rel="stylesheet"
-        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
+        href="https://cdnjs.cloudflare.com/ajax/libs/mocha/10.2.0/mocha.min.css"
+        integrity="sha512-K2SeadvFVe9lYFodeleJaoA3p2Kna1reHWkNJ3GWMint1X7cXdU7oJpe2TTkRZ65DCWp2kyxM8RNnEPstlWr4A=="
         crossorigin="anonymous"
+        referrerpolicy="no-referrer"
     />
-    <script src="../src/v.js"></script>
 </head>
 <body>
+    <div id="mocha"></div>
 
-    <span id="span2">Lorem Ipsum</span>
-    <div id="test">Lorem ipsum dolor sit amet consectetur, <span id="span1">adipisicing elit</span>. Magnam in possimus voluptatem at eos doloremque nam, vero quasi mollitia minus. Quod eligendi maxime velit unde itaque. Quisquam, repellendus.</div>
-
-    <!-- <div id="container" style="display: flex;width:100%;height: 50px;">
-        <div id="size-test" style="flex-grow:1;height:100px;padding:20px;border:5px solid gray;margin:30px">&nbsp;</div>
-    </div> -->
-
-
-    <div class="mt-5">&nbsp;</div>
-    <form id="test-form" class="mt-5 p-3">
-        <div class="row p-2">
-            <div class="col-2 pt-2 text-end">
-                <label for="testField1" class="form-label">Test field 1</label>
-            </div>
-            <div class="col-2">
-                <input type="text" class="form-control" id="testField1" name="testField1" placeholder="[should_validate]">
-            </div>
-
-            <div class="col-2 pt-2 text-end">
-                <label for="testField2" class="form-label">Test field 2</label>
-            </div>
-            <div class="col-2">
-                <input type="text" class="form-control" id="testField2" name="testField2" value="some value">
-            </div>
-
-            <div class="col-2 pt-2 text-end">
-                <label for="testField3" class="form-label">Test field 3</label>
-            </div>
-            <div class="col-2">
-                <input type="text" class="form-control" id="testField3" name="testField3" value="other value" required>
-            </div>
+    <div style="display:none">
+        <div id="test01">
+            Lorem ipsum <kbd>dolor</kbd> sit, <kbd class="test02">amet</kbd> consectetur adipisicing <kbd>elit</kbd>.
+            Debitis voluptatum <del name="test03">incidunt</del> magni accusamus <span class="test02" name="test03">quod</span> maiores,
+            temporibus quo dolores tempora inventore cupiditate dignissimos voluptas laborum placeat iure nostrum neque dolore atque?
         </div>
-        <div class="row p-2">
-            <div class="col-2 pt-2 text-end">
-                <label for="testField4" class="form-label">Test field 4</label>
-            </div>
-            <div class="col-2">
-                <input type="text" class="form-control" id="testField4" name="testField4" placeholder="[sould_not_validate]">
-            </div>
-
-            <div class="col-2 pt-2 text-end">
-                <label for="testField5" class="form-label">Test field 5</label>
-            </div>
-            <div class="col-2">
-                <input type="text" class="form-control" id="testField5" name="testField5" placeholder="[sould_not_validate]" required>
-            </div>
-        </div>
-    </form>
-
-    
-    <script>
-
-VJS.register();
-
-let el = $('test');
-
-console.log(el, el instanceof Element, el instanceof HTMLElement);
-console.log($('span1', el));
-// console.log(window instanceof Window, window instanceof HTMLElement, window instanceof Element);
-// console.log(document instanceof Document, document instanceof HTMLElement, document instanceof Element);
-console.log($q('span', el));
-
-console.log($t('span'));
-
-$cels('<b>Nisi, quia?</b>', el);
-
-// let st = $('size-test');
-// console.log(st.clientHeight, st.offsetHeight, st.getBoundingClientRect().height, st.style.height);
+    </div>
 
 
-try {
-    let fd = $fd('test-form', ['testField2', 'testField4'], {}, 'json', {error: 'is-invalid', success: 'is-valid'});
-    console.log(fd);
-}
-catch (e) {
-    console.error(e.message);
-}
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/chai/4.3.7/chai.min.js"
+        integrity="sha512-Pwgr3yHn4Gvztp1GKl0ihhAWLZfqgp4/SbMt4HKW7AymuTQODMCNPE7v1uGapTeOoQQ5Hoz367b4seKpx6j7Zg=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+    ></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/mocha/10.2.0/mocha.min.js"
+        integrity="sha512-jsP/sG70bnt0xNVJt+k9NxQqGYvRrLzWhI+46SSf7oNJeCwdzZlBvoyrAN0zhtVyolGcHNh/9fEgZppG2pH+eA=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+    ></script>
 
+    <script src="../src/v.js"></script>
 
+    <script class="mocha-init">
+        mocha.setup('bdd');
+        mocha.checkLeaks();
+
+        // `VJS.register()` creates global functions, register them
+        mocha.globals([
+            '$*', 'c*', 'is*', 'add*', 'get*', 'set*', 'rem*', 'has*',
+            'querySel', 'filter', 'height', 'width', 'offset', 'position', 'serialize', 'toArray'
+        ]);
+
+        let assert = chai.assert;
+    </script>
+
+    <!-- -------------------------------- -->
+    <script src="test.instance.js"></script>
+    <script src="test.globals.js"></script>
+    <!-- -------------------------------- -->
+
+    <script class="mocha-exec">
+        mocha.run();
     </script>
 </body>
 </html>

@@ -84,62 +84,66 @@ class VJS
     $$(s) { return VJS.__e(s, document, true); }
 
     /**
-     * `getElementsByName` - returns a live NodeList of all found elements by name attribute.
+     * `getElementsByName` - returns a live NodeList of all found elements or first HTMLElement by name attribute.
      * 
      * @method  $n
      * @see     alias {@link getElemsByName|getElemsByName()}
      * 
      * @param   {string}   name
      * 
-     * @return  {NodeList}
+     * @return  {(NodeList|HTMLElement)}
      */
-    $n(n) { return VJS.__n(n); }
+    $n(n, f = false) {
+        // return VJS.__$n(n);
+        if (n[0] !== '=') n = `=${n}`;  // don't add `=` symbol, if it has already
+        return VJS.__e(n, null, !f);
+    }
     /**
      * @method  getElemsByName
      * @see     read more {@link $n|$n()}
      */
-    getElemsByName (n) { return VJS.__$n(n); }
+    getElemsByName (n, f = false) { return VJS.__$n(n, f); }
 
     /**
      * `getElementsByTagName` - returns a live HTMLCollection of all found elements or first HTMLElement by tag name.
      * 
      * @method  $t
-     * @see     alias {@link getElemsByTagNm|getElemsByTagNm()}
+     * @see     alias {@link getElemsByTag|getElemsByTag()}
      * 
      * @param   {string}                         tagName
      * @param   {(Document|HTMLElement|string)}  [element=document]    Document/HTMLElement or ID of element
-     * @param   {boolean}                        [firstElement=false]  Return first element or all of them (HTMLCollection/NodeList)
+     * @param   {boolean}                        [firstElement=false]  Return first HTML element or all of them (HTMLCollection/NodeList)
      * 
      * @return  {(HTMLCollection|NodeList|HTMLElement)}  WebKit (like Firefox) browsers return `NodeList` instead of `HTMLCollection` (see {@link https://bugzil.la/14869|Firefox bug 14869})
      */
     $t(t, e = document, f = false) { return VJS.__e(t, e, !f); }
     /**
-     * @method  getElemsByTagNm
+     * @method  getElemsByTag
      * @see     read more {@link $t|$t()}
      */
-    getElemsByTagNm (t, e = document, f = false) { return VJS.__e(t, e, !f); }
+    getElemsByTag(t, e = document, f = false) { return VJS.__e(t, e, !f); }
 
     /**
      * `getElementsByClassName` - returns a live HTMLCollection of all found elements by class name.
      *
      * @method  $c
-     * @see     alias {@link getElemsByClassNm|getElemsByClassNm()}
+     * @see     alias {@link getElemsByClass|getElemsByClass()}
      * 
      * @param   {string}                         className
      * @param   {(Document|HTMLElement|string)}  [element=document]    Document/HTMLElement or ID of element
-     * @param   {boolean}                        [firstElement=false]  Return first element or all of them (HTMLCollection/NodeList)
+     * @param   {boolean}                        [firstElement=false]  Return first HTML element or all of them (HTMLCollection)
      * 
-     * @return  {HTMLCollection}
+     * @return  {(HTMLCollection|HTMLElement)}
      */
     $c(c, e = document, f = false) {
         if (c[0] !== '.') c = `.${c}`;  // don't add `.` symbol, if it has already
         return VJS.__e(c, e, !f);
     }
     /**
-     * @method  getElemsByClassNm
+     * @method  getElemsByClass
      * @see     read more {@link $c|$c()}
      */
-    getElemsByClassNm(c, e = document, f = false) { return VJS.__i().$c(c, e, f); }
+    getElemsByClass(c, e = document, f = false) { return VJS.__i().$c(c, e, f); }
 
     /**
      * `querySelector` - returns a static (not live) NodeList if `all = true`, HTMLElement otherwise.
@@ -1036,7 +1040,7 @@ class VJS
                 return a ? r : r.item(0);
             }
             else if (_s.match(/^\=["']?[a-z][\w\-]+["']?$/)) {
-                let r = VJS.__$t(VJS.__o(e, d), s.substring(1));
+                let r = VJS.__$n(s.substring(1));
                 return a ? r : r.item(0);
             }
             else if (_s.match(/^(?:h[1-6]|[abipqsu]|[a-z]{2,})$/)) {
