@@ -42,6 +42,7 @@
     <script class="mocha-init">
         mocha.setup('bdd');
         mocha.checkLeaks();
+        // mocha.reporter('spec');  /// outputs to the console; try also 'tap'
 
         // `VJS.register()` creates global functions, register them
         mocha.globals([

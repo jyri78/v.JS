@@ -1,13 +1,18 @@
 describe('[GLOBALS]', () => {
-    describe('$(), getElemById()', () => {
+    before(() => {
+        if (!window.$$) VJS.register();  // for grep to properly work
+    });
+
+
+    describe('$i(), getElemById()', () => {
         it('should return HTMLElement', () => {
-            assert.instanceOf( $('test01'), HTMLElement );
-            assert.instanceOf( $('#test01'), HTMLElement );
+            assert.instanceOf( $i('test01'), HTMLElement );
+            assert.instanceOf( $i('#test01'), HTMLElement );
             assert.instanceOf( getElemById('test01'), HTMLElement );
             assert.instanceOf( getElemById('#test01'), HTMLElement );
         });
         it('should return NULL', () => {
-            assert.isNull( $('test00') );  // non-existent ID
+            assert.isNull( $i('test00') );  // non-existent ID
         });
     });
 

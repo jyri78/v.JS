@@ -16,12 +16,15 @@ Include `v.JS` into HTML file and call `register()`:
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- ... -->
+    <meta charset="utf-8" />
+    <title>My Homepage</title>
     <script src="script/v.js"></script>
     <script>VJS.register()</script>
 </head>
 <body>
-    <!-- ... -->
+
+    <!-- Body content... -->
+
 </body>
 </html>
 ```
@@ -30,7 +33,7 @@ And you are ready to use functions, for example:
 
 ```JavaScript
 // Gets element by ID "myElem"
-const myElem = $("myElem");
+const myElem = $("#myElem");  // or `$i("myElem")`
 ```
 
 ## Licence

@@ -48,40 +48,59 @@ class VJS
 
 
     /**
-     * `getElementById` - returns HTMLElement by ID.
+     * Similar to jQuery `$` function, but much simpler version of it.
+     * At first function tries to find single Element (by ID, by class name etc.), then live HTMLCollection, and finally static NodeList.
+     * 
+     * **Note!** If `selector` string begins with symbol `=`, then function tries to find live NodeList of elements by name attribute.
+     * 
+     * @method  $
+     * 
+     * @param   {string}  selector
+     * 
+     * @return  {(HTMLElement|HTMLCollection|NodeList|null)}
+     */
+    $(s) { return VJS.__e(s, document, true); }
+
+    // TODO: add functionality
+    $$(s) { s; }
+
+    /**
+     * `getElementById` - returns HTMLElement by ID, or `null` if not found.
      * 
      * **Note!** If you want to use jQuery `$()` like functionality, use the {@link $$|$$()} instead.
      * 
-     * @method  $
+     * @method  $i
      * @see     alias {@link getElemById|getElemById()}
      * 
      * @param   {string}       id
      * 
-     * @return  {HTMLElement}
+     * @return  {(HTMLElement|null)}
      */
-    $(i) {
-        if (i[0] !== '#') i = `#${i}`;  // don't add `#` symbol, if it has already
-        return VJS.__e(i);
-    }
+    $i(i) { return VJS.__inc(i, '#'); }
     /**
      * @method  getElemById
-     * @see     read more {@link $|$()}
+     * @see     read more {@link $i|$i()}
      */
-    getElemById(i) { return VJS.__i().$(i); }
+    getElemById(i) { return VJS.__i().$i(i); }
 
     /**
-     * Similar to jQuery `$` function, but much simplified version of it.
-     * At first function tries to find single Element (by ID, by class name etc.), then live HTMLCollection, and finally static NodeList; all based `selector` string.
+     * `getElementsByClassName` - returns a live HTMLCollection of all found elements by class name.
+     *
+     * @method  $c
+     * @see     alias {@link getElemsByClass|getElemsByClass()}
      * 
-     * **Note!** If `selector` string begins with symbol `=`, then function tries to find live NodeList of elements by name attribute.
+     * @param   {string}                         className
+     * @param   {(Document|HTMLElement|string)}  [element=document]    Document/HTMLElement or ID of element
+     * @param   {boolean}                        [firstElement=false]  Return first HTML element or all of them (HTMLCollection)
      * 
-     * @method  $$
-     * 
-     * @param   {string}  selector
-     * 
-     * @return  {(HTMLElement|HTMLCollection|NodeList)}
+     * @return  {(HTMLCollection|HTMLElement|null)}
      */
-    $$(s) { return VJS.__e(s, document, true); }
+    $c(c, e = document, f = false) { return VJS.__inc(c, '.', e, !f); }
+    /**
+     * @method  getElemsByClass
+     * @see     read more {@link $c|$c()}
+     */
+    getElemsByClass(c, e = document, f = false) { return VJS.__i().$c(c, e, f); }
 
     /**
      * `getElementsByName` - returns a live NodeList of all found elements or first HTMLElement by name attribute.
@@ -93,11 +112,7 @@ class VJS
      * 
      * @return  {(NodeList|HTMLElement)}
      */
-    $n(n, f = false) {
-        // return VJS.__$n(n);
-        if (n[0] !== '=') n = `=${n}`;  // don't add `=` symbol, if it has already
-        return VJS.__e(n, null, !f);
-    }
+    $n(n, f = false) { return VJS.__inc(n, '=', null, !f); }
     /**
      * @method  getElemsByName
      * @see     read more {@link $n|$n()}
@@ -116,34 +131,12 @@ class VJS
      * 
      * @return  {(HTMLCollection|NodeList|HTMLElement)}  WebKit (like Firefox) browsers return `NodeList` instead of `HTMLCollection` (see {@link https://bugzil.la/14869|Firefox bug 14869})
      */
-    $t(t, e = document, f = false) { return VJS.__e(t, e, !f); }
+    $t(t, e = document, f = false) { return VJS.__inc(t, '', e, !f); }
     /**
      * @method  getElemsByTag
      * @see     read more {@link $t|$t()}
      */
     getElemsByTag(t, e = document, f = false) { return VJS.__e(t, e, !f); }
-
-    /**
-     * `getElementsByClassName` - returns a live HTMLCollection of all found elements by class name.
-     *
-     * @method  $c
-     * @see     alias {@link getElemsByClass|getElemsByClass()}
-     * 
-     * @param   {string}                         className
-     * @param   {(Document|HTMLElement|string)}  [element=document]    Document/HTMLElement or ID of element
-     * @param   {boolean}                        [firstElement=false]  Return first HTML element or all of them (HTMLCollection)
-     * 
-     * @return  {(HTMLCollection|HTMLElement)}
-     */
-    $c(c, e = document, f = false) {
-        if (c[0] !== '.') c = `.${c}`;  // don't add `.` symbol, if it has already
-        return VJS.__e(c, e, !f);
-    }
-    /**
-     * @method  getElemsByClass
-     * @see     read more {@link $c|$c()}
-     */
-    getElemsByClass(c, e = document, f = false) { return VJS.__i().$c(c, e, f); }
 
     /**
      * `querySelector` - returns a static (not live) NodeList if `all = true`, HTMLElement otherwise.
@@ -962,11 +955,18 @@ class VJS
     /** @ignore @readonly */static get E1() { return 'VJS class works only in Browser!'; }
     /** @ignore @readonly */static get E2() { return 'Your Browser does not support ECMAScript11 (2020)!'; }
     /** @private */static __v;
-    /** @private */static __$(i) { return document.getElementById(i); }
+    /** @private */static __$i(i) { return document.getElementById(i); }
     /** @private */static __$n(n) { return document.getElementsByName(n); }
-    /** @private */static __$t(e, t) { return e.getElementsByTagName(t); }
     /** @private */static __$c(e, c) { return e.getElementsByClassName(c); }
+    /** @private */static __$t(e, t) { return e.getElementsByTagName(t); }
     /** @private */static __$q(e, q, a) { return e[`querySelector${a ? 'All' : ''}`](q); }
+
+    /** @private */  //* id_name_class  (params:  `selector`, `firstSymbol`)
+    static __inc(s, f, e = null, a = false) {
+        if (typeof s !== 'string') return null;
+        if (!['#', '.', '='].includes(s[0])) s = `${f}${s}`;  // don't add symbol `f`, if it has already
+        return VJS.__e(s, e, a);
+    }
 
     /** @private */  //* instance
     static __i() {
@@ -1034,7 +1034,7 @@ class VJS
 
             if (_s.match(/^\#?document$/)) return d;
             else if (_s.match(/^\#?window$/)) return window;
-            else if (_s.match(/^\#[a-z][\w\-]+$/)) return VJS.__$(s.substring(1));
+            else if (_s.match(/^\#[a-z][\w\-]+$/)) return VJS.__$i(s.substring(1));
             else if (_s.match(/^\.[a-z][\w\-]+$/)) {
                 let r = VJS.__$c(VJS.__o(e, d), s.substring(1));
                 return a ? r : r.item(0);
