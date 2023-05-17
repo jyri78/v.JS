@@ -52,25 +52,46 @@ class VJS
      * At first function tries to find single Element (by ID, by class name etc.), then live HTMLCollection, and finally static NodeList.
      * 
      * **Note!** If `selector` string begins with symbol `=`, then function tries to find live NodeList of elements by name attribute.
+     *           If `selector` string begins with symbol `@`, then function handles it as tag name (doesn't make simple tag name validation).
      * 
      * @method  $
+     * @see     also alternatives {@link $i|$i()}, {@link $n|$n()}, {@link $c|$c()}, and {@link $t|$t()}
      * 
-     * @param   {string}  selector
+     * @param   {string}   selector
+     * @param   {boolean}  [all=false]  Return HTMLCollection/NodeList if possible
      * 
      * @return  {(HTMLElement|HTMLCollection|NodeList|null)}
      */
-    $(s) { return VJS.__e(s, document, true); }
+    $(s, a = false) { return VJS.__e(s, document, a); }
 
-    // TODO: add functionality
-    $$(s) { s; }
+    /**
+     * `getElementByDataAttributeValue` - returns HTMLElement or `NULL` by other elements data attribute value.
+     * 
+     * @method  $$
+     *
+     * @param   {(HTMLElement|string)}  element    Where data attribute to look for
+     * @param   {string}                name       Data attribute name
+     * @param   {string=}               [prefix]   Prefix of data attribute name
+     * @param   {string}                [type=id]  How to handle data attributes value; accepted values are `id`, `class`, `name` and `tag` (all other types are ignored and attribute value is hadled as query string)
+     *
+     * @return  {(HTMLElement|null)}
+     */
+    $$(e, n, p = '', t = 'id') {
+        let s = {id: '#', class: '.', name: '=', tag: '@'},
+            i = VJS.__i(),
+            q = i.$gda(e, n, p);
+
+        if (!q) return null;
+        if (Object.keys(s).includes(t)) q = `${s[t]}${q}`;
+        return i.$(q);
+    }
 
     /**
      * `getElementById` - returns HTMLElement by ID, or `null` if not found.
      * 
-     * **Note!** If you want to use jQuery `$()` like functionality, use the {@link $$|$$()} instead.
-     * 
      * @method  $i
      * @see     alias {@link getElemById|getElemById()}
+     * @see     Look also {@link $|$()}, {@link $n|$n()}, {@link $c|$c()}, and {@link $t|$t()}
      * 
      * @param   {string}       id
      * 
@@ -84,10 +105,30 @@ class VJS
     getElemById(i) { return VJS.__i().$i(i); }
 
     /**
+     * `getElementsByName` - returns a live NodeList of all found elements or first HTMLElement by name attribute.
+     * 
+     * @method  $n
+     * @see     alias {@link getElemsByName|getElemsByName()}
+     * @see     Look also {@link $|$()}, {@link $i|$i()}, {@link $c|$c()}, and {@link $t|$t()}
+     * 
+     * @param   {string}   name                  Value of attribute `name`
+     * @param   {boolean}  [firstElement=false]  Return first HTML element or all of them (HTMLCollection/NodeList)
+     * 
+     * @return  {(NodeList|HTMLElement|null)}
+     */
+    $n(n, f = false) { return VJS.__inc(n, '=', null, !f); }
+    /**
+     * @method  getElemsByName
+     * @see     read more {@link $n|$n()}
+     */
+    getElemsByName (n, f = false) { return VJS.__$n(n, f); }
+
+    /**
      * `getElementsByClassName` - returns a live HTMLCollection of all found elements by class name.
      *
      * @method  $c
      * @see     alias {@link getElemsByClass|getElemsByClass()}
+     * @see     Look also {@link $|$()}, {@link $i|$i()}, {@link $n|$n()}, and {@link $t|$t()}
      * 
      * @param   {string}                         className
      * @param   {(Document|HTMLElement|string)}  [element=document]    Document/HTMLElement or ID of element
@@ -103,27 +144,11 @@ class VJS
     getElemsByClass(c, e = document, f = false) { return VJS.__i().$c(c, e, f); }
 
     /**
-     * `getElementsByName` - returns a live NodeList of all found elements or first HTMLElement by name attribute.
-     * 
-     * @method  $n
-     * @see     alias {@link getElemsByName|getElemsByName()}
-     * 
-     * @param   {string}   name
-     * 
-     * @return  {(NodeList|HTMLElement)}
-     */
-    $n(n, f = false) { return VJS.__inc(n, '=', null, !f); }
-    /**
-     * @method  getElemsByName
-     * @see     read more {@link $n|$n()}
-     */
-    getElemsByName (n, f = false) { return VJS.__$n(n, f); }
-
-    /**
      * `getElementsByTagName` - returns a live HTMLCollection of all found elements or first HTMLElement by tag name.
      * 
      * @method  $t
      * @see     alias {@link getElemsByTag|getElemsByTag()}
+     * @see     Look also {@link $|$()}, {@link $i|$i()}, {@link $n|$n()}, and {@link $c|$c()}
      * 
      * @param   {string}                         tagName
      * @param   {(Document|HTMLElement|string)}  [element=document]    Document/HTMLElement or ID of element
@@ -959,7 +984,7 @@ class VJS
     /** @private */static __$n(n) { return document.getElementsByName(n); }
     /** @private */static __$c(e, c) { return e.getElementsByClassName(c); }
     /** @private */static __$t(e, t) { return e.getElementsByTagName(t); }
-    /** @private */static __$q(e, q, a) { return e[`querySelector${a ? 'All' : ''}`](q); }
+    /** @private */static __$q(e, q, a) { try { return e[`querySelector${a ? 'All' : ''}`](q); } catch (_) { return null; } }
 
     /** @private */  //* id_name_class  (params:  `selector`, `firstSymbol`)
     static __inc(s, f, e = null, a = false) {
@@ -980,8 +1005,8 @@ class VJS
         return this.__e(e) ?? d;
     }
 
-    /** @private */  //* data  (params: `name`, `prefix`)
-    static __d(n, p = '') {
+    /** @private */  //* data  (params: `name`, `prefix`, `suffix`)
+    static __d(n, p = '', s = '') {
         if (!n) return '';
         if (p) return `data-${p}-${n}`;
         return `data-${n}`;
@@ -1043,7 +1068,10 @@ class VJS
                 let r = VJS.__$n(s.substring(1));
                 return a ? r : r.item(0);
             }
-            else if (_s.match(/^(?:h[1-6]|[abipqsu]|[a-z]{2,})$/)) {
+            else if (
+                _s.match(/^\@[a-z][\w\-]+$/) ||
+                _s.match(/^(?:h[1-6]|[abipqsu]|[a-z]{2,})$/)
+            ) {
                 let r = VJS.__$t(VJS.__o(e, d), s);
                 return a ? r : r.item(0);
             }

@@ -38,13 +38,14 @@
     ></script>
 
     <script src="../src/v.js"></script>
+    <!-- <script src="../v.min.js"></script> -->
 
     <script class="mocha-init">
         mocha.setup('bdd');
         mocha.checkLeaks();
         // mocha.reporter('spec');  /// outputs to the console; try also 'tap'
 
-        // `VJS.register()` creates global functions, register them
+        // `VJS.register()` creates global functions, allow them
         mocha.globals([
             '$*', 'c*', 'is*', 'add*', 'get*', 'set*', 'rem*', 'has*',
             'querySel', 'filter', 'height', 'width', 'offset', 'position', 'serialize', 'toArray'
@@ -55,7 +56,7 @@
 
     <!-- -------------------------------- -->
     <script src="test.instance.js"></script>
-    <script src="test.globals.js"></script>
+    <script src="test.global.js"></script>
     <!-- -------------------------------- -->
 
     <script class="mocha-exec">

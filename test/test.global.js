@@ -1,4 +1,4 @@
-describe('[GLOBALS]', () => {
+describe('[GLOBAL]', () => {
     before(() => {
         if (!window.$$) VJS.register();  // for grep to properly work
     });
@@ -65,7 +65,10 @@ describe('[GLOBALS]', () => {
     describe('$t(), getElemsByTag()', () => {
         it('sould return HTMLCollection', () => {
             assert.instanceOf( $t('kbd'), HTMLCollection );
+            assert.instanceOf( $t('@kbd'), HTMLCollection );
             assert.instanceOf( getElemsByTag('kbd'), HTMLCollection );
+            assert.instanceOf( getElemsByTag('@kbd'), HTMLCollection );
+
         });
         it('should have three elements', () => {
             assert.strictEqual( $t('kbd').length, 3 );
