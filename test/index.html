@@ -15,13 +15,18 @@
 <body>
     <div id="mocha"></div>
 
+    <!-- ------------------------------------------------------------------- -->
     <div style="display:none">
-        <div id="test01">
-            Lorem ipsum <kbd>dolor</kbd> sit, <kbd class="test02">amet</kbd> consectetur adipisicing <kbd>elit</kbd>.
-            Debitis voluptatum <del name="test03">incidunt</del> magni accusamus <span class="test02" name="test03">quod</span> maiores,
-            temporibus quo dolores tempora inventore cupiditate dignissimos voluptas laborum placeat iure nostrum neque dolore atque?
-        </div>
+
+<div id="test-id">
+    Lorem ipsum <kbd>dolor</kbd> sit, <kbd class="test-class">amet</kbd> consectetur adipisicing <kbd>elit</kbd>.
+    Debitis voluptatum <del name="test-name">incidunt</del> magni accusamus <span class="test-class" name="test-name">quod</span> maiores,
+    temporibus quo dolores tempora inventore cupiditate dignissimos voluptas laborum placeat iure nostrum neque dolore atque?
+</div>
+<div id="test-query" data-prfx-id="test-id" data-prfx-class="test-class" data-prfx-name="test-name"></div>
+
     </div>
+    <!-- ------------------------------------------------------------------- -->
 
 
     <script
@@ -54,10 +59,10 @@
         let assert = chai.assert;
     </script>
 
-    <!-- -------------------------------- -->
+    <!-- -------------------------------------- -->
     <script src="test.instance.js"></script>
-    <script src="test.global.js"></script>
-    <!-- -------------------------------- -->
+    <script src="test.global.selector.js"></script>
+    <!-- -------------------------------------- -->
 
     <script class="mocha-exec">
         mocha.run();

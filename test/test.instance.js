@@ -1,7 +1,7 @@
 describe('VJS', () => {
     describe('.getInstance()', () => {
         it('created instance should exist', () => {
-            var vjsObj = VJS.getInstance();
+            var vjsObj = VJS.getInstance('prfx');
 
             assert.exists(vjsObj);
             assert.instanceOf( vjsObj, VJS );

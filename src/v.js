@@ -35,15 +35,22 @@
  * @todo    Update documentation.
  * 
  * @class
- * @throws           {Error}  If script is not runned in Browser (ex. Node.js)
- * @hideconstructor
+ * @throws           {Error}  If script is not runned in Browser (ex. Node.js), or Browser doesn't support ECMAScript11 (2020).
  */
 class VJS
 {
-    /** @ignore */
-    constructor() {
+    /**
+     * Constructor of VJS.
+     *
+     * @param   {string=}  [prefix] String to be prepended to the data name (will be "remembered" statically)
+     *
+     * @return  {VJS}
+     */
+    constructor(p = '') {
         if (typeof window === 'undefined') throw new Error(VJS.E1);
         if (typeof String.prototype.replaceAll !== 'function') throw new Error(VJS.E2);
+
+        VJS.__sp(p);
     }
 
 
@@ -71,15 +78,14 @@ class VJS
      *
      * @param   {(HTMLElement|string)}  element    Where data attribute to look for
      * @param   {string}                name       Data attribute name
-     * @param   {string=}               [prefix]   Prefix of data attribute name
      * @param   {string}                [type=id]  How to handle data attributes value; accepted values are `id`, `class`, `name` and `tag` (all other types are ignored and attribute value is hadled as query string)
      *
      * @return  {(HTMLElement|null)}
      */
-    $$(e, n, p = '', t = 'id') {
+    $$(e, n, t = 'id') {
         let s = {id: '#', class: '.', name: '=', tag: '@'},
             i = VJS.__i(),
-            q = i.$gda(e, n, p);
+            q = i.$gda(e, n);
 
         if (!q) return null;
         if (Object.keys(s).includes(t)) q = `${s[t]}${q}`;
@@ -476,19 +482,18 @@ class VJS
      * 
      * @param   {(HTMLElement|string)}  element        Document/HTMLElement or ID of element
      * @param   {string}                attributeName  Name of the elements attribute
-     * @param   {string=}               [prefix]       Prefix of the elements data attribute name
      *
      * @return  {boolean}
      */
-    $hda(e, n, p = '') {
+    $hda(e, n) {
         if (!n) return VJS.__i().$ha(e);
-        return VJS.__i().$ha(e, VJS.__d(n, p));
+        return VJS.__i().$ha(e, VJS.__dn(n));
     }
     /**
      * @method  hasDataAttrib
      * @see     read more {@link $hda|$hda()}
      */
-    hasDataAttrib(e, n, p = '') { return VJS.__i().$hda(e, n, p); }
+    hasDataAttrib(e, n) { return VJS.__i().$hda(e, n); }
 
     /**
      * `getDataAttribute` - returns elements data attribute value or empty string.
@@ -498,19 +503,18 @@ class VJS
      * 
      * @param   {(HTMLElement|string)}  element        Document/HTMLElement or ID of element
      * @param   {string}                attributeName  Name of the elements attribute
-     * @param   {string=}               [prefix]       Prefix of the elements data attribute name
      *
      * @return  {string}
      */
-    $gda(e, n, p = '') {
+    $gda(e, n) {
         if (!n) return '';
-        return VJS.__i().$ga(e, VJS.__d(n, p));
+        return VJS.__i().$ga(e, VJS.__dn(n));
     }
     /**
      * @method  getDataAttrib
      * @see     read more {@link $gda|$gda()}
      */
-    getDataAttrib(e, n, p = '') { return VJS.__i().$gda(e, n, p); }
+    getDataAttrib(e, n) { return VJS.__i().$gda(e, n); }
 
     /**
      * `setDataAttribute` - sets elements data attribute value.
@@ -520,20 +524,19 @@ class VJS
      * 
      * @param   {(HTMLElement|string)}  element        Document/HTMLElement or ID of element
      * @param   {string}                attributeName  Name of the elements attribute
-     * @param   {string=}               [prefix]       Prefix of the elements data attribute name
      * @param   {(string|boolean)}      [value=true]   Value of the elements attribute
      */
-    $sda(e, n, p = '', v = true) {
+    $sda(e, n, v = true) {
         if (n) {
             if (typeof v === 'boolean') v = v|0;  // turn boolean value to integer
-            VJS.__i().$sa(e, VJS.__d(n, p), v);
+            VJS.__i().$sa(e, VJS.__dn(n), v);
         }
     }
     /**
      * @method  setDataAttrib
      * @see     read more {@link $sda|$sda()}
      */
-    setDataAttrib(e, n, p = '', v = true) { VJS.__i().$dsa(e, n, p, v); }
+    setDataAttrib(e, n, v = true) { VJS.__i().$dsa(e, n, v); }
 
     /**
      * `removeDataAttribute` - removes attribute from element.
@@ -543,14 +546,13 @@ class VJS
      * 
      * @param   {(HTMLElement|string)}  element        Document/HTMLElement or ID of element
      * @param   {string}                attributeName  Name of the elements attribute
-     * @param   {string=}               [prefix]       Prefix of the elements data attribute name
      */
-    $rda(e, n, p = '') { if (n) VJS.__i().$ra(e, VJS.__d(n, p)); }
+    $rda(e, n) { if (n) VJS.__i().$ra(e, VJS.__dn(n)); }
     /**
      * @method  remDataAttrib
      * @see     read more {@link $rda|$rda()}
      */
-    remDataAttrib(e, n, p = '') { VJS.__i().$rda(e, n, p); }
+    remDataAttrib(e, n) { VJS.__i().$rda(e, n); }
 
     /**
      * `classContains` - returns boolean value if the element contains class name or not.
@@ -979,7 +981,8 @@ class VJS
 
     /** @ignore @readonly */static get E1() { return 'VJS class works only in Browser!'; }
     /** @ignore @readonly */static get E2() { return 'Your Browser does not support ECMAScript11 (2020)!'; }
-    /** @private */static __v;
+    /** @private */static __v;  //* value (instance)
+    /** @private */static __p;  //* prefix
     /** @private */static __$i(i) { return document.getElementById(i); }
     /** @private */static __$n(n) { return document.getElementsByName(n); }
     /** @private */static __$c(e, c) { return e.getElementsByClassName(c); }
@@ -993,9 +996,19 @@ class VJS
         return VJS.__e(s, e, a);
     }
 
-    /** @private */  //* instance
-    static __i() {
-        if (!VJS.__v) VJS.__v = new VJS();
+    /** @private */  //* setPrefix  (param: `prefix`)
+    static __sp(p = '') {
+        p = p.trim();
+        if (p) {
+            p = p.replace(/[^\w\d]/gi, '');
+            if (p) VJS.__p = p;
+        }
+    }
+
+    /** @private */  //* instance  (param: `prefix`)
+    static __i(p = '') {
+        if (!VJS.__v) VJS.__v = new VJS(p);
+        else VJS.__sp(p);
         return VJS.__v;
     }
 
@@ -1005,19 +1018,19 @@ class VJS
         return this.__e(e) ?? d;
     }
 
-    /** @private */  //* data  (params: `name`, `prefix`, `suffix`)
-    static __d(n, p = '', s = '') {
-        if (!n) return '';
-        if (p) return `data-${p}-${n}`;
-        return `data-${n}`;
-    }
-
     /** @private */  //* class  (params: `element`, `classList`, `function`)
     static __c(e, c, f) {
         e = this.__o(e);
         if (!e) return;
         if (!(c instanceof Array)) c = [c];
         else e.classList[f](...c);
+    }
+
+    /** @private */  //* dataName  (params: `name`)
+    static __dn(n) {
+        if (!n) return '';
+        if (VJS.__p) return `data-${VJS.__p}-${n}`;
+        return `data-${n}`;
     }
 
     /** @private */  //* heightWeight  (params:  `function`, `element`, `type`, `value`)
@@ -1145,15 +1158,20 @@ class VJS
     /**
      * Returns instance of VJS class or throws error, if `window` object doesn't exist (not in Browser).
      * 
+     * @example <caption>test</caption>
+     * let vjs = VJS.getInstance();
+     * 
      * @static
      * @method    getInstance
      * 
      * @constructs  VJS
-     * @throws      {Error}  If script is not runned in Browser (ex. Node.js)
+     * @throws      {Error}    If script is not runned in Browser (ex. Node.js)
      * 
-     * @return      {VJS}
+     * @param       {string=}  [prefix] String to be prepended to the data name (will be "remembered" statically)
+     *
+     * @return      {object}
      */
-    static getInstance() { return VJS.__i(); }
+    static getInstance(p = '') { return VJS.__i(p); }
 
     /**
      * Registers VJS Methods to the window object (makes global functions).
@@ -1163,11 +1181,13 @@ class VJS
      * @static
      * @function  register
      * 
+     * @param   {string=}  [prefix] String to be prepended to the data name (will be "remembered" statically)
+     *
      * @return  {void}
      */
-    static register() {
+    static register(p = '') {
         try {
-            let v = VJS.getInstance();
+            let v = VJS.getInstance(p);
 
             Object.getOwnPropertyNames(VJS.prototype)
                 .filter(n => n!=='constructor' && !~n.indexOf('__'))
