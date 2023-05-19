@@ -64,33 +64,87 @@ class VJS
      * @method  $
      * @see     also alternatives {@link $i|$i()}, {@link $n|$n()}, {@link $c|$c()}, and {@link $t|$t()}
      * 
-     * @param   {string}   selector
-     * @param   {boolean}  [all=false]  Return HTMLCollection/NodeList if possible
+     * @param   {string}                         selector
+     * @param   {(Document|HTMLElement|string)}  [element=document]  Document/HTMLElement or ID of element (if can be used)
+     * @param   {boolean}                        [all=false]         Return HTMLCollection/NodeList if possible
      * 
      * @return  {(HTMLElement|HTMLCollection|NodeList|null)}
      */
-    $(s, a = false) { return VJS.__e(s, document, a); }
+    $(s, e = document, a = false) { return VJS.__e(s, e, a); }
 
     /**
      * `getElementByDataAttributeValue` - returns HTMLElement or `NULL` by other elements data attribute value.
      * 
      * @method  $$
      *
-     * @param   {(HTMLElement|string)}  element    Where data attribute to look for
-     * @param   {string}                name       Data attribute name
-     * @param   {string}                [type=id]  How to handle data attributes value; accepted values are `id`, `class`, `name` and `tag` (all other types are ignored and attribute value is hadled as query string)
+     * @param   {(HTMLElement|string)}  element      Where data attribute to look for
+     * @param   {string}                name         Data attribute name
+     * @param   {string}                [type=id]    How to handle data attributes value; accepted values are `id`, `class`, `name` and `tag` (all other types are ignored and attribute value is hadled as query string)
+     * @param   {boolean}               [all=false]  Return HTMLCollection/NodeList if possible
      *
-     * @return  {(HTMLElement|null)}
+     * @return  {(HTMLElement|HTMLCollection|NodeList|null)}
      */
-    $$(e, n, t = 'id') {
+    $$(e, n, t = 'id', a = false) {
         let s = {id: '#', class: '.', name: '=', tag: '@'},
             i = VJS.__i(),
             q = i.$gda(e, n);
 
         if (!q) return null;
         if (Object.keys(s).includes(t)) q = `${s[t]}${q}`;
-        return i.$(q);
+        return i.$(q, document, a);
     }
+
+    /**
+     * `getElementByDataAttributeValueName` - returns HTMLElement or `NULL` by other elements data attribute value (handles as name).
+     * 
+     * @method  $$n
+     *
+     * @param   {(HTMLElement|string)}  element      Where data attribute to look for
+     * @param   {string}                name         Data attribute name
+     * @param   {boolean}               [all=false]  Return HTMLCollection/NodeList if possible
+     * 
+     * @return  {(HTMLElement|NodeList|null)}
+     */
+    $$n(e, n, a = false) { return VJS.__i().$$(e, n, 'name', a); }
+
+    /**
+     * `getElementByDataAttributeValueClass` - returns HTMLElement or `NULL` by other elements data attribute value (handles as class).
+     * 
+     * @method  $$c
+     *
+     * @param   {(HTMLElement|string)}  element     Where data attribute to look for
+     * @param   {string}                name        Data attribute name
+     * @param   {boolean}               [all=false]  Return HTMLCollection/NodeList if possible
+     * 
+     * @return  {(HTMLElement|HTMLCollection|null)}
+     */
+    $$c(e, n, a = false) { return VJS.__i().$$(e, n, 'class', a); }
+
+    /**
+     * `getElementByDataAttributeValueTagName` - returns HTMLElement or `NULL` by other elements data attribute value (handles as tag name).
+     * 
+     * @method  $$t
+     *
+     * @param   {(HTMLElement|string)}  element    Where data attribute to look for
+     * @param   {string}                name       Data attribute name
+     * @param   {boolean}               [all=false]  Return HTMLCollection/NodeList if possible
+     * 
+     * @return  {(HTMLElement|HTMLCollection|NodeList|null)}
+     */
+    $$t(e, n, a = false) { return VJS.__i().$$(e, n, 'tag', a); }
+
+    /**
+     * `getElementByDataAttributeValueQuery` - returns HTMLElement or `NULL` by other elements data attribute value (handles as query string).
+     * 
+     * @method  $$q
+     *
+     * @param   {(HTMLElement|string)}  element      Where data attribute to look for
+     * @param   {string}                name         Data attribute name
+     * @param   {boolean}               [all=false]  Return HTMLCollection/NodeList if possible
+     * 
+     * @return  {(HTMLElement|HTMLCollection|NodeList|null)}
+     */
+    $$q(e, n, a = false) { return VJS.__i().$$(e, n, 'query', a); }
 
     /**
      * `getElementById` - returns HTMLElement by ID, or `null` if not found.
@@ -103,7 +157,7 @@ class VJS
      * 
      * @return  {(HTMLElement|null)}
      */
-    $i(i) { return VJS.__inc(i, '#'); }
+    $i(i) { return VJS.__go(i, '#'); }
     /**
      * @method  getElemById
      * @see     read more {@link $i|$i()}
@@ -122,7 +176,7 @@ class VJS
      * 
      * @return  {(NodeList|HTMLElement|null)}
      */
-    $n(n, f = false) { return VJS.__inc(n, '=', null, !f); }
+    $n(n, f = false) { return VJS.__go(n, '=', null, !f); }
     /**
      * @method  getElemsByName
      * @see     read more {@link $n|$n()}
@@ -142,7 +196,7 @@ class VJS
      * 
      * @return  {(HTMLCollection|HTMLElement|null)}
      */
-    $c(c, e = document, f = false) { return VJS.__inc(c, '.', e, !f); }
+    $c(c, e = document, f = false) { return VJS.__go(c, '.', e, !f); }
     /**
      * @method  getElemsByClass
      * @see     read more {@link $c|$c()}
@@ -160,14 +214,14 @@ class VJS
      * @param   {(Document|HTMLElement|string)}  [element=document]    Document/HTMLElement or ID of element
      * @param   {boolean}                        [firstElement=false]  Return first HTML element or all of them (HTMLCollection/NodeList)
      * 
-     * @return  {(HTMLCollection|NodeList|HTMLElement)}  WebKit (like Firefox) browsers return `NodeList` instead of `HTMLCollection` (see {@link https://bugzil.la/14869|Firefox bug 14869})
+     * @return  {(HTMLCollection|NodeList|HTMLElement|null)}  WebKit (like Firefox) browsers return `NodeList` instead of `HTMLCollection` (see {@link https://bugzil.la/14869|Firefox bug 14869})
      */
-    $t(t, e = document, f = false) { return VJS.__inc(t, '', e, !f); }
+    $t(t, e = document, f = false) { return VJS.__go(t, '@', e, !f); }
     /**
      * @method  getElemsByTag
      * @see     read more {@link $t|$t()}
      */
-    getElemsByTag(t, e = document, f = false) { return VJS.__e(t, e, !f); }
+    getElemsByTag(t, e = document, f = false) { return VJS.__i().$t(t, e, f); }
 
     /**
      * `querySelector` - returns a static (not live) NodeList if `all = true`, HTMLElement otherwise.
@@ -179,14 +233,14 @@ class VJS
      * @param   {(Document|HTMLElement|string)}  [element=document]  Document/HTMLElement or ID of element
      * @param   {boolean}                        [all=false]         Return all found elements (NodeList) or only first one
      * 
-     * @return  {(HTMLElement|HTMLCollection|NodeList)}
+     * @return  {(HTMLElement|HTMLCollection|NodeList|null)}
      */
     $q(q, e = document, a = false) { return VJS.__$q(e, q, a); }
     /**
      * @method  querySel
      * @see     read more {@link $q|$q()}
      */
-    querySel(q, e = document, a = false) { return VJS.__q(e, q, a); }
+    querySel(q, e = document, a = false) { return VJS.__$q(e, q, a); }
 
     /**
      * `filter` - returns an array of a static (not live) NodeList or live HTMLCollection of filtered (by function) elements.
@@ -989,10 +1043,10 @@ class VJS
     /** @private */static __$t(e, t) { return e.getElementsByTagName(t); }
     /** @private */static __$q(e, q, a) { try { return e[`querySelector${a ? 'All' : ''}`](q); } catch (_) { return null; } }
 
-    /** @private */  //* id_name_class  (params:  `selector`, `firstSymbol`)
-    static __inc(s, f, e = null, a = false) {
+    /** @private */  //* getObject  (params:  `selector`, `firstSymbol`, `element`, `all`)
+    static __go(s, f, e = null, a = false) {
         if (typeof s !== 'string') return null;
-        if (!['#', '.', '='].includes(s[0])) s = `${f}${s}`;  // don't add symbol `f`, if it has already
+        if (!['#', '.', '=', '@'].includes(s[0])) s = `${f}${s}`;  // don't add symbol `f`, if it has already
         return VJS.__e(s, e, a);
     }
 
@@ -1085,7 +1139,7 @@ class VJS
                 _s.match(/^\@[a-z][\w\-]+$/) ||
                 _s.match(/^(?:h[1-6]|[abipqsu]|[a-z]{2,})$/)
             ) {
-                let r = VJS.__$t(VJS.__o(e, d), s);
+                let r = VJS.__$t(VJS.__o(e, d), s[0] === '@' ? s.substring(1) : s);
                 return a ? r : r.item(0);
             }
             else return VJS.__$q(VJS.__o(e, d), s, a);

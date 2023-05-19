@@ -98,6 +98,15 @@ describe('GLOBAL: selector', () => {
             // By name
             assert.instanceOf( $('=test-name'), HTMLElement );
             assert.instanceOf( $$('test-query', 'name', 'name'), HTMLElement );
+            assert.instanceOf( $$n('test-query', 'name'), HTMLElement );
+            // By class
+            assert.instanceOf( $('.test-class'), HTMLElement );
+            assert.instanceOf( $$('test-query', 'class', 'class'), HTMLElement );
+            assert.instanceOf( $$c('test-query', 'class'), HTMLElement );
+            // By tag
+            assert.instanceOf( $('@kbd'), HTMLElement );
+            assert.instanceOf( $$('test-query', 'tag', 'tag'), HTMLElement );
+            assert.instanceOf( $$t('test-query', 'tag'), HTMLElement );
         });
     });
 });
