@@ -66,7 +66,7 @@ class VJS
      * 
      * @param   {string}                         selector
      * @param   {(Document|HTMLElement|string)}  [element=document]  Document/HTMLElement or ID of element (if can be used)
-     * @param   {boolean}                        [all=false]         Return HTMLCollection/NodeList if possible
+     * @param   {boolean}                        [all=false]         Return HTMLCollection/NodeList of HTMLElements
      * 
      * @return  {(HTMLElement|HTMLCollection|NodeList|null)}
      */
@@ -80,7 +80,7 @@ class VJS
      * @param   {(HTMLElement|string)}  element      Where data attribute to look for
      * @param   {string}                name         Data attribute name
      * @param   {string}                [type=id]    How to handle data attributes value; accepted values are `id`, `class`, `name` and `tag` (all other types are ignored and attribute value is hadled as query string)
-     * @param   {boolean}               [all=false]  Return HTMLCollection/NodeList if possible
+     * @param   {boolean}               [all=false]  Return HTMLCollection/NodeList of HTMLElements
      *
      * @return  {(HTMLElement|HTMLCollection|NodeList|null)}
      */
@@ -101,7 +101,7 @@ class VJS
      *
      * @param   {(HTMLElement|string)}  element      Where data attribute to look for
      * @param   {string}                name         Data attribute name
-     * @param   {boolean}               [all=false]  Return HTMLCollection/NodeList if possible
+     * @param   {boolean}               [all=false]  Return HTMLCollection/NodeList of HTMLElements
      * 
      * @return  {(HTMLElement|NodeList|null)}
      */
@@ -114,7 +114,7 @@ class VJS
      *
      * @param   {(HTMLElement|string)}  element     Where data attribute to look for
      * @param   {string}                name        Data attribute name
-     * @param   {boolean}               [all=false]  Return HTMLCollection/NodeList if possible
+     * @param   {boolean}               [all=false]  Return HTMLCollection/NodeList of HTMLElements
      * 
      * @return  {(HTMLElement|HTMLCollection|null)}
      */
@@ -127,7 +127,7 @@ class VJS
      *
      * @param   {(HTMLElement|string)}  element    Where data attribute to look for
      * @param   {string}                name       Data attribute name
-     * @param   {boolean}               [all=false]  Return HTMLCollection/NodeList if possible
+     * @param   {boolean}               [all=false]  Return HTMLCollection/NodeList of HTMLElements
      * 
      * @return  {(HTMLElement|HTMLCollection|NodeList|null)}
      */
@@ -140,7 +140,7 @@ class VJS
      *
      * @param   {(HTMLElement|string)}  element      Where data attribute to look for
      * @param   {string}                name         Data attribute name
-     * @param   {boolean}               [all=false]  Return HTMLCollection/NodeList if possible
+     * @param   {boolean}               [all=false]  Return HTMLCollection/NodeList of HTMLElements
      * 
      * @return  {(HTMLElement|HTMLCollection|NodeList|null)}
      */
@@ -224,23 +224,22 @@ class VJS
     getElemsByTag(t, e = document, f = false) { return VJS.__i().$t(t, e, f); }
 
     /**
-     * `querySelector` - returns a static (not live) NodeList if `all = true`, HTMLElement otherwise.
+     * `querySelector` - returns a static (non-live) NodeList if `all = true`, HTMLElement otherwise.
      *
      * @method  $q
      * @see     alias {@link querySel|querySel()}
      * 
      * @param   {string}                         queryString
-     * @param   {(Document|HTMLElement|string)}  [element=document]  Document/HTMLElement or ID of element
-     * @param   {boolean}                        [all=false]         Return all found elements (NodeList) or only first one
+     * @param   {boolean}                        [all=false]         Return all found elements (NodeList)
      * 
      * @return  {(HTMLElement|HTMLCollection|NodeList|null)}
      */
-    $q(q, e = document, a = false) { return VJS.__$q(e, q, a); }
+    $q(q, a = false) { return VJS.__$q(q, a); }
     /**
      * @method  querySel
      * @see     read more {@link $q|$q()}
      */
-    querySel(q, e = document, a = false) { return VJS.__$q(e, q, a); }
+    querySel(q, a = false) { return VJS.__$q(q, a); }
 
     /**
      * `filter` - returns an array of a static (not live) NodeList or live HTMLCollection of filtered (by function) elements.
@@ -971,12 +970,12 @@ class VJS
      * 
      * @param   {(HTMLCollection|NodeList)}  collection  HTMLCollection or NodeList to check
      *
-     * @return  {boolean}
+     * @return  {(boolean|undefined)}  If answer is inconclusive, returns `undefined`.
      */
     isLive(c) {
         if (c instanceof HTMLCollection) return true;
         let l = c.length;
-        if (!l) return false;  //? or better `undefined`, since inconclusive
+        if (!l) return undefined;
         let e = c.item(0);
         let p = e.parentNode;
         let n = e.cloneNode();
@@ -1041,7 +1040,7 @@ class VJS
     /** @private */static __$n(n) { return document.getElementsByName(n); }
     /** @private */static __$c(e, c) { return e.getElementsByClassName(c); }
     /** @private */static __$t(e, t) { return e.getElementsByTagName(t); }
-    /** @private */static __$q(e, q, a) { try { return e[`querySelector${a ? 'All' : ''}`](q); } catch (_) { return null; } }
+    /** @private */static __$q(q, a) { try { return document[`querySelector${a ? 'All' : ''}`](q); } catch (_) { return null; } }
 
     /** @private */  //* getObject  (params:  `selector`, `firstSymbol`, `element`, `all`)
     static __go(s, f, e = null, a = false) {
@@ -1142,7 +1141,7 @@ class VJS
                 let r = VJS.__$t(VJS.__o(e, d), s[0] === '@' ? s.substring(1) : s);
                 return a ? r : r.item(0);
             }
-            else return VJS.__$q(VJS.__o(e, d), s, a);
+            else return VJS.__$q(s, a);
         }
         else if (s instanceof Window) {
             if (!e && !a) return d;  // prevent requesting elements from `window`
