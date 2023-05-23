@@ -119,83 +119,116 @@ describe('GLOBAL: selector', () => {
         });
     });
 
-    describe('$(), $$()', () => {
+    describe('$()', () => {
+        it('should return HTMLElement', () => {
+            assert.instanceOf( $('#test-id'), HTMLElement );
+            assert.instanceOf( $('=test-name'), HTMLElement );
+            assert.instanceOf( $('.test-class'), HTMLElement );
+            assert.instanceOf( $('@kbd'), HTMLElement );
+        });
+        it('should return NULL', () => {
+            assert.isNull( $('#test-00') );
+            assert.isNull( $('=test-00') );
+            assert.isNull( $('.test-00') );
+            assert.isNull( $('@map') );
+        });
+        it('should return live(!) NodeList', () => {
+            assert.instanceOf( $('=test-name', '#vjs-test', true), NodeList );
+ 
+            // confirm that returned NodeList is live
+            assert.isTrue( isLive($('=test-name', '#vjs-test', true)) );
+        });
+        it('should return HTMLCollection', () => {
+            assert.instanceOf( $('.test-class', '#vjs-test', true), HTMLCollection );
+            assert.instanceOf( $('@kbd', '#vjs-test', true), HTMLCollection );
+        });
+        it('should return empty NodeList', () => {
+            assert.isEmpty( $('=test-00', '#vjs-test', true) );
+        });
+        it('should return empty HTMLCollection', () => {
+            assert.isEmpty( $('.test-00', '#vjs-test', true) );
+            assert.isEmpty( $('@map', '#vjs-test', true) );
+        });
+    });
+
+    describe('$$(), $$n(), $$c(), $$t(), $$q()', () => {
         it('should return HTMLElement', () => {
             // By ID
-            assert.instanceOf( $('#test-id'), HTMLElement );
             assert.instanceOf( $$('test-query', 'idVal'), HTMLElement );
  
             // By name attribute
-            assert.instanceOf( $('=test-name'), HTMLElement );
             assert.instanceOf( $$('test-query', 'nameVal', 'name'), HTMLElement );
             assert.instanceOf( $$n('test-query', 'nameVal'), HTMLElement );
  
             // By class name
-            assert.instanceOf( $('.test-class'), HTMLElement );
             assert.instanceOf( $$('test-query', 'classVal', 'class'), HTMLElement );
             assert.instanceOf( $$c('test-query', 'classVal'), HTMLElement );
  
             // By tag name
-            assert.instanceOf( $('@kbd'), HTMLElement );
             assert.instanceOf( $$('test-query', 'tagVal', 'tag'), HTMLElement );
             assert.instanceOf( $$t('test-query', 'tagVal'), HTMLElement );
         });
         it('should return NULL', () => {
             // By ID
-            assert.isNull( $('#test-00') );
-            assert.isNull( $$('test-qry00', 'id') );
+            assert.isNull( $$('test-qry00', 'idVal') );
  
             // By name attribute
-            assert.isNull( $('=test-00') );
             assert.isNull( $$('test-qry00', 'nameVal', 'name') );
             assert.isNull( $$n('test-qry00', 'nameVal') );
  
             // By class name
-            assert.isNull( $('.test-00') );
             assert.isNull( $$('test-qry00', 'classVal', 'class'));
             assert.isNull( $$c('test-qry00', 'classVal'));
  
             // By tag name
-            assert.isNull( $('@map') );
             assert.isNull( $$('test-qry00', 'tagVal', 'tag') );
             assert.isNull( $$t('test-qry00', 'tagVal') );
         });
         it('should return live(!) NodeList', () => {
-            assert.instanceOf( $('=test-name', '#vjs-test', true), NodeList );
             assert.instanceOf( $$('test-query', 'nameVal', 'name', true), NodeList );
             assert.instanceOf( $$n('test-query', 'nameVal', true), NodeList );
  
             // confirm that returned NodeList is live
-            assert.isTrue( isLive($('=test-name', '#vjs-test', true)) );
             assert.isTrue( isLive($$('test-query', 'nameVal', 'name', true)) );
             assert.isTrue( isLive($$n('test-query', 'nameVal', true)) );
         });
         it('should return HTMLCollection', () => {
             // By class name
-            assert.instanceOf( $('.test-class', '#vjs-test', true), HTMLCollection );
             assert.instanceOf( $$('test-query', 'classVal', 'class', true), HTMLCollection );
             assert.instanceOf( $$c('test-query', 'classVal', true), HTMLCollection );
  
             // By tag name
-            assert.instanceOf( $('@kbd', '#vjs-test', true), HTMLCollection );
             assert.instanceOf( $$('test-query', 'tagVal', 'tag', true), HTMLCollection );
             assert.instanceOf( $$t('test-query', 'tagVal', true), HTMLCollection );
         });
         it('should return empty NodeList', () => {
-            assert.isEmpty( $('=test-00', '#vjs-test', true) );
             assert.isEmpty( $$('test-qry00', 'nameVal', 'name', true) );
             assert.isEmpty( $$n('test-qry00', 'nameVal', true) );
         });
         it('should return empty HTMLCollection', () => {
             // By class name
-            assert.isEmpty( $('.test-00', '#vjs-test', true) );
             assert.isEmpty( $$('test-qry00', 'classVal', 'class', true) );
             assert.isEmpty( $$c('test-qry00', 'classVal', true) );
  
             // By tag name
-            assert.isEmpty( $('@map', '#vjs-test', true) );
             assert.isEmpty( $$('test-qry00', 'tagVal', 'tag', true) );
             assert.isEmpty( $$t('test-qry00', 'tagVal', true) );
+        });
+    });
+
+    describe('$f(), filter()', () => {
+        it('should return array with two HTMLElements', () => {
+            let callback = el => el.innerText === 'elit' || el.innerText === 'amet',
+                filtered1 = $f('@kbd', callback),
+                filtered2 = filter('tagVal', callback, 'test-query|tag');
+ 
+            assert.instanceOf( filtered1, Array );
+            assert.instanceOf( filtered1[0], HTMLElement );
+            assert.equal( filtered1.length, 2 );
+ 
+            assert.instanceOf( filtered2, Array );
+            assert.instanceOf( filtered2[0], HTMLElement );
+            assert.equal( filtered2.length, 2 );
         });
     });
 });
