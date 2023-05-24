@@ -29,7 +29,7 @@ describe('GLOBAL: selector', () => {
             assert.instanceOf( getElemsByName('=test-name'), NodeList );
             assert.isTrue( isLive(getElemsByName('test-name')) );
         });
-        it('should have one element', () => {
+        it('should have two elements', () => {
             assert.strictEqual( $n('test-name').length, 2 );
         });
         it('should return first of found HTMLelements', () => {
@@ -37,9 +37,11 @@ describe('GLOBAL: selector', () => {
             assert.equal( $n('test-name', true).innerText, 'incidunt' );
         });
         it('should return empty list', () => {
-            assert.instanceOf( $n('test00'), NodeList );
-            assert.isEmpty( $n('test00') );
-            assert.isUndefined( isLive($n('test00')) );
+            let elems = $n('test00');
+ 
+            assert.instanceOf( elems, NodeList );
+            assert.isEmpty( elems );
+            assert.isUndefined( isLive(elems) );
         });
         it('should return NULL', () => {
             assert.isNull( $n('test00', true) );
@@ -110,9 +112,11 @@ describe('GLOBAL: selector', () => {
             assert.isFalse( isLive($q('#test-id>kbd', true)) );
         });
         it('should return empty list', () => {
-            assert.instanceOf( $q('#test-id>test00', true), NodeList );
-            assert.isEmpty( $q('#test-id>test00', true) );
-            assert.isUndefined( isLive($q('#test-id>test00', true)) );
+            let elems = $q('#test-id>test00', true);
+ 
+            assert.instanceOf( elems, NodeList );
+            assert.isEmpty( elems );
+            assert.isUndefined( isLive(elems) );  // empty list can't be checked
         });
         it('should return NULL', () => {
             assert.isNull( $q('#test-id>test00') );
@@ -231,4 +235,32 @@ describe('GLOBAL: selector', () => {
             assert.equal( filtered2.length, 2 );
         });
     });
+
+    describe('$cs(), containsSel()', () => {
+        it('should return array with two HTMLElements', () => {
+            let elems1 = $cs('@b', 'dolor'),
+                elems2 = containsSel('@b', 'dolor');
+ 
+            assert.isArray( elems1 );
+            assert.equal( elems1.length, 2 );
+            assert.instanceOf( elems1[0], HTMLElement );
+            assert.instanceOf( elems1[1], HTMLElement );
+ 
+            assert.isArray( elems2 );
+            assert.equal( elems2.length, 2 );
+            assert.instanceOf( elems2[0], HTMLElement );
+            assert.instanceOf( elems2[1], HTMLElement );
+        });
+        it('should return empty array', () => {
+            let elems1 = $cs('@b', 'elit'),
+                elems2 = $cs('@map', 'lorem');  // non-existent element(s)
+ 
+            assert.isArray( elems1 );
+            assert.isEmpty( elems1 );
+ 
+            assert.isArray( elems2 );
+            assert.isEmpty( elems2 );
+        });
+    });
+
 });

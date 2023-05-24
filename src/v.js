@@ -248,18 +248,19 @@ class VJS
      * @method  $f
      * @see     alias {@link filter|filter()}
      * 
-     * @param   {string}    selector          Element or query string to search for
-     * @param   {Function}  callbackFunction  Function to use for filtering
-     * @param   {string=}   dataAttribute     If set, use query string by other elements data attribute; value should be in format `<ID>|<type>`; accepted types are `id`, `class`, `name` and `tag`
+     * @param   {(HTMLElement|string)}  selector          Element or query string to search for, or data attribute name, if `dataAttribute` is set
+     * @param   {Function}              callbackFunction  Function to use for filtering
+     * @param   {string=}               dataAttribute     If set, use query string by other elements data attribute; value should be in format `<ID>|<type>`; accepted types are `id`, `class`, `name` and `tag`
      *
      * @return  {HTMLElement[]}
      */
     $f(s, c, d = '') {
         let o;
 
-        if(!d) o = VJS.__i().$(s, 0, true);
+        if(!d) o = VJS.__i().$(s, 0, true);  // '0' defaults to `document`
         else {
             let p = d.split('|');
+            if (p.length < 2) return [];  // avoid error
             o = VJS.__i().$$(p[0], s, p[1], true);
         }
 
@@ -367,8 +368,8 @@ class VJS
      * @method  $cs
      * @see     alias {@link containsSel|containsSel()}
      * 
-     * @param   {string}   selector       Element or query string to search for
-     * @param   {string=}  [includeText]  The text that the element should contains
+     * @param   {(HTMLElement|string)}  selector       Element or query string to search for
+     * @param   {string=}               [includeText]  The text that the element should contains
      *
      * @return  {HTMLElement[]}
      */
@@ -716,7 +717,7 @@ class VJS
      * @method  $pos
      * @see     also {@link position|position()} and {@link offset|offset()} 
      * 
-     * @param   {(HTMLElement|string)}  element
+     * @param   {(HTMLElement|string)}  element    HTMLElement or ID of element
      *
      * @return  {(Position|undefined)}
      */
@@ -732,7 +733,7 @@ class VJS
      *
      * @method  $val
      * 
-     * @param   {(HTMLElement|string)}  e  [e description]
+     * @param   {(HTMLElement|string)}  element    HTMLElement or ID of element
      *
      * @return  {(string|string[])}
      */
@@ -1152,7 +1153,7 @@ class VJS
                 return a ? r : r.item(0);
             }
             else if (
-                _s.match(/^\@[a-z][\w\-]+$/) ||
+                _s.match(/^\@[a-z][\w\-]*$/) ||
                 _s.match(/^(?:h[1-6]|[abipqsu]|[a-z]{2,})$/)
             ) {
                 let r = VJS.__$t(VJS.__o(e, d), s[0] === '@' ? s.substring(1) : s);

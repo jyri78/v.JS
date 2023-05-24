@@ -26,4 +26,5 @@ describe('VJS', () => {
             assert.isFunction($$);
         });
     });
+
 });
