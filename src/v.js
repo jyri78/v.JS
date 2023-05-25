@@ -743,7 +743,7 @@ class VJS
 
         if (e.options && e.multiple)
             return e.options.filter(o => o.selected).map(o => o.value);
-        else return e.value;
+        else return e.value || e.innerText;
     }
 
     /**
@@ -842,7 +842,7 @@ class VJS
      * @method  $html
      *
      * @param   {(HTMLElement|string)}  element
-     * @param   {string=}               [text]      HTML string to add to the element; if empty, then returns
+     * @param   {string=}               [text]      HTML string to add to the element; if empty, then returns elements content
      * @param   {string=}               [position]  If empty string, then replaces child elements, or inserts HTML string by next values: `beforebegin` – before element itself; `afterbegin` – before its first child; `beforeend` – after its last child; `afterend` – after element itself
      *
      * @return  {(string|undefined)}

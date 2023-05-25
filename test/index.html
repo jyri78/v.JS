@@ -16,9 +16,12 @@
     <div id="mocha"></div>
 
     <!-- ------------------------------------------------------------------- -->
-    <div id="vjs-test" style="display:none">
+    <div id="vjs-test" style="position:absolute; left:-9990px; top:-9990px; display:none">
 
-<div id="test-id">
+<div
+    id="test-id"
+    style="width:777px; height:555px; margin:5px; border:2px solid gray; padding:4px"
+>
     Lorem ipsum <kbd>dolor</kbd> sit, <kbd class="test-class">amet</kbd> consectetur adipisicing <kbd>elit</kbd>.
     Debitis voluptatum <del name="test-name">incidunt</del> magni accusamus <span class="test-class" name="test-name">quod</span> maiores,
     temporibus quo <b>dolores</b> tempora inventore cupiditate dignissimos voluptas laborum placeat iure nostrum neque <b>dolore</b> atque?
@@ -62,7 +65,8 @@
 
     <!-- -------------------------------------- -->
     <script src="test.instance.js"></script>
-    <script src="test.global.selector.js"></script>
+    <script src="test.global.selectors.js"></script>
+    <script src="test.global.attributes.js"></script>
     <!-- -------------------------------------- -->
 
     <script class="mocha-exec">

@@ -1,4 +1,4 @@
-describe('GLOBAL: selector', () => {
+describe('GLOBAL: selectors', () => {
     before(() => {
         if (!window.$$) VJS.register('prfx');  // for grep to properly work
     });
