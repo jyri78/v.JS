@@ -389,11 +389,11 @@ class VJS
      * @param   {(HTMLElement|string)}  element           Document/HTMLElement or ID of element
      * @param   {string=}               [attributeName]   Name of the elements attribute
      *
-     * @return  {boolean}
+     * @return  {(boolean|undefined)}  If no valid element given, returns `undefined`, otherwise boolean value
      */
     $ha(e, n = '') {
         e = VJS.__o(e);
-        if (!e) return false;
+        if (!e) return undefined;
         return (!n ? e.hasAttributes() : e.hasAttribute(n));
     }
     /**
@@ -408,21 +408,22 @@ class VJS
      * @method  $ga
      * @see     alias {@link getAttrib|getAttrib()}
      * 
-     * @param   {(HTMLElement|string)}  element        Document/HTMLElement or ID of element
-     * @param   {string}                attributeName  Name of the elements attribute
+     * @param   {(HTMLElement|string)}  element              Document/HTMLElement or ID of element
+     * @param   {string}                attributeName        Name of the elements attribute
+     * @param   {(string|null)=}        [defaultValue=null]  Default value to return, if attribute not found
      *
-     * @return  {string}
+     * @return  {(string|null)}
      */
-    $ga(e, n) {
+    $ga(e, n, d = null) {
         e = VJS.__o(e);
-        if (!e) return '';
-        return (VJS.__i().$ha(e, n) ? e.getAttribute(n) : '');
+        if (!e) return d;
+        return (VJS.__i().$ha(e, n) ? (e.getAttribute(n) ?? d) : d);
     }
     /**
      * @method  getAttrib
      * @see     read more {@link $ga|$ga()}
      */
-    getAttrib(e, n) { return VJS.__i().$ga(e, n); }
+    getAttrib(e, n, d = null) { return VJS.__i().$ga(e, n, d); }
 
     /**
      * `setAttribute` - sets elements attribute value; attributes with boolean value don't need value.
@@ -432,12 +433,15 @@ class VJS
      * 
      * @param   {(HTMLElement|string)}  element        Document/HTMLElement or ID of element
      * @param   {string}                attributeName  Name of the elements attribute
-     * @param   {(string|boolean)}      [value=true]   Value of the elements attribute
+     * @param   {(string|boolean)}      [value=true]   Value of the elements attribute; **note:** if set to boolean `false`, then attribute will be removed
      */
     $sa(e, n, v = true) {
         e = VJS.__o(e);
         if (!e) return;
-        if (typeof v === 'boolean') e.setAttribute(n, n);
+        if (typeof v === 'boolean') {
+            if (v) e.setAttribute(n, n);
+            else VJS.__i().$ra(e, n);  // remove instead of setting
+        }
         else e.setAttribute(n, v);
     }
     /**
@@ -1054,8 +1058,8 @@ class VJS
     /** @private */static __p;  //* prefix
     /** @private */static __$i(i) { return document.getElementById(i); }
     /** @private */static __$n(n) { return document.getElementsByName(n); }
-    /** @private */static __$c(e, c) { return e.getElementsByClassName(c); }
-    /** @private */static __$t(e, t) { return e.getElementsByTagName(t); }
+    /** @private */static __$c(e, c) { return !e ? null : e.getElementsByClassName(c); }
+    /** @private */static __$t(e, t) { return !e ? null : e.getElementsByTagName(t); }
     /** @private */static __$q(q, a) { try { return document[`querySelector${a ? 'All' : ''}`](q); } catch (_) { return null; } }
 
     /** @private */  //* getObject  (params:  `selector`, `firstSymbol`, `element`, `all`)
@@ -1081,10 +1085,11 @@ class VJS
         return VJS.__v;
     }
 
-    /** @private */  //* object  (params: `element`, `default`)
-    static __o(e, d = null) {
+    /** @private */  //* object  (param: `element`)
+    static __o(e) {
+        if (!e) return null;  // don't do anything
         if (typeof e === 'string' && e[0] !== '#') e = `#${e}`;
-        return this.__e(e) ?? d;
+        return this.__e(e) ?? null;
     }
 
     /** @private */  //* class  (params: `element`, `classList`, `function`)
@@ -1145,7 +1150,7 @@ class VJS
             else if (_s.match(/^\#?window$/)) return window;
             else if (_s.match(/^\#[a-z][\w\-]+$/)) return VJS.__$i(s.substring(1));
             else if (_s.match(/^\.[a-z][\w\-]+$/)) {
-                let r = VJS.__$c(VJS.__o(e, d), s.substring(1));
+                let r = VJS.__$c(VJS.__o(e), s.substring(1));
                 return a ? r : r.item(0);
             }
             else if (_s.match(/^\=["']?[a-z][\w\-]+["']?$/)) {
@@ -1156,7 +1161,7 @@ class VJS
                 _s.match(/^\@[a-z][\w\-]*$/) ||
                 _s.match(/^(?:h[1-6]|[abipqsu]|[a-z]{2,})$/)
             ) {
-                let r = VJS.__$t(VJS.__o(e, d), s[0] === '@' ? s.substring(1) : s);
+                let r = VJS.__$t(VJS.__o(e), s[0] === '@' ? s.substring(1) : s);
                 return a ? r : r.item(0);
             }
             else return VJS.__$q(s, a);

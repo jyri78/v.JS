@@ -37,7 +37,7 @@ describe('GLOBAL: selectors', () => {
             assert.equal( $n('test-name', true).innerText, 'incidunt' );
         });
         it('should return empty list', () => {
-            let elems = $n('test00');
+            let elems = $n('test00');  // non-existent name
  
             assert.instanceOf( elems, NodeList );
             assert.isEmpty( elems );
@@ -65,7 +65,7 @@ describe('GLOBAL: selectors', () => {
             assert.equal( $c('test-class', '#vjs-test', true).innerText, 'amet' );
         });
         it('should return empty collection', () => {
-            assert.instanceOf( $c('test00'), HTMLCollection );
+            assert.instanceOf( $c('test00'), HTMLCollection );  // non-existent class
             assert.isEmpty( $c('test00') );
         });
         it('should return NULL', () => {

@@ -32,4 +32,41 @@ describe('GLOBAL: attributes', () => {
             assert.strictEqual( $h('test-id', 'with-margin'), 577 );
         });
     });
+
+    describe('$ha(), hasAttrib()', () => {
+        it('should return TRUE', () => {
+            assert.isTrue( $ha($('@del'), 'name') );
+            assert.isTrue( hasAttrib($('@del'), 'name') );
+ 
+            // Has any attribute at all
+            assert.isTrue( $ha($('@del')) );
+        });
+        it('should return FALSE', () => {
+            assert.isFalse( $ha($('@kbd'), 'class') );
+            assert.isFalse( $ha($('@kbd')) );  // any attribute at all
+        });
+        it('should return UNDEFINED', () => {
+            assert.isUndefined( $ha($('@map'), 'id') );
+            assert.isUndefined( $ha($('@map')) );  // any attribute at all
+        });
+    });
+
+    describe('$ga(), getAttrib()', () => {
+        it('should return "test-name"', () => {
+            assert.strictEqual( $ga($('@del'), 'name'), 'test-name' );
+            assert.strictEqual( getAttrib($('@del'), 'name'), 'test-name' );
+        });
+        it('should return NULL', () => {
+            assert.isNull( $ga($('@del'), 'id') );
+            assert.isNull( getAttrib($('@del'), 'id') );
+            assert.isNull( $ga($('@del')) );  // without attribute name
+            assert.isNull( $ga($('test00'), 'id') );  // non-existent element
+        });
+        it('should return empty string', () => {
+            assert.isString( $ga($('@del'), 'id', '') );  // confirm, that it is String
+ 
+            assert.isEmpty( $ga($('@del'), 'id', '') );
+            assert.isEmpty( $ga($('test00'), 'id', '') );  // non-existent element
+        });
+    });
 });
