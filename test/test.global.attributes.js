@@ -4,35 +4,6 @@ describe('GLOBAL: attributes', () => {
     });
 
 
-    describe('$w(), $h()', () => {
-        before(() => {
-            $('#vjs-test').style.display = 'block';
-        });
-        after(() => {
-            $('#vjs-test').style.display = 'none';
-        });
-
-        it('should return size of 777 × 555 px', () => {
-            assert.strictEqual( $w('test-id'), 777 );
-            assert.strictEqual( $h('test-id'), 555 );
-        });
-        it('should return "inner" size of 785 × 563 px', () => {
-            // Padding is 4px, i.e adds 8px to width and height
-            assert.strictEqual( $w('test-id', 'inner'), 785 );
-            assert.strictEqual( $h('test-id', 'inner'), 563 );
-        });
-        it('should return "outer" size of 789 × 567 px', () => {
-            // Border is 2px, i.e adds extra 4px (totally 12px) to width and height
-            assert.strictEqual( $w('test-id', 'outer'), 789 );
-            assert.strictEqual( $h('test-id', 'outer'), 567 );
-        });
-        it('should return "with-margin" size of 799 × 577 px', () => {
-            // Margin is 5px, i.e adds even more 10px (totally 22px) to width and height
-            assert.strictEqual( $w('test-id', 'with-margin'), 799 );
-            assert.strictEqual( $h('test-id', 'with-margin'), 577 );
-        });
-    });
-
     describe('$ha(), hasAttrib()', () => {
         it('should return TRUE', () => {
             assert.isTrue( $ha($('@del'), 'name') );
@@ -69,4 +40,91 @@ describe('GLOBAL: attributes', () => {
             assert.isEmpty( $ga($('test00'), 'id', '') );  // non-existent element
         });
     });
+
+    describe('$sa(), setAttrib()', () => {
+        it('should add new attribute', () => {
+            let elem1 = $('@span'),
+                elem2 = $('@kbd');
+ 
+            // Confirm, that element doesn't have attribute yet
+            assert.isFalse( $ha(elem1, 'title') );
+            assert.isFalse( $ha(elem2, 'itemscope') );
+ 
+            // Add new attribute
+            $sa(elem1, 'title', 'Hello world!');
+            setAttrib(elem2, 'itemscope');
+ 
+            // Confirm, that element has now added attribute with new value
+            assert.isTrue( $ha(elem1, 'title') );
+            assert.isTrue( $ha(elem2, 'itemscope') );
+            assert.strictEqual( $ga(elem1, 'title'), 'Hello world!' );
+            assert.strictEqual( $ga(elem2, 'itemscope'), 'itemscope' );
+        });
+    });
+
+    describe('$ra(), remAttrib()', () => {
+        it('should remove added attribute', () => {
+            let elem1 = $('@span'),
+                elem2 = $('@kbd');;
+ 
+            $ra(elem1, 'title');
+            remAttrib(elem2, 'itemscope');
+ 
+            // Confirm, that element doesn't have attribute anymore
+            assert.isFalse( $ha(elem1, 'title') );
+            assert.isFalse( $ha(elem2, 'itemscope') );
+        });
+    });
+
+    describe('$hda(), hasDataAttrib()', () => {
+        it('should return TRUE', () => {
+            assert.isTrue( $hda('test-query', 'nameVal') );
+            assert.isTrue( hasDataAttrib('test-query', 'classVal') );
+ 
+            // Has any data attribute at all
+            assert.isTrue( $hda('test-query') );  // only with prefixes
+            assert.isTrue( $hda('test-id', '', true) );  // ignores prefixes
+        });
+        it('should return FALSE', () => {
+            assert.isFalse( $hda('test-query', 'testVal') );
+ 
+            // Has any data attribute at all
+            assert.isFalse( $hda($('@kbd')) );
+            assert.isFalse( $hda('test-id') );
+        });
+        it('should return UNDEFINED', () => {
+            assert.isUndefined( $hda($('@map'), 'testVal') );
+            assert.isUndefined( $hda($('@map')) );
+        });
+    });
+
+    describe('$w(), $h()', () => {
+        before(() => {
+            $('#vjs-test').style.display = 'block';
+        });
+        after(() => {
+            $('#vjs-test').style.display = 'none';
+        });
+
+        it('should return size of 777 × 555 px', () => {
+            assert.strictEqual( $w('test-id'), 777 );
+            assert.strictEqual( $h('test-id'), 555 );
+        });
+        it('should return "inner" size of 785 × 563 px', () => {
+            // Padding is 4px, i.e adds 8px to width and height
+            assert.strictEqual( $w('test-id', 'inner'), 785 );
+            assert.strictEqual( $h('test-id', 'inner'), 563 );
+        });
+        it('should return "outer" size of 789 × 567 px', () => {
+            // Border is 2px, i.e adds extra 4px (totally 12px) to width and height
+            assert.strictEqual( $w('test-id', 'outer'), 789 );
+            assert.strictEqual( $h('test-id', 'outer'), 567 );
+        });
+        it('should return "with-margin" size of 799 × 577 px', () => {
+            // Margin is 5px, i.e adds even more 10px (totally 22px) to width and height
+            assert.strictEqual( $w('test-id', 'with-margin'), 799 );
+            assert.strictEqual( $h('test-id', 'with-margin'), 577 );
+        });
+    });
+
 });

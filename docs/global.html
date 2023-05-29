@@ -1747,7 +1747,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line753">line 753</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line760">line 760</a>
     </li></ul></dd>
     
 
@@ -1990,7 +1990,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line801">line 801</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line808">line 808</a>
     </li></ul></dd>
     
 
@@ -2944,7 +2944,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line649">line 649</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line656">line 656</a>
     </li></ul></dd>
     
 
@@ -3116,7 +3116,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line630">line 630</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line637">line 637</a>
     </li></ul></dd>
     
 
@@ -3285,7 +3285,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line681">line 681</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line688">line 688</a>
     </li></ul></dd>
     
 
@@ -3478,7 +3478,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line665">line 665</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line672">line 672</a>
     </li></ul></dd>
     
 
@@ -3650,7 +3650,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line698">line 698</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line705">line 705</a>
     </li></ul></dd>
     
 
@@ -5149,7 +5149,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line571">line 571</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line578">line 578</a>
     </li></ul></dd>
     
 
@@ -5781,7 +5781,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
 
     
 
-    <h4 class="name" id="$hda"><span class="type-signature"></span>$hda<span class="signature">(element, attributeName)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    <h4 class="name" id="$hda"><span class="type-signature"></span>$hda<span class="signature">(element, attributeName, allDataAttributes<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
 
     
 
@@ -5791,7 +5791,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
 <dl class="details">
     
     <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><p><code>hasDataAttribute</code> - returns boolean value if element has data attribute, or any attributes at all (if attribute name is empty string).</p></li></ul></dd>
+    <dd class="tag-description"><ul class="dummy"><li><p><code>hasDataAttribute</code> - returns boolean value if element has data attribute, or any data attributes at all (if attribute name is empty string).</p></li></ul></dd>
     
 
     
@@ -5864,7 +5864,11 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
         <th>Type</th>
 
         
+        <th>Attributes</th>
+        
 
+        
+        <th>Default</th>
         
 
         <th class="last">Description</th>
@@ -5893,7 +5897,19 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>Document/HTMLElement or ID of element</p></td>
@@ -5917,10 +5933,62 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
             </td>
 
             
+                <td class="attributes">
+                
 
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last"><p>Name of the elements attribute</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>allDataAttributes</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>false</code>
+                
+                </td>
+            
+
+            <td class="description last"><p>If <code>attributeName</code> not set, returns boolean, if there are any data attributes regardless of prefix</p></td>
         </tr>
 
     
@@ -5985,7 +6053,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line843">line 843</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line850">line 850</a>
     </li></ul></dd>
     
 
@@ -6614,7 +6682,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line718">line 718</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line725">line 725</a>
     </li></ul></dd>
     
 
@@ -7176,7 +7244,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line614">line 614</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line621">line 621</a>
     </li></ul></dd>
     
 
@@ -7345,7 +7413,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line777">line 777</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line784">line 784</a>
     </li></ul></dd>
     
 
@@ -7588,7 +7656,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line822">line 822</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line829">line 829</a>
     </li></ul></dd>
     
 
@@ -8067,7 +8135,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line592">line 592</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line599">line 599</a>
     </li></ul></dd>
     
 
@@ -8875,7 +8943,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line735">line 735</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line742">line 742</a>
     </li></ul></dd>
     
 
@@ -9277,7 +9345,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line771">line 771</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line778">line 778</a>
     </li></ul></dd>
     
 
@@ -9366,7 +9434,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line816">line 816</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line823">line 823</a>
     </li></ul></dd>
     
 
@@ -9458,7 +9526,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line877">line 877</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line884">line 884</a>
     </li></ul></dd>
     
 
@@ -9609,7 +9677,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line659">line 659</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line666">line 666</a>
     </li></ul></dd>
     
 
@@ -9698,7 +9766,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line643">line 643</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line650">line 650</a>
     </li></ul></dd>
     
 
@@ -9787,7 +9855,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line675">line 675</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line682">line 682</a>
     </li></ul></dd>
     
 
@@ -9876,7 +9944,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line692">line 692</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line699">line 699</a>
     </li></ul></dd>
     
 
@@ -9965,7 +10033,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line712">line 712</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line719">line 719</a>
     </li></ul></dd>
     
 
@@ -10499,7 +10567,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line586">line 586</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line593">line 593</a>
     </li></ul></dd>
     
 
@@ -11033,7 +11101,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line565">line 565</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line572">line 572</a>
     </li></ul></dd>
     
 
@@ -11125,7 +11193,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line889">line 889</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line896">line 896</a>
     </li></ul></dd>
     
 
@@ -11370,7 +11438,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line1009">line 1009</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line1016">line 1016</a>
     </li></ul></dd>
     
 
@@ -11527,7 +11595,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line986">line 986</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line993">line 993</a>
     </li></ul></dd>
     
 
@@ -11691,7 +11759,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line1023">line 1023</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line1030">line 1030</a>
     </li></ul></dd>
     
 
@@ -11848,7 +11916,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line923">line 923</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line930">line 930</a>
     </li></ul></dd>
     
 
@@ -12015,7 +12083,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line944">line 944</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line951">line 951</a>
     </li></ul></dd>
     
 
@@ -12272,7 +12340,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line1262">line 1262</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line1284">line 1284</a>
     </li></ul></dd>
     
 
@@ -12524,7 +12592,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line624">line 624</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line631">line 631</a>
     </li></ul></dd>
     
 
@@ -12613,7 +12681,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line795">line 795</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line802">line 802</a>
     </li></ul></dd>
     
 
@@ -12702,7 +12770,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line837">line 837</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line844">line 844</a>
     </li></ul></dd>
     
 
@@ -12794,7 +12862,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line965">line 965</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line972">line 972</a>
     </li></ul></dd>
     
 
@@ -13061,7 +13129,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line608">line 608</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line615">line 615</a>
     </li></ul></dd>
     
 
@@ -13153,7 +13221,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line1034">line 1034</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line1041">line 1041</a>
     </li></ul></dd>
     
 
@@ -13316,7 +13384,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="v.js.html">v.js</a>, <a href="v.js.html#line906">line 906</a>
+        <a href="v.js.html">v.js</a>, <a href="v.js.html#line913">line 913</a>
     </li></ul></dd>
     
 
@@ -13712,7 +13780,7 @@ If <code>selector</code> string begins with symbol <code>@</code>, then function
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a> on Fri May 26 2023 08:46:08 GMT+0300 (Ida-Euroopa suveaeg) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a> on Mon May 29 2023 09:01:44 GMT+0300 (Ida-Euroopa suveaeg) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

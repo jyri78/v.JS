@@ -43,7 +43,7 @@ class VJS
     /**
      * Constructor of VJS.
      *
-     * @param   {string=}  [prefix] String to be prepended to the data name (will be "remembered" statically)
+     * @param   {string=}  [prefix] String to be prepended to the data attribute name (will be "remembered" statically)
      *
      * @return  {VJS}
      */
@@ -548,19 +548,26 @@ class VJS
     }
 
     /**
-     * `hasDataAttribute` - returns boolean value if element has data attribute, or any attributes at all (if attribute name is empty string).
+     * `hasDataAttribute` - returns boolean value if element has data attribute, or any data attributes at all (if attribute name is empty string).
      *
      * @method  $hda
      * @see     alias {@link hasDataAttrib|hasDataAttrib()}
      * 
-     * @param   {(HTMLElement|string)}  element        Document/HTMLElement or ID of element
-     * @param   {string}                attributeName  Name of the elements attribute
+     * @param   {(HTMLElement|string)}  element                     Document/HTMLElement or ID of element
+     * @param   {string}                attributeName               Name of the elements attribute
+     * @param   {boolean}               [allDataAttributes=false]   If `attributeName` not set, returns boolean, if there are any data attributes regardless of prefix
      *
      * @return  {boolean}
      */
-    $hda(e, n) {
-        if (!n) return VJS.__i().$ha(e);
-        return VJS.__i().$ha(e, VJS.__dn(n));
+    $hda(e, n, a = false) {
+        // if (!n) return VJS.__i().$ha(e);
+        let dn = VJS.__dn(n);
+        if (!dn) {
+            let da = VJS.__da(e, a);
+            if (!da) return undefined;
+            return da.length > 0;
+        }
+        return VJS.__i().$ha(e, dn);
     }
     /**
      * @method  hasDataAttrib
@@ -1100,11 +1107,26 @@ class VJS
         else e.classList[f](...c);
     }
 
-    /** @private */  //* dataName  (params: `name`)
+    /** @private */  //* dataName  (param: `name`)
     static __dn(n) {
         if (!n) return '';
         if (VJS.__p) return `data-${VJS.__p}-${n}`;
         return `data-${n}`;
+    }
+
+    /** @private */  //* dataAttributes  (params: `element`, `all`)
+    static __da(e, a) {
+        e = VJS.__o(e);
+        if (!e) return undefined;
+
+        let k = Object.keys(e.dataset),
+            c = [];
+
+        if (a || !VJS.__p) return k;
+        k.forEach(d => {
+            if (d.includes(VJS.__p)) c.push(d);
+        });
+        return c;
     }
 
     /** @private */  //* heightWeight  (params:  `function`, `element`, `type`, `value`)
