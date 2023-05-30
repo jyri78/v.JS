@@ -31,13 +31,20 @@ describe('GLOBAL: attributes', () => {
             assert.isNull( $ga($('@del'), 'id') );
             assert.isNull( getAttrib($('@del'), 'id') );
             assert.isNull( $ga($('@del')) );  // without attribute name
-            assert.isNull( $ga($('test00'), 'id') );  // non-existent element
+            assert.isNull( $ga('test00', 'id') );  // non-existent element
         });
         it('should return empty string', () => {
             assert.isString( $ga($('@del'), 'id', '') );  // confirm, that it is String
  
             assert.isEmpty( $ga($('@del'), 'id', '') );
-            assert.isEmpty( $ga($('test00'), 'id', '') );  // non-existent element
+            assert.isEmpty( $ga('test00', 'id', '') );  // non-existent element
+        });
+        it('should be numeric value', () => {
+            assert.isNumber( $ga('test-num', 'width') );
+            assert.strictEqual( $ga('test-num', 'width'), 7 );
+ 
+            assert.isNumber( $ga('test-num', 'height') );
+            assert.strictEqual( $ga('test-num', 'height'), 3.5 );
         });
     });
 
@@ -83,10 +90,11 @@ describe('GLOBAL: attributes', () => {
  
             // Has any data attribute at all
             assert.isTrue( $hda('test-query') );  // only with prefixes
-            assert.isTrue( $hda('test-id', '', true) );  // ignores prefixes
+            assert.isTrue( $hda('test-id', '', true) );  // ignore prefixes
         });
         it('should return FALSE', () => {
             assert.isFalse( $hda('test-query', 'testVal') );
+            assert.isFalse( $hda($('.test-class'), '', true) );
  
             // Has any data attribute at all
             assert.isFalse( $hda($('@kbd')) );
@@ -95,6 +103,32 @@ describe('GLOBAL: attributes', () => {
         it('should return UNDEFINED', () => {
             assert.isUndefined( $hda($('@map'), 'testVal') );
             assert.isUndefined( $hda($('@map')) );
+        });
+    });
+
+    describe('$gda(), getDataAttrib()', () => {
+        it('should return valid value', () => {
+            assert.strictEqual( $gda('test-query', 'idVal'), 'test-id' );
+            assert.strictEqual( getDataAttrib('test-query', 'idVal'), 'test-id' );
+            assert.strictEqual( $gda('test-id', 'testVal', '', true), 'test-00' );  // ignore prefix
+        });
+        it('should return NULL', () => {
+            assert.isNull( $gda('test-query', 'testVal') );
+            assert.isNull( $gda('test-id', 'testVal') );
+            assert.isNull( $gda('test-query') );  // without data attribute name
+            assert.isNull( $gda('test-00', 'testVal') );  // non-existent element
+        });
+        it('should return empty string', () => {
+            // Confirm, that returned value is String
+            assert.isString( $gda('test-query', 'testVal', '') );
+            assert.isString( $gda('test-id', 'testVal', '') );
+            assert.isString( $gda('test-query', '', '') );
+            assert.isString( $gda('test-00', 'testVal', '') );
+ 
+            assert.isEmpty( $gda('test-query', 'testVal', '') );
+            assert.isEmpty( $gda('test-id', 'testVal', '') );
+            assert.isEmpty( $gda('test-query', '', '') );  // without data attribute name
+            assert.isEmpty( $gda('test-00', 'testVal', '') );  // non-existent element
         });
     });
 

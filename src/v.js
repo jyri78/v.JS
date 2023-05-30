@@ -386,7 +386,7 @@ class VJS
      * @method  $ha
      * @see     alias {@link hasAttrib|hasAttrib)}
      * 
-     * @param   {(HTMLElement|string)}  element           Document/HTMLElement or ID of element
+     * @param   {(HTMLElement|string)}  element           HTMLElement or ID of element
      * @param   {string=}               [attributeName]   Name of the elements attribute
      *
      * @return  {(boolean|undefined)}  If no valid element given, returns `undefined`, otherwise boolean value
@@ -403,21 +403,32 @@ class VJS
     hasAttrib(e, n = '') { return VJS.__i().$ha(e, n); }
 
     /**
-     * `getAttribute` - returns elements attribute value or empty string.
+     * `getAttribute` - returns elements attribute value or null (or whatever default value).
      *
      * @method  $ga
      * @see     alias {@link getAttrib|getAttrib()}
      * 
-     * @param   {(HTMLElement|string)}  element              Document/HTMLElement or ID of element
+     * @param   {(HTMLElement|string)}  element              HTMLElement or ID of element
      * @param   {string}                attributeName        Name of the elements attribute
-     * @param   {(string|null)=}        [defaultValue=null]  Default value to return, if attribute not found
+     * @param   {(string|null)}         [defaultValue=null]  Default value to return, if attribute not found
      *
-     * @return  {(string|null)}
+     * @return  {(string|number|null)}
      */
     $ga(e, n, d = null) {
         e = VJS.__o(e);
-        if (!e) return d;
-        return (VJS.__i().$ha(e, n) ? (e.getAttribute(n) ?? d) : d);
+        if (!e || !VJS.__i().$ha(e, n)) return d;
+
+        let v = e.getAttribute(n);
+        if (!v) return d;
+
+        // Try to convert to numeric value
+        if (!isNaN(v)) {
+            let _n = +v, _i = _n|0;
+
+            if (_n === _i) return _i;
+            return _n;
+        }
+        return v;  // finally return string
     }
     /**
      * @method  getAttrib
@@ -431,7 +442,7 @@ class VJS
      * @method  $sa
      * @see     alias {@link setAttrib|setAttrib()}
      * 
-     * @param   {(HTMLElement|string)}  element        Document/HTMLElement or ID of element
+     * @param   {(HTMLElement|string)}  element        HTMLElement or ID of element
      * @param   {string}                attributeName  Name of the elements attribute
      * @param   {(string|boolean)}      [value=true]   Value of the elements attribute; **note:** if set to boolean `false`, then attribute will be removed
      */
@@ -553,7 +564,7 @@ class VJS
      * @method  $hda
      * @see     alias {@link hasDataAttrib|hasDataAttrib()}
      * 
-     * @param   {(HTMLElement|string)}  element                     Document/HTMLElement or ID of element
+     * @param   {(HTMLElement|string)}  element                     HTMLElement or ID of element
      * @param   {string}                attributeName               Name of the elements attribute
      * @param   {boolean}               [allDataAttributes=false]   If `attributeName` not set, returns boolean, if there are any data attributes regardless of prefix
      *
@@ -562,8 +573,10 @@ class VJS
     $hda(e, n, a = false) {
         // if (!n) return VJS.__i().$ha(e);
         let dn = VJS.__dn(n);
+
         if (!dn) {
             let da = VJS.__da(e, a);
+
             if (!da) return undefined;
             return da.length > 0;
         }
@@ -576,25 +589,24 @@ class VJS
     hasDataAttrib(e, n) { return VJS.__i().$hda(e, n); }
 
     /**
-     * `getDataAttribute` - returns elements data attribute value or empty string.
+     * `getDataAttribute` - returns elements data attribute value or null (or whatever default value).
      *
      * @method  $gda
      * @see     alias {@link getDataAttrib|getDataAttrib()}
      * 
-     * @param   {(HTMLElement|string)}  element        Document/HTMLElement or ID of element
-     * @param   {string}                attributeName  Name of the elements attribute
+     * @param   {(HTMLElement|string)}  element               HTMLElement or ID of element
+     * @param   {string}                attributeName         Name of the elements attribute
+     * @param   {(string|null)}         [defaultValue=null]   Default value to return, if attribute not found
+     * @param   {boolean}               [ignorePrefix=false]  Ignore prefix in data attribute name
      *
-     * @return  {string}
+     * @return  {(string|null)}
      */
-    $gda(e, n) {
-        if (!n) return '';
-        return VJS.__i().$ga(e, VJS.__dn(n));
-    }
+    $gda(e, n, d = null, i = false) { return VJS.__i().$ga(e, VJS.__dn(n, i), d); }
     /**
      * @method  getDataAttrib
      * @see     read more {@link $gda|$gda()}
      */
-    getDataAttrib(e, n) { return VJS.__i().$gda(e, n); }
+    getDataAttrib(e, n, d = null, i = false) { return VJS.__i().$gda(e, n, d, i); }
 
     /**
      * `setDataAttribute` - sets elements data attribute value.
@@ -602,7 +614,7 @@ class VJS
      * @method  $sda
      * @see     alias {@link setDataAttrib|setDataAttrib()}
      * 
-     * @param   {(HTMLElement|string)}  element        Document/HTMLElement or ID of element
+     * @param   {(HTMLElement|string)}  element        HTMLElement or ID of element
      * @param   {string}                attributeName  Name of the elements attribute
      * @param   {(string|boolean)}      [value=true]   Value of the elements attribute
      */
@@ -624,7 +636,7 @@ class VJS
      * @method  $rda
      * @see     alias {@link remDataAttrib|remDataAttrib()}
      * 
-     * @param   {(HTMLElement|string)}  element        Document/HTMLElement or ID of element
+     * @param   {(HTMLElement|string)}  element        HTMLElement or ID of element
      * @param   {string}                attributeName  Name of the elements attribute
      */
     $rda(e, n) { if (n) VJS.__i().$ra(e, VJS.__dn(n)); }
@@ -1107,10 +1119,10 @@ class VJS
         else e.classList[f](...c);
     }
 
-    /** @private */  //* dataName  (param: `name`)
-    static __dn(n) {
-        if (!n) return '';
-        if (VJS.__p) return `data-${VJS.__p}-${n}`;
+    /** @private */  //* dataName  (params: `name`, `ignorePrefix`)
+    static __dn(n, i = false) {
+        if (!n && !i) return '';
+        if (VJS.__p) return `data-${ i ? n : `${VJS.__p}-${n}` }`;
         return `data-${n}`;
     }
 
