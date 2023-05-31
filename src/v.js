@@ -575,18 +575,18 @@ class VJS
      * @method  $hda
      * @see     alias {@link hasDataAttrib|hasDataAttrib()}
      * 
-     * @param   {(HTMLElement|string)}  element                     HTMLElement or ID of element
-     * @param   {string}                attributeName               Name of the elements attribute
-     * @param   {boolean}               [allDataAttributes=false]   If `attributeName` not set, returns boolean, if there are any data attributes regardless of prefix
+     * @param   {(HTMLElement|string)}  element               HTMLElement or ID of element
+     * @param   {string}                attributeName         Name of the elements attribute
+     * @param   {boolean}               [ignorePrefix=false]  If `attributeName` not set, returns boolean, if there are any data attributes regardless of prefix
      *
      * @return  {boolean}
      */
-    $hda(e, n, a = false) {
+    $hda(e, n, i = false) {
         // if (!n) return VJS.__i().$ha(e);
-        let dn = VJS.__dn(n);
+        let dn = VJS.__dn(n, i);
 
         if (!dn) {
-            let da = VJS.__da(e, a);
+            let da = VJS.__da(e, i);
 
             if (!da) return undefined;
             return da.length > 0;
@@ -1132,7 +1132,7 @@ class VJS
 
     /** @private */  //* dataName  (params: `name`, `ignorePrefix`)
     static __dn(n, i = false) {
-        if (!n && !i) return '';
+        if (!n) return '';
         if (VJS.__p) return `data-${ i ? n : `${VJS.__p}-${n}` }`;
         return `data-${n}`;
     }

@@ -88,8 +88,14 @@ describe('GLOBAL: attributes', () => {
             assert.isTrue( $hda('test-query', 'nameVal') );
             assert.isTrue( hasDataAttrib('test-query', 'classVal') );
  
+            // Verify existence of prefix (should be "prfx")
+            assert.isTrue( $ha('test-query', 'data-prfx-nameVal') );
+ 
+            // Ignore data attribute name prefix (i.e. Bootstrap has it's own name prefix `bs`)
+            assert.isTrue( $hda('test-id', 'testVal', true) );
+ 
             // Has any data attribute at all
-            assert.isTrue( $hda('test-query') );  // only with prefixes
+            assert.isTrue( $hda('test-query') );         // only with prefixes
             assert.isTrue( $hda('test-id', '', true) );  // ignore prefixes
         });
         it('should return FALSE', () => {
