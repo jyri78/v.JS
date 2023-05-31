@@ -437,7 +437,7 @@ class VJS
     getAttrib(e, n, d = null) { return VJS.__i().$ga(e, n, d); }
 
     /**
-     * `setAttribute` - sets elements attribute value; attributes with boolean value don't need value.
+     * `setAttribute` - sets elements attribute value; attributes with boolean value don't need value (same for anumerated attributes except for setting falsy value).
      *
      * @method  $sa
      * @see     alias {@link setAttrib|setAttrib()}
@@ -449,10 +449,21 @@ class VJS
     $sa(e, n, v = true) {
         e = VJS.__o(e);
         if (!e) return;
+        let r = false;  // do remove instead of setting
+
         if (typeof v === 'boolean') {
-            if (v) e.setAttribute(n, n);
-            else VJS.__i().$ra(e, n);  // remove instead of setting
+            // Change enumerated attribute value to string;
+            // see: [Enumerated - MDN Web Docs](https://developer.mozilla.org/en-US/docs/Glossary/Enumerated)
+            if (n === 'translate') v = v ? 'yes' : 'no';
+            else if (['contenteditable', 'draggable', 'spellcheck'].includes(n)) v = v ? 'true' : 'false';
+            else if (['autocomplete', 'autocorrect'].includes(n)) v = v ? 'on' : 'off';
+
+            else if (v) v = n;
+            else r = true;  // remove instead of setting
         }
+        else if (!v) r = true;  // in case of empty string remove it
+
+        if (r) VJS.__i().$ra(e, n);
         else e.setAttribute(n, v);
     }
     /**
