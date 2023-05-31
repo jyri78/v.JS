@@ -625,9 +625,9 @@ class VJS
      * @method  $sda
      * @see     alias {@link setDataAttrib|setDataAttrib()}
      * 
-     * @param   {(HTMLElement|string)}  element        HTMLElement or ID of element
-     * @param   {string}                attributeName  Name of the elements attribute
-     * @param   {(string|boolean)}      [value=true]   Value of the elements attribute
+     * @param   {(HTMLElement|string)}     element        HTMLElement or ID of element
+     * @param   {string}                   attributeName  Name of the elements data attribute (withoud prefix `data-*`)
+     * @param   {(string|number|boolean)}  [value=true]   Value of the elements data attribute
      */
     $sda(e, n, v = true) {
         if (n) {
@@ -639,7 +639,7 @@ class VJS
      * @method  setDataAttrib
      * @see     read more {@link $sda|$sda()}
      */
-    setDataAttrib(e, n, v = true) { VJS.__i().$dsa(e, n, v); }
+    setDataAttrib(e, n, v) { VJS.__i().$dsa(e, n, v); }
 
     /**
      * `removeDataAttribute` - removes attribute from element.
