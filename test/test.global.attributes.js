@@ -178,5 +178,42 @@ describe('GLOBAL: attributes', () => {
             assert.strictEqual( height('test-id', 'with-margin'), 577 );
         });
     });
+    describe('$s(), size()', () => {
+        before(() => {
+            $('#vjs-test').style.display = 'block';
+        });
+        after(() => {
+            $('#vjs-test').style.display = 'none';
+        });
+
+        it('should return "Size" object', () => {
+            let size1 = $s('test-id'),
+                size2 = size('test-id');
+ 
+            // Check if it is object
+            assert.isObject( size1 );
+            assert.isObject( size2 );
+ 
+            // Verify it's structure
+            assert.hasAllKeys( size1, ['width', 'height'] );
+            assert.hasAllKeys( size2, ['width', 'height'] );
+ 
+            // Verify it's contents
+            assert.deepEqual( size1, {width: 777, height: 555} );
+            assert.deepEqual( size2, {width: 777, height: 555} );
+ 
+            // Verify it's "inner" dimensions (padding 4px, i.e adds 8px to width and height)
+            assert.deepEqual( $s('test-id', 'inner'), {width: 785, height: 563} );
+            assert.deepEqual( size('test-id', 'inner'), {width: 785, height: 563} );
+ 
+            // Verify it's "outer" dimensions (border is 2px, i.e adds extra 4px)
+            assert.deepEqual( $s('test-id', 'outer'), {width: 789, height: 567} );
+            assert.deepEqual( size('test-id', 'outer'), {width: 789, height: 567} );
+ 
+            // Verify it's "outer" dimensions (margin is 5px, i.e adds even more 10px)
+            assert.deepEqual( $s('test-id', 'with-margin'), {width: 799, height: 577} );
+            assert.deepEqual( size('test-id', 'with-margin'), {width: 799, height: 577} );
+        });
+    });
 
 });

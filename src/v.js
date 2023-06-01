@@ -22,6 +22,12 @@
  * @property {number} left
  */
 
+/**
+ * @typedef  {Object} Size
+ * @property {number} width
+ * @property {number} height
+ */
+
 
 /**
  * Vanilla JS (`VJS`) class with common methods plus some syntactic sugars.
@@ -43,7 +49,7 @@ class VJS
     /**
      * Constructor of VJS.
      *
-     * @param   {string=}  [prefix] String to be prepended to the data attribute name (will be "remembered" statically)
+     * @param   {string=}  [prefix] String to be prepended to the data attribute name (will be "remembered" statically).
      *
      * @return  {VJS}
      */
@@ -66,8 +72,8 @@ class VJS
      * @see     also alternatives {@link $i|$i()}, {@link $n|$n()}, {@link $c|$c()}, and {@link $t|$t()}
      * 
      * @param   {string}                         selector
-     * @param   {(Document|HTMLElement|string)}  [element=document]  Document/HTMLElement or ID of element (if can be used)
-     * @param   {boolean}                        [all=false]         Return HTMLCollection/NodeList of HTMLElements
+     * @param   {(Document|HTMLElement|string)}  [element=document]  Document/HTMLElement or ID of element (if can be used).
+     * @param   {boolean}                        [all=false]         Return HTMLCollection/NodeList of HTMLElements.
      * 
      * @return  {(HTMLElement|HTMLCollection|NodeList|null)}
      */
@@ -78,10 +84,10 @@ class VJS
      * 
      * @method  $$
      *
-     * @param   {(HTMLElement|string)}  element      Where data attribute to look for
-     * @param   {string}                name         Data attribute name
-     * @param   {string}                [type=id]    How to handle data attributes value; accepted values are `id`, `class`, `name` and `tag` (all other types are ignored and attribute value is hadled as query string)
-     * @param   {boolean}               [all=false]  Return HTMLCollection/NodeList of HTMLElements
+     * @param   {(HTMLElement|string)}  element      Where data attribute to look for.
+     * @param   {string}                name         Data attribute name.
+     * @param   {string}                [type=id]    How to handle data attributes value; accepted values are `id`, `class`, `name` and `tag` (all other types are ignored and attribute value is hadled as query string).
+     * @param   {boolean}               [all=false]  Return HTMLCollection/NodeList of HTMLElements.
      *
      * @return  {(HTMLElement|HTMLCollection|NodeList|null)}
      */
@@ -100,9 +106,9 @@ class VJS
      * 
      * @method  $$n
      *
-     * @param   {(HTMLElement|string)}  element      Where data attribute to look for
-     * @param   {string}                name         Data attribute name
-     * @param   {boolean}               [all=false]  Return HTMLCollection/NodeList of HTMLElements
+     * @param   {(HTMLElement|string)}  element      Where data attribute to look for.
+     * @param   {string}                name         Data attribute name.
+     * @param   {boolean}               [all=false]  Return HTMLCollection/NodeList of HTMLElements.
      * 
      * @return  {(HTMLElement|NodeList|null)}
      */
@@ -113,9 +119,9 @@ class VJS
      * 
      * @method  $$c
      *
-     * @param   {(HTMLElement|string)}  element     Where data attribute to look for
-     * @param   {string}                name        Data attribute name
-     * @param   {boolean}               [all=false]  Return HTMLCollection/NodeList of HTMLElements
+     * @param   {(HTMLElement|string)}  element     Where data attribute to look for.
+     * @param   {string}                name        Data attribute name.
+     * @param   {boolean}               [all=false]  Return HTMLCollection/NodeList of HTMLElements.
      * 
      * @return  {(HTMLElement|HTMLCollection|null)}
      */
@@ -126,9 +132,9 @@ class VJS
      * 
      * @method  $$t
      *
-     * @param   {(HTMLElement|string)}  element    Where data attribute to look for
-     * @param   {string}                name       Data attribute name
-     * @param   {boolean}               [all=false]  Return HTMLCollection/NodeList of HTMLElements
+     * @param   {(HTMLElement|string)}  element    Where data attribute to look for.
+     * @param   {string}                name       Data attribute name.
+     * @param   {boolean}               [all=false]  Return HTMLCollection/NodeList of HTMLElements.
      * 
      * @return  {(HTMLElement|HTMLCollection|NodeList|null)}
      */
@@ -139,9 +145,9 @@ class VJS
      * 
      * @method  $$q
      *
-     * @param   {(HTMLElement|string)}  element      Where data attribute to look for
-     * @param   {string}                name         Data attribute name
-     * @param   {boolean}               [all=false]  Return HTMLCollection/NodeList of HTMLElements
+     * @param   {(HTMLElement|string)}  element      Where data attribute to look for.
+     * @param   {string}                name         Data attribute name.
+     * @param   {boolean}               [all=false]  Return HTMLCollection/NodeList of HTMLElements.
      * 
      * @return  {(HTMLElement|HTMLCollection|NodeList|null)}
      */
@@ -172,8 +178,8 @@ class VJS
      * @see     alias {@link getElemsByName|getElemsByName()}
      * @see     Look also {@link $|$()}, {@link $i|$i()}, {@link $c|$c()}, and {@link $t|$t()}
      * 
-     * @param   {string}   name                  Value of attribute `name`
-     * @param   {boolean}  [firstElement=false]  Return first HTML element or all of them (HTMLCollection/NodeList)
+     * @param   {string}   name                  Value of attribute `name`.
+     * @param   {boolean}  [firstElement=false]  Return first HTML element or all of them (HTMLCollection/NodeList).
      * 
      * @return  {(NodeList|HTMLElement|null)}
      */
@@ -192,8 +198,8 @@ class VJS
      * @see     Look also {@link $|$()}, {@link $i|$i()}, {@link $n|$n()}, and {@link $t|$t()}
      * 
      * @param   {string}                         className
-     * @param   {(Document|HTMLElement|string)}  [element=document]    Document/HTMLElement or ID of element
-     * @param   {boolean}                        [firstElement=false]  Return first HTML element or all of them (HTMLCollection)
+     * @param   {(Document|HTMLElement|string)}  [element=document]    Document/HTMLElement or ID of element.
+     * @param   {boolean}                        [firstElement=false]  Return first HTML element or all of them (HTMLCollection).
      * 
      * @return  {(HTMLCollection|HTMLElement|null)}
      */
@@ -212,10 +218,10 @@ class VJS
      * @see     Look also {@link $|$()}, {@link $i|$i()}, {@link $n|$n()}, and {@link $c|$c()}
      * 
      * @param   {string}                         tagName
-     * @param   {(Document|HTMLElement|string)}  [element=document]    Document/HTMLElement or ID of element
-     * @param   {boolean}                        [firstElement=false]  Return first HTML element or all of them (HTMLCollection/NodeList)
+     * @param   {(Document|HTMLElement|string)}  [element=document]    Document/HTMLElement or ID of element.
+     * @param   {boolean}                        [firstElement=false]  Return first HTML element or all of them (HTMLCollection/NodeList).
      * 
-     * @return  {(HTMLCollection|NodeList|HTMLElement|null)}  WebKit (like Firefox) browsers return `NodeList` instead of `HTMLCollection` (see {@link https://bugzil.la/14869|Firefox bug 14869})
+     * @return  {(HTMLCollection|NodeList|HTMLElement|null)}  WebKit (like Firefox) browsers return `NodeList` instead of `HTMLCollection` (see {@link https://bugzil.la/14869|Firefox bug 14869}).
      */
     $t(t, e = document, f = false) { return VJS.__go(t, '@', e, !f); }
     /**
@@ -231,7 +237,7 @@ class VJS
      * @see     alias {@link querySel|querySel()}
      * 
      * @param   {string}                         queryString
-     * @param   {boolean}                        [all=false]         Return all found elements (NodeList)
+     * @param   {boolean}                        [all=false]         Return all found elements (NodeList).
      * 
      * @return  {(HTMLElement|HTMLCollection|NodeList|null)}
      */
@@ -248,9 +254,9 @@ class VJS
      * @method  $f
      * @see     alias {@link filter|filter()}
      * 
-     * @param   {(HTMLElement|string)}  selector          Element or query string to search for, or data attribute name, if `dataAttribute` is set
-     * @param   {Function}              callbackFunction  Function to use for filtering
-     * @param   {string=}               dataAttribute     If set, use query string by other elements data attribute; value should be in format `<ID>|<type>`; accepted types are `id`, `class`, `name` and `tag`
+     * @param   {(HTMLElement|string)}  selector          Element or query string to search for, or data attribute name, if `dataAttribute` is set.
+     * @param   {Function}              callbackFunction  Function to use for filtering.
+     * @param   {string=}               dataAttribute     If set, use query string by other elements data attribute; value should be in format `<ID>|<type>`; accepted types are `id`, `class`, `name` and `tag`.
      *
      * @return  {HTMLElement[]}
      */
@@ -280,16 +286,17 @@ class VJS
      *
      * @method  $h
      * @see     alias {@link height|height()}
+     * @see     also  {@link size|size()}
      * 
      * @param   {(HTMLElement|string)}  element
-     * @param   {string=}               [type]   Type of height to return:  `inner` – elements height with padding;  `outer` – elements height with padding, border and scrollbar;  `with-margin` – computed `outer` + margin
-     * @param   {(string|number)}       [value]  Value to set as elements height, `type` is ignored
+     * @param   {string=}               [type]   Type of height to return:  `inner` – elements height with padding;  `outer` – elements height with padding, border and scrollbar;  `with-margin` – computed `outer` + margin.
+     * @param   {(string|number)}       [value]  Value to set as elements height, `type` is ignored.
      *
      * @return  {number}
      */
     $h(e, t = '', v = null) {
-        let r = VJS.__h(e, t, v);
-        if (!v) return r;
+        let h = VJS.__h(e, t, v);
+        if (!v) return h;
     }
 
     /**
@@ -297,16 +304,40 @@ class VJS
      *
      * @method  $w
      * @see     alias {@link width|width()}
+     * @see     also  {@link size|size()}
      * 
      * @param   {(HTMLElement|string)}  element
-     * @param   {string=}               [type]   Type of width to return:  `inner` – elements width with padding;  `outer` – elements width with padding, border and scrollbar;  `with-margin` – computed `outer` + margin
-     * @param   {(string|number)}       [value]  Value to set as elements height, `type` is ignored
+     * @param   {string=}               [type]   Type of width to return:  `inner` – elements width with padding;  `outer` – elements width with padding, border and scrollbar;  `with-margin` – computed `outer` + margin.
+     * @param   {(string|number)}       [value]  Value to set as elements height, `type` is ignored.
      *
      * @return  {number}
      */
     $w(e, t = '', v = null) {
-        let r = VJS.__w(e, t, v);
-        if (!v) return r;
+        let w = VJS.__w(e, t, v);
+        if (!v) return w;
+    }
+
+    /**
+     * Returns or sets elements dimensions.
+     * 
+     * @method  $s
+     * @see     alias {@link size|size()}
+     * @see     also  {@link $w|$w()}, {@link $h|$h()}, {@link width|width()} and {@link height|height()}
+     *
+     * @param   {(HTMLElement|string)}  element
+     * @param   {string=}               [type]    Type of width to return:  `inner` – elements width with padding;  `outer` – elements width with padding, border and scrollbar;  `with-margin` – computed `outer` + margin.
+     * @param   {(string|number)}       [width]   Value to set as elements width, `type` is ignored. If `height` not set, then this value is used.
+     * @param   {(string|number)}       [height]  Value to set as elements height, `type` is ignored.
+     *
+     * @return  {Size}
+     */
+    $s(e, t = '', w = null, h = null)
+    {
+        let s = {
+            width:  VJS.__w(e, t, !w ? h : w),  // just-in case
+            height: VJS.__h(e, t, !h ? w : h)
+        };
+        if (!w && !h) return s;
     }
 
     /**
@@ -315,8 +346,8 @@ class VJS
      * @method  $ce
      * @see     alias {@link createElem|createElem()}
      * 
-     * @param   {string}   [tagName=div]  Name of the element to be created
-     * @param   {string=}  [optionsIs]    Name of the custom element
+     * @param   {string}   [tagName=div]  Name of the element to be created.
+     * @param   {string=}  [optionsIs]    Name of the custom element.
      *
      * @return  {(Element|HTMLUnknownElement)}
      */
@@ -340,7 +371,7 @@ class VJS
      * @see     alias {@link createElems|createElems()}
      * 
      * @param   {string}                 html
-     * @param   {?(HTMLElement|string)}  [element=null]  An element to which add newly created elements
+     * @param   {?(HTMLElement|string)}  [element=null]  An element to which add newly created elements.
      *
      * @return  {Element[]}
      */
@@ -368,8 +399,8 @@ class VJS
      * @method  $cs
      * @see     alias {@link containsSel|containsSel()}
      * 
-     * @param   {(HTMLElement|string)}  selector       Element or query string to search for
-     * @param   {string=}               [includeText]  The text that the element should contains
+     * @param   {(HTMLElement|string)}  selector       Element or query string to search for.
+     * @param   {string=}               [includeText]  The text that the element should contains.
      *
      * @return  {HTMLElement[]}
      */
@@ -386,10 +417,10 @@ class VJS
      * @method  $ha
      * @see     alias {@link hasAttrib|hasAttrib)}
      * 
-     * @param   {(HTMLElement|string)}  element           HTMLElement or ID of element
-     * @param   {string=}               [attributeName]   Name of the elements attribute
+     * @param   {(HTMLElement|string)}  element           HTMLElement or ID of element.
+     * @param   {string=}               [attributeName]   Name of the elements attribute.
      *
-     * @return  {(boolean|undefined)}  If no valid element given, returns `undefined`, otherwise boolean value
+     * @return  {(boolean|undefined)}  If no valid element given, returns `undefined`, otherwise boolean value.
      */
     $ha(e, n = '') {
         e = VJS.__o(e);
@@ -408,9 +439,9 @@ class VJS
      * @method  $ga
      * @see     alias {@link getAttrib|getAttrib()}
      * 
-     * @param   {(HTMLElement|string)}  element              HTMLElement or ID of element
-     * @param   {string}                attributeName        Name of the elements attribute
-     * @param   {(string|null)}         [defaultValue=null]  Default value to return, if attribute not found
+     * @param   {(HTMLElement|string)}  element              HTMLElement or ID of element.
+     * @param   {string}                attributeName        Name of the elements attribute.
+     * @param   {(string|null)}         [defaultValue=null]  Default value to return, if attribute not found.
      *
      * @return  {(string|number|null)}
      */
@@ -442,9 +473,9 @@ class VJS
      * @method  $sa
      * @see     alias {@link setAttrib|setAttrib()}
      * 
-     * @param   {(HTMLElement|string)}  element        HTMLElement or ID of element
-     * @param   {string}                attributeName  Name of the elements attribute
-     * @param   {(string|boolean)}      [value=true]   Value of the elements attribute; **note:** if set to boolean `false`, then attribute will be removed
+     * @param   {(HTMLElement|string)}  element        HTMLElement or ID of element.
+     * @param   {string}                attributeName  Name of the elements attribute.
+     * @param   {(string|boolean)}      [value=true]   Value of the elements attribute; **note:** if set to boolean `false`, then attribute will be removed.
      */
     $sa(e, n, v = true) {
         e = VJS.__o(e);
@@ -478,8 +509,8 @@ class VJS
      * @method  $ra
      * @see     alias {@link remAttrib|remAttrib()}
      * 
-     * @param   {(HTMLElement|string)}  element        Document/HTMLElement or ID of element
-     * @param   {string}                attributeName  Name of the elements attribute
+     * @param   {(HTMLElement|string)}  element        Document/HTMLElement or ID of element.
+     * @param   {string}                attributeName  Name of the elements attribute.
      */
     $ra(e, n) {
         e = VJS.__o(e);
@@ -496,12 +527,12 @@ class VJS
      *
      * @method  $st
      * 
-     * @param   {Function}    function          Function to call after time is up
-     * @param   {number}      seconds           Timeout in seconds
-     * @param   {Array.<*>}   [parameters=[]]   Array of parameters or just one parameter to be passed to the function
-     * @param   {boolean}     [interval=false]  Set interval instead of timeout
+     * @param   {Function}    function          Function to call after time is up.
+     * @param   {number}      seconds           Timeout in seconds.
+     * @param   {Array.<*>}   [parameters=[]]   Array of parameters or just one parameter to be passed to the function.
+     * @param   {boolean}     [interval=false]  Set interval instead of timeout.
      *
-     * @return  {number}  `timeoutID`, that can be passed to {@link $ct|$ct()} to cancel timeout
+     * @return  {number}  `timeoutID`, that can be passed to {@link $ct|$ct()} to cancel timeout.
      */
     $st(f, s, p = [], i = false) {
         let t = s * 1000;
@@ -516,8 +547,8 @@ class VJS
      *
      * @method  $ct
      * 
-     * @param   {number}   id                `timoutID` or `intervalID`
-     * @param   {boolean}  [interval=false]  Clear interval instead of timeout
+     * @param   {number}   id                `timoutID` or `intervalID`.
+     * @param   {boolean}  [interval=false]  Clear interval instead of timeout.
      */
     $ct(d, i = false) {
         if (!d) return;
@@ -533,11 +564,11 @@ class VJS
      *
      * @todo    Add to parameter `required` extra validation data and update validation functionality.
      * 
-     * @param   {(HTMLElement|string)}               form               Form element or ID of form
-     * @param   {string[]}                           [required=[]]      IDs of required fields
-     * @param   {object}                             [extraData={}]     Additional data to be added
-     * @param   {string}                             [type=FormData]    Type of returned data. Accepted values are:  `string`, `json`, or `FormData`
-     * @param   {{error: string, success: string}=}  [validationClass]  Validation class to be set; for example for Bootstrap it would be `{error: 'is-invalid', success: 'is-valid'}`
+     * @param   {(HTMLElement|string)}               form               Form element or ID of form.
+     * @param   {string[]}                           [required=[]]      IDs of required fields.
+     * @param   {object}                             [extraData={}]     Additional data to be added.
+     * @param   {string}                             [type=FormData]    Type of returned data. Accepted values are:  `string`, `json`, or `FormData`.
+     * @param   {{error: string, success: string}=}  [validationClass]  Validation class to be set; for example for Bootstrap it would be `{error: 'is-invalid', success: 'is-valid'}`.
      *
      * @return  {(FormData|object|string)}
      */
@@ -575,9 +606,9 @@ class VJS
      * @method  $hda
      * @see     alias {@link hasDataAttrib|hasDataAttrib()}
      * 
-     * @param   {(HTMLElement|string)}  element               HTMLElement or ID of element
-     * @param   {string}                attributeName         Name of the elements attribute
-     * @param   {boolean}               [ignorePrefix=false]  If `attributeName` not set, returns boolean, if there are any data attributes regardless of prefix
+     * @param   {(HTMLElement|string)}  element               HTMLElement or ID of element.
+     * @param   {string}                attributeName         Name of the elements attribute.
+     * @param   {boolean}               [ignorePrefix=false]  If `attributeName` not set, returns boolean, if there are any data attributes regardless of prefix.
      *
      * @return  {boolean}
      */
@@ -605,10 +636,10 @@ class VJS
      * @method  $gda
      * @see     alias {@link getDataAttrib|getDataAttrib()}
      * 
-     * @param   {(HTMLElement|string)}  element               HTMLElement or ID of element
-     * @param   {string}                attributeName         Name of the elements attribute
-     * @param   {(string|null)}         [defaultValue=null]   Default value to return, if attribute not found
-     * @param   {boolean}               [ignorePrefix=false]  Ignore prefix in data attribute name
+     * @param   {(HTMLElement|string)}  element               HTMLElement or ID of element.
+     * @param   {string}                attributeName         Name of the elements attribute.
+     * @param   {(string|null)}         [defaultValue=null]   Default value to return, if attribute not found.
+     * @param   {boolean}               [ignorePrefix=false]  Ignore prefix in data attribute name.
      *
      * @return  {(string|null)}
      */
@@ -625,9 +656,9 @@ class VJS
      * @method  $sda
      * @see     alias {@link setDataAttrib|setDataAttrib()}
      * 
-     * @param   {(HTMLElement|string)}     element        HTMLElement or ID of element
-     * @param   {string}                   attributeName  Name of the elements data attribute (withoud prefix `data-*`)
-     * @param   {(string|number|boolean)}  [value=true]   Value of the elements data attribute
+     * @param   {(HTMLElement|string)}     element        HTMLElement or ID of element.
+     * @param   {string}                   attributeName  Name of the elements data attribute (withoud prefix `data-*`).
+     * @param   {(string|number|boolean)}  [value=true]   Value of the elements data attribute.
      */
     $sda(e, n, v = true) {
         if (n) {
@@ -647,8 +678,8 @@ class VJS
      * @method  $rda
      * @see     alias {@link remDataAttrib|remDataAttrib()}
      * 
-     * @param   {(HTMLElement|string)}  element        HTMLElement or ID of element
-     * @param   {string}                attributeName  Name of the elements attribute
+     * @param   {(HTMLElement|string)}  element        HTMLElement or ID of element.
+     * @param   {string}                attributeName  Name of the elements attribute.
      */
     $rda(e, n) { if (n) VJS.__i().$ra(e, VJS.__dn(n)); }
     /**
@@ -663,8 +694,8 @@ class VJS
      * @method  $clc
      * @see     alias {@link classCont|classCont()}
      * 
-     * @param   {(HTMLElement|string)}  element    HTMLElement or ID of element
-     * @param   {string}                className  Class name to check
+     * @param   {(HTMLElement|string)}  element    HTMLElement or ID of element.
+     * @param   {string}                className  Class name to check.
      */
     $clc(e, c) {
         e = VJS.__o(e);
@@ -682,8 +713,8 @@ class VJS
      * @method  $cla
      * @see     alias {@link classAdd|classAdd()}
      * 
-     * @param   {(HTMLElement|string)}  element    HTMLElement or ID of element
-     * @param   {(string|string[])}     className  Class name or array of class names to add
+     * @param   {(HTMLElement|string)}  element    HTMLElement or ID of element.
+     * @param   {(string|string[])}     className  Class name or array of class names to add.
      */
     $cla(e, c) { VJS.__c(e, c, 'add'); }
     /**
@@ -698,8 +729,8 @@ class VJS
      * @method  $clr
      * @see     alias {@link classRem|classRem()}
      * 
-     * @param   {(HTMLElement|string)}  element    HTMLElement or ID of element
-     * @param   {(string|string[])}     className  Class name or array of class names to remove
+     * @param   {(HTMLElement|string)}  element    HTMLElement or ID of element.
+     * @param   {(string|string[])}     className  Class name or array of class names to remove.
      */
     $clr(e, c) { VJS.__c(e, c, 'remove'); }
     /**
@@ -714,9 +745,9 @@ class VJS
      * @method  $clp
      * @see     alias {@link classRepl|classRepl()}
      * 
-     * @param   {(HTMLElement|string)}  element       HTMLElement or ID of element
-     * @param   {string}                oldClassName  Class name to be replaced
-     * @param   {string}                newClassName  Class name to replace with
+     * @param   {(HTMLElement|string)}  element       HTMLElement or ID of element.
+     * @param   {string}                oldClassName  Class name to be replaced.
+     * @param   {string}                newClassName  Class name to replace with.
      */
     $clp(e, o, n) { VJS.__c(e, [o, n], 'replace'); }
     /**
@@ -731,9 +762,9 @@ class VJS
      * @method  $clt
      * @see     alias {@link classToggle|classToggle()}
      * 
-     * @param   {(HTMLElement|string)}  element    HTMLElement or ID of element
-     * @param   {string}                className  Class name to toggle
-     * @param   {boolean=}              [force]    If set, toggles one way-only (`true` - sets; `false` - removes)
+     * @param   {(HTMLElement|string)}  element    HTMLElement or ID of element.
+     * @param   {string}                className  Class name to toggle.
+     * @param   {boolean=}              [force]    If set, toggles one way-only (`true` - sets; `false` - removes).
      */
     $clt(e, c, f) {
         if (typeof f !== 'undefined') c = [c, f];
@@ -751,7 +782,7 @@ class VJS
      * @method  $pos
      * @see     also {@link position|position()} and {@link offset|offset()} 
      * 
-     * @param   {(HTMLElement|string)}  element    HTMLElement or ID of element
+     * @param   {(HTMLElement|string)}  element    HTMLElement or ID of element.
      *
      * @return  {(Position|undefined)}
      */
@@ -767,7 +798,7 @@ class VJS
      *
      * @method  $val
      * 
-     * @param   {(HTMLElement|string)}  element    HTMLElement or ID of element
+     * @param   {(HTMLElement|string)}  element    HTMLElement or ID of element.
      *
      * @return  {(string|string[])}
      */
@@ -787,9 +818,9 @@ class VJS
      * @see     alias {@link addEvtListener|addEvtListener()}
      * @see     Look also {@link $aels|$aels()} (alias {@link addEvtListens|addEvtListens()})
      * 
-     * @param   {Function}              function          Function to call, if event occurs
-     * @param   {string}                [event=load]      Name of the event to listen
-     * @param   {(HTMLElement|string)}  [element=window]  Document/HTMLElement or ID of element (or array of elements)
+     * @param   {Function}              function          Function to call, if event occurs.
+     * @param   {string}                [event=load]      Name of the event to listen.
+     * @param   {(HTMLElement|string)}  [element=window]  Document/HTMLElement or ID of element (or array of elements).
      */
     $ael(f, v = 'load', e = window) {
         if (typeof f !== 'function') return;
@@ -811,9 +842,9 @@ class VJS
      * @see     alias {@link remEvtListener|remEvtListener()}
      * @see     Look also {@link $rels|$rels()} (alias {@link addEvtListens|addEvtListens()})
      * 
-     * @param   {Function}              function          Function to call, if event occurs
-     * @param   {string}                [event=load]      Name of the event to listen
-     * @param   {(HTMLElement|string)}  [element=window]  Document/HTMLElement or ID of element (or array of elements)
+     * @param   {Function}              function          Function to call, if event occurs.
+     * @param   {string}                [event=load]      Name of the event to listen.
+     * @param   {(HTMLElement|string)}  [element=window]  Document/HTMLElement or ID of element (or array of elements).
      */
     $rel(f, v = 'load', e = window) {
         if (typeof f !== 'function') return;
@@ -835,9 +866,9 @@ class VJS
      * @see     alias {@link addEvtListeners|addEvtListeners()}
      * @see     Look also {@link $ael|$ael()} (alias {@link addEvtListen|addEvtListen()})
      * 
-     * @param   {Function}                  function       Function to call, if event occurs
-     * @param   {string}                    event          Name of the event to listen
-     * @param   {(HTMLElement[]|string[])}  [elements=[]]  Array of Document/HTMLElement objects or IDs
+     * @param   {Function}                  function       Function to call, if event occurs.
+     * @param   {string}                    event          Name of the event to listen.
+     * @param   {(HTMLElement[]|string[])}  [elements=[]]  Array of Document/HTMLElement objects or IDs.
      */
     $aels(f, v, e = []) {
         if (e instanceof Array) e.forEach(i => VJS.__i().$ael(f, v, i));
@@ -856,9 +887,9 @@ class VJS
      * @see     alias {@link remEvtListeners|remEvtListeners()}
      * @see     Look also {@link $ael|$ael()} (alias {@link remEvtListen|remEvtListen()})
      * 
-     * @param   {Function}                  function       Function to call, if event occurs
-     * @param   {string}                    event          Name of the event to listen
-     * @param   {(HTMLElement[]|string[])}  [elements=[]]  Array of Document/HTMLElement objects or IDs
+     * @param   {Function}                  function       Function to call, if event occurs.
+     * @param   {string}                    event          Name of the event to listen.
+     * @param   {(HTMLElement[]|string[])}  [elements=[]]  Array of Document/HTMLElement objects or IDs.
      */
     $rels(f, v, e = []) {
         if (e instanceof Array) e.forEach(i => VJS.__i().$rel(f, v, i));
@@ -876,8 +907,8 @@ class VJS
      * @method  $html
      *
      * @param   {(HTMLElement|string)}  element
-     * @param   {string=}               [text]      HTML string to add to the element; if empty, then returns elements content
-     * @param   {string=}               [position]  If empty string, then replaces child elements, or inserts HTML string by next values: `beforebegin` – before element itself; `afterbegin` – before its first child; `beforeend` – after its last child; `afterend` – after element itself
+     * @param   {string=}               [text]      HTML string to add to the element; if empty, then returns elements content.
+     * @param   {string=}               [position]  If empty string, then replaces child elements, or inserts HTML string by next values: `beforebegin` – before element itself; `afterbegin` – before its first child; `beforeend` – after its last child; `afterend` – after element itself.
      *
      * @return  {(string|undefined)}
      */
@@ -921,16 +952,17 @@ class VJS
      *
      * @method  height
      * @see     alias {@link $h|$h()}
+     * @see     also  {@link size|size()}
      * 
      * @param   {(HTMLElement|string)}  element
-     * @param   {string=}               [type]   Type of height to return:  `inner` – elements height with padding;  `outer` – elements height with padding, border and scrollbar;  `with-margin` – computed `outer` + margin
-     * @param   {(string|number)}       [value]  Value to set as elements height, `type` is ignored
+     * @param   {string=}               [type]   Type of height to return:  `inner` – elements height with padding;  `outer` – elements height with padding, border and scrollbar;  `with-margin` – computed `outer` + margin.
+     * @param   {(string|number)}       [value]  Value to set as elements height, `type` is ignored.
      *
      * @return  {number}
      */
     height(e, t = '', v = null) {
-        let r = VJS.__h(e, t, v);
-        if (!v) return r;
+        let h = VJS.__h(e, t, v);
+        if (!v) return h;
     }
 
     /**
@@ -938,16 +970,36 @@ class VJS
      *
      * @method  width
      * @see     alias {@link $w|$w()}
+     * @see     also  {@link size|size()}
      * 
      * @param   {(HTMLElement|string)}  element
-     * @param   {string=}               [type]   Type of width to return:  `inner` – elements width with padding;  `outer` – elements width with padding, border and scrollbar;  `with-margin` – computed `outer` + margin
-     * @param   {(string|number)}       [value]  Value to set as elements height, `type` is ignored
+     * @param   {string=}               [type]   Type of width to return:  `inner` – elements width with padding;  `outer` – elements width with padding, border and scrollbar;  `with-margin` – computed `outer` + margin.
+     * @param   {(string|number)}       [value]  Value to set as elements width, `type` is ignored.
      *
      * @return  {number}
      */
     width(e, t = '', v = null) {
-        let r = VJS.__w(e, t, v);
-        if (!v) return r;
+        let w = VJS.__w(e, t, v);
+        if (!v) return w;
+    }
+
+    /**
+     * Returns or sets elements dimensions.
+     * 
+     * @method  size
+     * @see     also {@link $w|$w()}, {@link $h|$h()}, {@link width|width()} and {@link height|height()}
+     *
+     * @param   {(HTMLElement|string)}  element
+     * @param   {string=}               [type]    Type of width to return:  `inner` – elements width with padding;  `outer` – elements width with padding, border and scrollbar;  `with-margin` – computed `outer` + margin.
+     * @param   {(string|number)}       [width]   Value to set as elements width, `type` is ignored. If `height` not set, then this value is used.
+     * @param   {(string|number)}       [height]  Value to set as elements height, `type` is ignored.
+     *
+     * @return  {Size}
+     */
+    size(e, t = '', w = null, h = null)
+    {
+        let s = VJS.__i().$s(e, t, w, h);
+        if (s) return s;
     }
 
     /**
@@ -998,7 +1050,7 @@ class VJS
      * @method  serialize
      * 
      * @param   {(HTMLElement|string)}  formElement
-     * @param   {object}                extraData    Extra data to add to the form data
+     * @param   {object}                extraData    Extra data to add to the form data.
      *
      * @return  {string}
      */
@@ -1018,7 +1070,7 @@ class VJS
      *
      * @method  isLive
      * 
-     * @param   {(HTMLCollection|NodeList)}  collection  HTMLCollection or NodeList to check
+     * @param   {(HTMLCollection|NodeList)}  collection  HTMLCollection or NodeList to check.
      *
      * @return  {(boolean|undefined)}  If answer is inconclusive, returns `undefined`.
      */
@@ -1286,9 +1338,9 @@ class VJS
      * @method    getInstance
      * 
      * @constructs  VJS
-     * @throws      {Error}    If script is not runned in Browser (ex. Node.js)
+     * @throws      {Error}    If script is not runned in Browser (ex. Node.js).
      * 
-     * @param       {string=}  [prefix] String to be prepended to the data name (will be "remembered" statically)
+     * @param       {string=}  [prefix] String to be prepended to the data name (will be "remembered" statically).
      *
      * @return      {object}
      */
@@ -1302,7 +1354,7 @@ class VJS
      * @static
      * @function  register
      * 
-     * @param   {string=}  [prefix] String to be prepended to the data name (will be "remembered" statically)
+     * @param   {string=}  [prefix] String to be prepended to the data name (will be "remembered" statically).
      *
      * @return  {void}
      */
