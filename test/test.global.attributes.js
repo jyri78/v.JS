@@ -50,36 +50,40 @@ describe('GLOBAL: attributes', () => {
 
     describe('$sa(), setAttrib()', () => {
         it('should add new attribute', () => {
-            let elem1 = $('@span'),
-                elem2 = $('@kbd');
+            let span = $('@span'),
+                kbd = $('@kbd');
  
             // Confirm, that element doesn't have attribute yet
-            assert.isFalse( $ha(elem1, 'title') );
-            assert.isFalse( $ha(elem2, 'itemscope') );
+            assert.isFalse( $ha(span, 'title') );
+            assert.isFalse( $ha(kbd, 'itemscope') );
  
             // Add new attribute
-            $sa(elem1, 'title', 'Hello world!');
-            setAttrib(elem2, 'itemscope');  // add boolean value
+            $sa(span, 'title', 'Hello world!');
+            setAttrib(kbd, 'itemscope');  // add boolean value
  
             // Confirm, that element has now added attribute with new value
-            assert.isTrue( $ha(elem1, 'title') );
-            assert.isTrue( $ha(elem2, 'itemscope') );
-            assert.strictEqual( $ga(elem1, 'title'), 'Hello world!' );
-            assert.strictEqual( $ga(elem2, 'itemscope'), 'itemscope' );
+            assert.isTrue( $ha(span, 'title') );
+            assert.isTrue( $ha(kbd, 'itemscope') );
+            assert.strictEqual( $ga(span, 'title'), 'Hello world!' );
+            assert.strictEqual( $ga(kbd, 'itemscope'), 'itemscope' );
         });
     });
 
     describe('$ra(), remAttrib()', () => {
         it('should remove added attribute', () => {
-            let elem1 = $('@span'),
-                elem2 = $('@kbd');;
+            let span = $('@span'),
+                kbd = $('@kbd');
  
-            $ra(elem1, 'title');
-            remAttrib(elem2, 'itemscope');
+            // Confirm, that added attribute still exists
+            assert.isTrue( $ha(span, 'title') );
+            assert.isTrue( $ha(kbd, 'itemscope') );
+ 
+            $ra(span, 'title');
+            remAttrib(kbd, 'itemscope');
  
             // Confirm, that element doesn't have attribute anymore
-            assert.isFalse( $ha(elem1, 'title') );
-            assert.isFalse( $ha(elem2, 'itemscope') );
+            assert.isFalse( $ha(span, 'title') );
+            assert.isFalse( $ha(kbd, 'itemscope') );
         });
     });
 
@@ -138,13 +142,52 @@ describe('GLOBAL: attributes', () => {
         });
     });
 
+    describe('$sda(), setDataAttrib', () => {
+        it('should set data attribute to the element', () => {
+            let del = $('@del'),
+                b = $('@b');
+ 
+            // Confirm, that element doesn't have data attribute yet
+            assert.isFalse( $ha(del, 'testVal') );
+            assert.isFalse( $ha(b, 'testVal') );
+ 
+            // Add new data attribute
+            $sda(del, 'testVal', 'Hello world!');
+            setDataAttrib(b, 'testVal', 11);  // add numeric value
+ 
+            // Confirm, that element has now added data attribute with new value
+            assert.isTrue( $hda(del, 'testVal') );
+            assert.isTrue( $hda(b, 'testVal') );
+            assert.strictEqual( $gda(del, 'testVal'), 'Hello world!' );
+            assert.strictEqual( $gda(b, 'testVal'), 11 );
+ 
+            // Confirm, that element has data attribute with prefixed name
+            assert.isTrue( $ha(del, 'data-prfx-testVal') );
+            assert.isTrue( $ha(b, 'data-prfx-testVal') );
+        });
+    });
+
+    describe('$rda(), remDataAttrib()', () => {
+        it('should remove added data attribute', () => {
+            let del = $('@del'),
+                b = $('@b');
+ 
+            // Confirm, that added data attribute still exists
+            assert.isTrue( $hda(del, 'testVal') );
+            assert.isTrue( $hda(b, 'testVal') );
+ 
+            $rda(del, 'testVal');
+            remDataAttrib(b, 'testVal');
+ 
+            // Confirm, that element doesn't have attribute anymore
+            assert.isFalse( $hda(del, 'testVal') );
+            assert.isFalse( $hda(b, 'testVal') );
+        });
+    });
+
     describe('$w(), $h(), width(), height()', () => {
-        before(() => {
-            $('#vjs-test').style.display = 'block';
-        });
-        after(() => {
-            $('#vjs-test').style.display = 'none';
-        });
+        before(() => $('#vjs-test').style.display = 'block');
+        after(() => $('#vjs-test').style.display = 'none');
 
         it('should return size of 777 × 555 px', () => {
             assert.strictEqual( $w('test-id'), 777 );
@@ -178,13 +221,10 @@ describe('GLOBAL: attributes', () => {
             assert.strictEqual( height('test-id', 'with-margin'), 577 );
         });
     });
+
     describe('$s(), size()', () => {
-        before(() => {
-            $('#vjs-test').style.display = 'block';
-        });
-        after(() => {
-            $('#vjs-test').style.display = 'none';
-        });
+        before(() => $('#vjs-test').style.display = 'block');
+        after(() => $('#vjs-test').style.display = 'none');
 
         it('should return "Size" object', () => {
             let size1 = $s('test-id'),
@@ -213,6 +253,51 @@ describe('GLOBAL: attributes', () => {
             // Verify it's "outer" dimensions (margin is 5px, i.e adds even more 10px)
             assert.deepEqual( $s('test-id', 'with-margin'), {width: 799, height: 577} );
             assert.deepEqual( size('test-id', 'with-margin'), {width: 799, height: 577} );
+        });
+    });
+
+    describe('$pos(), position()', () => {
+        before(() => $('#vjs-test').style.display = 'block');
+        after(() => $('#vjs-test').style.display = 'none');
+
+        it('should return "Position" object', () => {
+            let pos1 = $pos('vjs-test'),
+                pos2 = position('vjs-test');
+ 
+            // Check if it is object
+            assert.isObject( pos1 );
+            assert.isObject( pos2 );
+ 
+            // Verify it's structure
+            assert.hasAllKeys( pos1, ['top', 'left'] );
+            assert.hasAllKeys( pos2, ['top', 'left'] );
+ 
+            // Verify it's contents
+            assert.deepEqual( pos1, {top: -9990, left: -9990} );
+            assert.deepEqual( pos2, {top: -9990, left: -9990} );
+ 
+            // Margin 5px moves inner element in screen a bit
+            assert.deepEqual( $pos('test-id'), {top: -9985, left: -9985} );
+        });
+    });
+
+    describe('$val()', () => {
+        it('should return valid value', () => {
+            assert.strictEqual( $val($('@i')), 'quo dolores tempora' );
+            assert.strictEqual( $val('test-input'), '' );
+        });
+        it('should set new value', () => {
+            let em = $t('em', null, true);
+
+            $val('test-input', 'lorem...');
+            $val(em, 'irure');
+ 
+            // Confirm, that new value does exist
+            assert.strictEqual( $val('test-input'), 'lorem...' );
+            assert.strictEqual( $val(em), 'irure' );
+ 
+            // Confirm, that em tag doesn't have "value" attribute
+            assert.isFalse( $ha(em, 'value') );
         });
     });
 

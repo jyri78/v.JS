@@ -292,7 +292,7 @@ class VJS
      * @param   {string=}               [type]   Type of height to return:  `inner` – elements height with padding;  `outer` – elements height with padding, border and scrollbar;  `with-margin` – computed `outer` + margin.
      * @param   {(string|number)}       [value]  Value to set as elements height, `type` is ignored.
      *
-     * @return  {number}
+     * @return  {(number|void)}
      */
     $h(e, t = '', v = null) {
         let h = VJS.__h(e, t, v);
@@ -310,7 +310,7 @@ class VJS
      * @param   {string=}               [type]   Type of width to return:  `inner` – elements width with padding;  `outer` – elements width with padding, border and scrollbar;  `with-margin` – computed `outer` + margin.
      * @param   {(string|number)}       [value]  Value to set as elements height, `type` is ignored.
      *
-     * @return  {number}
+     * @return  {(number|void)}
      */
     $w(e, t = '', v = null) {
         let w = VJS.__w(e, t, v);
@@ -329,7 +329,7 @@ class VJS
      * @param   {(string|number)}       [width]   Value to set as elements width, `type` is ignored. If `height` not set, then this value is used.
      * @param   {(string|number)}       [height]  Value to set as elements height, `type` is ignored.
      *
-     * @return  {Size}
+     * @return  {(Size|void)}
      */
     $s(e, t = '', w = null, h = null)
     {
@@ -452,14 +452,7 @@ class VJS
         let v = e.getAttribute(n);
         if (!v) return d;
 
-        // Try to convert to numeric value
-        if (!isNaN(v)) {
-            let _n = +v, _i = _n|0;
-
-            if (_n === _i) return _i;
-            return _n;
-        }
-        return v;  // finally return string
+        return VJS.__vn(v);
     }
     /**
      * @method  getAttrib
@@ -670,7 +663,7 @@ class VJS
      * @method  setDataAttrib
      * @see     read more {@link $sda|$sda()}
      */
-    setDataAttrib(e, n, v) { VJS.__i().$dsa(e, n, v); }
+    setDataAttrib(e, n, v) { VJS.__i().$sda(e, n, v); }
 
     /**
      * `removeDataAttribute` - removes attribute from element.
@@ -794,21 +787,30 @@ class VJS
     }
 
     /**
-     * Returns elements value(s).
+     * Returns or sets elements value(s).
      *
      * @method  $val
      * 
-     * @param   {(HTMLElement|string)}  element    HTMLElement or ID of element.
+     * @param   {(HTMLElement|string)}  element      HTMLElement or ID of element.
+     * @param   {string=}               [value]      Value to be adde to the element; if empty, value will be returned.
+     * @param   {boolean}               [all=false]  Return all text, including non-visible (i.e style or script, if present).
      *
-     * @return  {(string|string[])}
+     * @return  {(string|number|string[]|number[]|void)}
      */
-    $val(e) {
+    $val(e, v = '', a = false) {
         e = VJS.__o(e);
         if (!e) return '';
 
-        if (e.options && e.multiple)
-            return e.options.filter(o => o.selected).map(o => o.value);
-        else return e.value || e.innerText;
+        if (!v) {
+            if (e.options && e.multiple)
+                return e.options.filter(o => o.selected).map(o => VJS.__vn(o.value));
+
+            return VJS.__vn(e.value || (a ? e.textContent : e.innerText));
+        }
+        else {
+            if (typeof e.value === 'undefined') e.textContent = v;
+            else e.value = v;
+        }
     }
 
     /**
@@ -958,7 +960,7 @@ class VJS
      * @param   {string=}               [type]   Type of height to return:  `inner` – elements height with padding;  `outer` – elements height with padding, border and scrollbar;  `with-margin` – computed `outer` + margin.
      * @param   {(string|number)}       [value]  Value to set as elements height, `type` is ignored.
      *
-     * @return  {number}
+     * @return  {(number|void)}
      */
     height(e, t = '', v = null) {
         let h = VJS.__h(e, t, v);
@@ -976,7 +978,7 @@ class VJS
      * @param   {string=}               [type]   Type of width to return:  `inner` – elements width with padding;  `outer` – elements width with padding, border and scrollbar;  `with-margin` – computed `outer` + margin.
      * @param   {(string|number)}       [value]  Value to set as elements width, `type` is ignored.
      *
-     * @return  {number}
+     * @return  {(number|void)}
      */
     width(e, t = '', v = null) {
         let w = VJS.__w(e, t, v);
@@ -994,7 +996,7 @@ class VJS
      * @param   {(string|number)}       [width]   Value to set as elements width, `type` is ignored. If `height` not set, then this value is used.
      * @param   {(string|number)}       [height]  Value to set as elements height, `type` is ignored.
      *
-     * @return  {Size}
+     * @return  {(Size|void)}
      */
     size(e, t = '', w = null, h = null)
     {
@@ -1158,6 +1160,21 @@ class VJS
             p = p.replace(/[^\w\d]/gi, '');
             if (p) VJS.__p = p;
         }
+    }
+
+    /** @private */  //* valueToNum  (param: `value`)
+    static __vn(v) {
+        // Don't convert empty string
+        if (typeof v !== 'string' || v.trim() === '') return '';
+
+        // Try to convert to numeric value
+        if (!isNaN(v)) {
+            let _n = +v, _i = _n|0;
+
+            if (_n === _i) return _i;
+            return _n;
+        }
+        return v;  // finally return string
     }
 
     /** @private */  //* instance  (param: `prefix`)
