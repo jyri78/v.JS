@@ -105,14 +105,15 @@ describe('GLOBAL: selectors', () => {
             assert.instanceOf( querySel('#test-id>kbd'), HTMLElement );
         });
         it('should return non-live NodeList', () => {
-            assert.instanceOf( $q('#test-id>kbd', true), NodeList );
-            assert.instanceOf( querySel('#test-id>kbd', true), NodeList );
+            // Attribute `element` can be set as empty string, in that case it defaults to Document
+            assert.instanceOf( $q('#test-id>kbd', '', true), NodeList );
+            assert.instanceOf( querySel('#test-id>kbd', '', true), NodeList );
  
             // Confirm that it's not live
-            assert.isFalse( isLive($q('#test-id>kbd', true)) );
+            assert.isFalse( isLive($q('#test-id>kbd', '', true)) );
         });
         it('should return empty list', () => {
-            let elems = $q('#test-id>test00', true);
+            let elems = $q('#test-id>test00', '', true);
  
             assert.instanceOf( elems, NodeList );
             assert.isEmpty( elems );

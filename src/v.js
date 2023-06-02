@@ -42,13 +42,13 @@
  * @todo    Update documentation.
  * 
  * @class
- * @throws           {Error}  If script is not runned in Browser (ex. Node.js), or Browser doesn't support ECMAScript11 (2020).
+ * @throws     {Error}  If script is not runned in Browser (ex. Node.js), or Browser doesn't support ECMAScript11 (2020).
  */
 class VJS
 {
     /**
      * Constructor of VJS.
-     *
+     * 
      * @param   {string=}  [prefix] String to be prepended to the data attribute name (will be "remembered" statically).
      *
      * @return  {VJS}
@@ -237,16 +237,21 @@ class VJS
      * @see     alias {@link querySel|querySel()}
      * 
      * @param   {string}                         queryString
+     * @param   {(Document|Element|string)}      [element=document]  Document/HTMLElement or ID of element.
      * @param   {boolean}                        [all=false]         Return all found elements (NodeList).
      * 
      * @return  {(HTMLElement|HTMLCollection|NodeList|null)}
      */
-    $q(q, a = false) { return VJS.__$q(q, a); }
+    $q(q, e = document, a = false) {
+        e = VJS.__o(e);
+        if (!e) e = document;  // default to Document
+        return VJS.__$q(e, q, a);
+    }
     /**
      * @method  querySel
      * @see     read more {@link $q|$q()}
      */
-    querySel(q, a = false) { return VJS.__$q(q, a); }
+    querySel(q, e = document, a = false) { return VJS.__i().$q(q, e, a); }
 
     /**
      * `filter` - returns an array of HTMLElements of filtered (by function) HTMLCollection/NodeList.
@@ -298,6 +303,14 @@ class VJS
         let h = VJS.__h(e, t, v);
         if (!v) return h;
     }
+    /**
+     * @method  height
+     * @see     read more {@link $h|$h()}
+     */
+    height(e, t = '', v = null) {
+        let h = VJS.__h(e, t, v);
+        if (!v) return h;
+    }
 
     /**
      * `width` - returns or sets elements width.
@@ -313,6 +326,14 @@ class VJS
      * @return  {(number|void)}
      */
     $w(e, t = '', v = null) {
+        let w = VJS.__w(e, t, v);
+        if (!v) return w;
+    }
+    /**
+     * @method  width
+     * @see     read more {@link $w|$w()}
+     */
+    width(e, t = '', v = null) {
         let w = VJS.__w(e, t, v);
         if (!v) return w;
     }
@@ -338,6 +359,15 @@ class VJS
             height: VJS.__h(e, t, !h ? w : h)
         };
         if (!w && !h) return s;
+    }
+    /**
+     * @method  size
+     * @see     read more {@link $s|$s()}
+     */
+    size(e, t = '', w = null, h = null)
+    {
+        let s = VJS.__i().$s(e, t, w, h);
+        if (s) return s;
     }
 
     /**
@@ -379,8 +409,10 @@ class VJS
     {
         if (typeof h !== 'string') return null;
         let t = VJS.__i().$ce(), r;
+
         t.innerHTML = h.trim();
         r = t.children;
+
         if (e) {
             e = VJS.__o(e);
             if (e) for(let c of r) e.append(c);
@@ -771,6 +803,8 @@ class VJS
 
     /**
      * Returns elements position relative to viewport or undefined if element not found.
+     * 
+     * **Note!** This method is not an alias of `position()`. Unlike a `position()`, this method returns position with margin included.
      *
      * @method  $pos
      * @see     also {@link position|position()} and {@link offset|offset()} 
@@ -907,6 +941,7 @@ class VJS
      * Inserts or returns elements HTML string.
      * 
      * @method  $html
+     * @throws  DOMException   If no valid element found, or in case of insertion not given, method raises exception with the corresponding name.
      *
      * @param   {(HTMLElement|string)}  element
      * @param   {string=}               [text]      HTML string to add to the element; if empty, then returns elements content.
@@ -930,82 +965,18 @@ class VJS
                         throw new DOMException(e.message, e.name);
                     }
                 }
-                else throw new DOMException('Not valid Element given.', 'NotSupportedError');
+                else throw new DOMException('No valid Element given.', 'NotSupportedError');
             }
             else return e.innerHTML;
         }
         else if (t) throw new DOMException('No valid Element found.', 'NotFoundError');
     }
 
-    /**
-     * Returns static (not live) NodeList of all child elements of selector.
-     *
-     * @method  children
-     * 
-     * @param   {string}  selector
-     *
-     * @return  {NodeList}
-     */
-    children(s) { return VJS.__i().$q(`:scope ${s}`); }
-
-
-    /**
-     * Returns or sets elements height.
-     *
-     * @method  height
-     * @see     alias {@link $h|$h()}
-     * @see     also  {@link size|size()}
-     * 
-     * @param   {(HTMLElement|string)}  element
-     * @param   {string=}               [type]   Type of height to return:  `inner` – elements height with padding;  `outer` – elements height with padding, border and scrollbar;  `with-margin` – computed `outer` + margin.
-     * @param   {(string|number)}       [value]  Value to set as elements height, `type` is ignored.
-     *
-     * @return  {(number|void)}
-     */
-    height(e, t = '', v = null) {
-        let h = VJS.__h(e, t, v);
-        if (!v) return h;
-    }
-
-    /**
-     * Returns or sets elements width.
-     *
-     * @method  width
-     * @see     alias {@link $w|$w()}
-     * @see     also  {@link size|size()}
-     * 
-     * @param   {(HTMLElement|string)}  element
-     * @param   {string=}               [type]   Type of width to return:  `inner` – elements width with padding;  `outer` – elements width with padding, border and scrollbar;  `with-margin` – computed `outer` + margin.
-     * @param   {(string|number)}       [value]  Value to set as elements width, `type` is ignored.
-     *
-     * @return  {(number|void)}
-     */
-    width(e, t = '', v = null) {
-        let w = VJS.__w(e, t, v);
-        if (!v) return w;
-    }
-
-    /**
-     * Returns or sets elements dimensions.
-     * 
-     * @method  size
-     * @see     also {@link $w|$w()}, {@link $h|$h()}, {@link width|width()} and {@link height|height()}
-     *
-     * @param   {(HTMLElement|string)}  element
-     * @param   {string=}               [type]    Type of width to return:  `inner` – elements width with padding;  `outer` – elements width with padding, border and scrollbar;  `with-margin` – computed `outer` + margin.
-     * @param   {(string|number)}       [width]   Value to set as elements width, `type` is ignored. If `height` not set, then this value is used.
-     * @param   {(string|number)}       [height]  Value to set as elements height, `type` is ignored.
-     *
-     * @return  {(Size|void)}
-     */
-    size(e, t = '', w = null, h = null)
-    {
-        let s = VJS.__i().$s(e, t, w, h);
-        if (s) return s;
-    }
 
     /**
      * Returns elements offset or undefined if element not found.
+     * 
+     * **Note!** This method takes into account scrollbar width/height and Documents client top/left position.
      *
      * @method  offset
      * @see     also {@link position|position()} and {@link $pos|$pos()} 
@@ -1027,6 +998,8 @@ class VJS
 
     /**
      * Returns elements position or undefined if element not found.
+     * 
+     * **Note!** This method is not an alias of `$pos()`. Unlike a `$pos()`, this method returns position without margin.
      *
      * @method  position
      * @see     also {@link $pos|$pos()} and {@link offset|offset()} 
@@ -1144,7 +1117,7 @@ class VJS
     /** @private */static __$n(n) { return document.getElementsByName(n); }
     /** @private */static __$c(e, c) { return !e ? null : e.getElementsByClassName(c); }
     /** @private */static __$t(e, t) { return !e ? null : e.getElementsByTagName(t); }
-    /** @private */static __$q(q, a) { try { return document[`querySelector${a ? 'All' : ''}`](q); } catch (_) { return null; } }
+    /** @private */static __$q(e, q, a) { try { return e[`querySelector${a ? 'All' : ''}`](q); } catch (_) { return null; } }
 
     /** @private */  //* getObject  (params:  `selector`, `firstSymbol`, `element`, `all`)
     static __go(s, f, e = null, a = false) {
@@ -1278,7 +1251,7 @@ class VJS
                 let r = VJS.__$t(VJS.__o(e), s[0] === '@' ? s.substring(1) : s);
                 return a ? r : r.item(0);
             }
-            else return VJS.__$q(s, a);
+            else return VJS.__$q(e, s, a);
         }
         else if (s instanceof Window) {
             if (!e && !a) return d;  // prevent requesting elements from `window`

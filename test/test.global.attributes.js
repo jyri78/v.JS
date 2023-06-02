@@ -256,28 +256,36 @@ describe('GLOBAL: attributes', () => {
         });
     });
 
-    describe('$pos(), position()', () => {
+    describe('$pos(), position(), offset()', () => {
         before(() => $('#vjs-test').style.display = 'block');
         after(() => $('#vjs-test').style.display = 'none');
 
         it('should return "Position" object', () => {
             let pos1 = $pos('vjs-test'),
-                pos2 = position('vjs-test');
+                pos2 = position('vjs-test'),
+                pos3 = offset('vjs-test');
  
             // Check if it is object
             assert.isObject( pos1 );
             assert.isObject( pos2 );
+            assert.isObject( pos3 );
  
             // Verify it's structure
             assert.hasAllKeys( pos1, ['top', 'left'] );
             assert.hasAllKeys( pos2, ['top', 'left'] );
+            assert.hasAllKeys( pos3, ['top', 'left'] );
  
             // Verify it's contents
             assert.deepEqual( pos1, {top: -9990, left: -9990} );
             assert.deepEqual( pos2, {top: -9990, left: -9990} );
+            assert.deepEqual( pos3, {top: -9990, left: -9990} );
  
             // Margin 5px moves inner element in screen a bit
             assert.deepEqual( $pos('test-id'), {top: -9985, left: -9985} );
+            assert.deepEqual( offset('test-id'), {top: -9985, left: -9985} );
+ 
+            // `position` returns result without margin
+            assert.deepEqual( position('test-id'), {top: -9990, left: -9990} );
         });
     });
 
