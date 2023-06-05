@@ -714,92 +714,92 @@ class VJS
     remDataAttrib(e, n) { VJS.__i().$rda(e, n); }
 
     /**
-     * `classContains` - returns boolean value if the element contains class name or not.
+     * `hasClass` - returns boolean value if the element contains class name or not.
      *
-     * @method  $clc
-     * @see     alias {@link classCont|classCont()}
+     * @method  $hcl
+     * @see     alias {@link hasClass|hasClass()}
      * 
      * @param   {(HTMLElement|string)}  element    HTMLElement or ID of element.
      * @param   {string}                className  Class name to check.
      */
-    $clc(e, c) {
+    $hcl(e, c) {
         e = VJS.__o(e);
         return !e ? false : e.classList.contains(c);
     }
     /**
-     * @method  classCont
-     * @see     read more {@link $clc|$clc()}
+     * @method  hasClass
+     * @see     read more {@link $hcl|$hcl()}
      */
-    classCont(e, o) { VJS.__i().$clc(e, o); }
+    hasClass(e, o) { VJS.__i().$hcl(e, o); }
 
     /**
-     * `classAdd` - adds class name or array of class names to the element.
+     * `addClass` - adds class name or array of class names to the element.
      *
-     * @method  $cla
-     * @see     alias {@link classAdd|classAdd()}
+     * @method  $acl
+     * @see     alias {@link addClass|addClass()}
      * 
      * @param   {(HTMLElement|string)}  element    HTMLElement or ID of element.
      * @param   {(string|string[])}     className  Class name or array of class names to add.
      */
-    $cla(e, c) { VJS.__c(e, c, 'add'); }
+    $acl(e, c) { VJS.__c(e, c, 'add'); }
     /**
-     * @method  classAdd
-     * @see     read more {@link $cla|$cla()}
+     * @method  addClass
+     * @see     read more {@link $acl|$acl()}
      */
-    classAdd(e, c) { VJS.__i().$cla(e, c); }
+    addClass(e, c) { VJS.__i().$acl(e, c); }
 
     /**
-     * `classRemove` - removes class name or array of class names from the element.
+     * `removeClass` - removes class name or array of class names from the element.
      *
-     * @method  $clr
-     * @see     alias {@link classRem|classRem()}
+     * @method  $rcl
+     * @see     alias {@link remClass|remClass()}
      * 
      * @param   {(HTMLElement|string)}  element    HTMLElement or ID of element.
      * @param   {(string|string[])}     className  Class name or array of class names to remove.
      */
-    $clr(e, c) { VJS.__c(e, c, 'remove'); }
+    $rcl(e, c) { VJS.__c(e, c, 'remove'); }
     /**
-     * @method  classRem
-     * @see     read more {@link $clr|$clr()}
+     * @method  remClass
+     * @see     read more {@link $rcl|$rcl()}
      */
-    classRem(e, c) { VJS.__i().$clr(e, c); }
+    remClass(e, c) { VJS.__i().$rcl(e, c); }
 
     /**
-     * `classReplace` - replaces elements old class name with new one.
+     * `replaceClass` - replaces elements old class name with new one.
      *
-     * @method  $clp
-     * @see     alias {@link classRepl|classRepl()}
+     * @method  $pcl
+     * @see     alias {@link replClass|replClass()}
      * 
      * @param   {(HTMLElement|string)}  element       HTMLElement or ID of element.
      * @param   {string}                oldClassName  Class name to be replaced.
      * @param   {string}                newClassName  Class name to replace with.
      */
-    $clp(e, o, n) { VJS.__c(e, [o, n], 'replace'); }
+    $pcl(e, o, n) { VJS.__c(e, [o, n], 'replace'); }
     /**
-     * @method  classRepl
-     * @see     read more {@link $clp|$clp()}
+     * @method  replClass
+     * @see     read more {@link $pcl|$pcl()}
      */
-    classRepl(e, o, n) { VJS.__i().$clp(e, o, n); }
+    replClass(e, o, n) { VJS.__i().$pcl(e, o, n); }
 
     /**
-     * `classToggle` - toggles class name in the element.
+     * `toggleClass` - toggles class name in the element.
      *
-     * @method  $clt
-     * @see     alias {@link classToggle|classToggle()}
+     * @method  $tcl
+     * @see     alias {@link toggleClass|toggleClass()}
      * 
      * @param   {(HTMLElement|string)}  element    HTMLElement or ID of element.
      * @param   {string}                className  Class name to toggle.
      * @param   {boolean=}              [force]    If set, toggles one way-only (`true` - sets; `false` - removes).
      */
-    $clt(e, c, f) {
+    $tcl(e, c, f) {
         if (typeof f !== 'undefined') c = [c, f];
         VJS.__c(e, c, 'toggle');
     }
     /**
-     * @method  classToggle
-     * @see     read more {@link $clt|$clt()}
+     * @method  toggleClass
+     * @see     read more {@link $tcl|$tcl()}
      */
-    classToggle(e, c, f) { VJS.__i().$clt(e, c, f); }
+    toggleClass(e, c, f) { VJS.__i().$tcl(e, c, f); }
 
     /**
      * Returns elements position relative to viewport or undefined if element not found.
