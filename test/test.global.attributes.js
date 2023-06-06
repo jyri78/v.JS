@@ -309,4 +309,25 @@ describe('GLOBAL: attributes', () => {
         });
     });
 
+    describe('$hcl(), hasClass()', () => {
+        it('should return TRUE', () => {
+            let el = $n('test-name')[1];  // second element contains also class attribute
+ 
+            assert.isTrue( $hcl(el, 'test-class') );
+            assert.isTrue( hasClass(el, 'test-class') );
+ 
+            // Check, if there has any class names at all
+            assert.isTrue( $hcl('test-input') );
+        });
+        it('should return FALSE', () => {
+            assert.isFalse( $hcl($n('test-name', true), 'test-class') );
+ 
+            // Check, if there has any class names at all
+            assert.isFalse( $hcl('test-id') );
+        });
+        it('should return UNDEFINED', () => {
+            assert.isUndefined( $hcl('test00') );
+        });
+    });
+
 });

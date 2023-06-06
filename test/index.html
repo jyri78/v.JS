@@ -24,12 +24,13 @@
     data-testVal="test-00"
 >
     Lorem ipsum <kbd>dolor</kbd> sit, <kbd class="test-class">amet</kbd> consectetur adipisicing <kbd>elit</kbd>.
-    Debitis voluptatum <del name="test-name">incidunt</del> magni accusamus <span class="test-class" name="test-name">quod</span> maiores,
-    temporibus <i>quo <b>dolores</b> tempora</i> inventore cupiditate dignissimos voluptas laborum placeat <em>iure</em> nostrum neque <b>dolore</b> atque?
-    <div id="test-num" width="7" height="3.5"></div>
+    Debitis voluptatum <del name="test-name">incidunt</del> magni accusamus <span class="test-class" name="test-name"
+    >quod</span> maiores, temporibus <i>quo <b>dolores</b> tempora</i> inventore cupiditate dignissimos voluptas laborum
+    placeat <em>iure</em> nostrum neque <b>dolore</b> atque?
     <div>
-        <input type="text" id="test-input" value="">
+        <input type="text" id="test-input" class="test-input" value="">
     </div>
+    <div id="test-num" width="7" height="3.5"></div>
 </div>
 <div id="test-query" data-prfx-idVal="test-id" data-prfx-classVal="test-class" data-prfx-nameVal="test-name" data-prfx-tagVal="kbd"></div>
 <div id="test-qry00" data-prfx-idVal="test-00" data-prfx-classVal="test-00" data-prfx-nameVal="test-00" data-prfx-tagVal="map"></div>
@@ -69,11 +70,11 @@
         let assert = chai.assert;
     </script>
 
-    <!-- -------------------------------------- -->
+    <!-- ---------------------------------------- -->
     <script src="test.instance.js"></script>
     <script src="test.global.selectors.js"></script>
     <script src="test.global.attributes.js"></script>
-    <!-- -------------------------------------- -->
+    <!-- ---------------------------------------- -->
 
     <script class="mocha-exec">
         mocha.run();

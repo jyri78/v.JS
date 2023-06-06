@@ -16,6 +16,7 @@
 // along with v.JS.  If not, see <http://www.gnu.org/licenses/>.
 
 
+// Define some object types for JSDoc.
 /**
  * @typedef  {Object} Position
  * @property {number} top
@@ -54,8 +55,8 @@ class VJS
      * @return  {VJS}
      */
     constructor(p = '') {
-        if (typeof window === 'undefined') throw new Error(VJS.E1);
-        if (typeof String.prototype.replaceAll !== 'function') throw new Error(VJS.E2);
+        if (typeof window === 'undefined') VJS._err(VJS.E1);
+        if (typeof String.prototype.replaceAll !== 'function') VJS._err(VJS.E2);
 
         VJS.__sp(p);
     }
@@ -268,17 +269,18 @@ class VJS
     $f(s, c, d = '') {
         let o;
 
-        if(!d) o = VJS.__i().$(s, 0, true);  // '0' defaults to `document`
+        if(!d) o = VJS.__i().$(s, 0, 1);  // '0' defaults to `document`
         else {
             let p = d.split('|');
             if (p.length < 2) return [];  // avoid error
-            o = VJS.__i().$$(p[0], s, p[1], true);
+            o = VJS.__i().$$(p[0], s, p[1], 1);
         }
 
-        if (!o) return [];
-        if (o instanceof HTMLElement) return [o];
-        if (!o?.[Symbol.iterator]) return [];  // just-in-case, but shouldn't happen
-        return [...o].filter(c);
+        return !o ? [] : (
+            o instanceof HTMLElement ? [o] : (
+                !o?.[Symbol.iterator] ? [] : [...o].filter(c)
+            )
+        );
     }
     /**
      * @method  filter
@@ -456,8 +458,7 @@ class VJS
      */
     $ha(e, n = '') {
         e = VJS.__o(e);
-        if (!e) return undefined;
-        return (!n ? e.hasAttributes() : e.hasAttribute(n));
+        return !e ? undefined : (!n ? e.hasAttributes() : e.hasAttribute(n));
     }
     /**
      * @method  hasAttrib
@@ -505,7 +506,7 @@ class VJS
     $sa(e, n, v = true) {
         e = VJS.__o(e);
         if (!e) return;
-        let r = false;  // do remove instead of setting
+        let r = 0;  // do remove instead of setting
 
         if (typeof v === 'boolean') {
             // Change enumerated attribute value to string;
@@ -515,9 +516,9 @@ class VJS
             else if (['autocomplete', 'autocorrect'].includes(n)) v = v ? 'on' : 'off';
 
             else if (v) v = n;
-            else r = true;  // remove instead of setting
+            else r = 1;  // remove instead of setting
         }
-        else if (!v) r = true;  // in case of empty string remove it
+        else if (!v) r = 1;  // in case of empty string remove it
 
         if (r) VJS.__i().$ra(e, n);
         else e.setAttribute(n, v);
@@ -604,7 +605,7 @@ class VJS
 
         let o = VJS.__fd(f, r, e, t);
 
-        if (o.err === 'nfe') throw new DOMException('Form not found', 'NotFoundError');
+        if (o.err === 'nfe') VJS.__de(1, VJS.E7);
         if (o.err === 'mrf') {  // "Missing Required Field(s)"
             if (v && v.error && v.success) {
                 o.ids.forEach(i => {
@@ -619,7 +620,7 @@ class VJS
                 });
                 return null;
             }
-            else throw new Error('Fill up required fields');
+            else VJS._err(VJS.E3);
         }
 
         return o.data;
@@ -635,7 +636,7 @@ class VJS
      * @param   {string}                attributeName         Name of the elements attribute.
      * @param   {boolean}               [ignorePrefix=false]  If `attributeName` not set, returns boolean, if there are any data attributes regardless of prefix.
      *
-     * @return  {boolean}
+     * @return  {(boolean|undefined)}  If no valid element given, returns `undefined`, otherwise boolean value.
      */
     $hda(e, n, i = false) {
         // if (!n) return VJS.__i().$ha(e);
@@ -719,18 +720,40 @@ class VJS
      * @method  $hcl
      * @see     alias {@link hasClass|hasClass()}
      * 
-     * @param   {(HTMLElement|string)}  element    HTMLElement or ID of element.
-     * @param   {string}                className  Class name to check.
+     * @param   {(HTMLElement|string)}  element      HTMLElement or ID of element.
+     * @param   {string=}               [className]  Class name to check. If not set, return existence of any class names.
+     *
+     * @return  {(boolean|undefined)}  If no valid element given, returns `undefined`, otherwise boolean value.
      */
-    $hcl(e, c) {
+    $hcl(e, c = '') {
         e = VJS.__o(e);
-        return !e ? false : e.classList.contains(c);
+        return !e ? undefined : (!c ? e.classList.length > 0 : e.classList.contains(c));
     }
     /**
      * @method  hasClass
      * @see     read more {@link $hcl|$hcl()}
      */
-    hasClass(e, o) { VJS.__i().$hcl(e, o); }
+    hasClass(e, c) { return VJS.__i().$hcl(e, c); }
+
+    /**
+     * `getClasses` - returns array of elements class names, or empty array.
+     *
+     * @method  $gcl
+     * @see     alias {@link getClass|getClass()}
+     * 
+     * @param   {(HTMLElement|string)}  element  HTMLElement or ID of element.
+     * 
+     * @return  {Array}
+     */
+    $gcl(e) {
+        e = VJS.__o(e);
+        return !e || !e.classList ? [] : [...e.classList];
+    }
+    /**
+     * @method  getClass
+     * @see     read more {@link $gcl|$gcl()}
+     */
+    getClass(e) { return VJS.__i().$gcl(e); }
 
     /**
      * `addClass` - adds class name or array of class names to the element.
@@ -941,7 +964,7 @@ class VJS
      * Inserts or returns elements HTML string.
      * 
      * @method  $html
-     * @throws  DOMException   If no valid element found, or in case of insertion not given, method raises exception with the corresponding name.
+     * @throws  DOMException   If no valid element found or given, method raises DOM exception with the corresponding name.
      *
      * @param   {(HTMLElement|string)}  element
      * @param   {string=}               [text]      HTML string to add to the element; if empty, then returns elements content.
@@ -961,15 +984,13 @@ class VJS
                         }
                         else e.innerHTML = t;
                     }
-                    catch (e) {
-                        throw new DOMException(e.message, e.name);
-                    }
+                    catch (e) { VJS.__de(1, e.message, 0, e.name); }
                 }
-                else throw new DOMException('No valid Element given.', 'NotSupportedError');
+                else VJS.__de(1, VJS.E6, 1);
             }
             else return e.innerHTML;
         }
-        else if (t) throw new DOMException('No valid Element found.', 'NotFoundError');
+        else if (t) VJS.__de(1);
     }
 
 
@@ -1109,8 +1130,12 @@ class VJS
     //    So-called private static helper methods (should not called outside)
     // =========================================================================
 
-    /** @ignore @readonly */static get E1() { return 'VJS class works only in Browser!'; }
-    /** @ignore @readonly */static get E2() { return 'Your Browser does not support ECMAScript11 (2020)!'; }
+    /** @readonly */static get E1() { return 'VJS class works only in Browser!'; }
+    /** @readonly */static get E2() { return 'Your Browser does not support ECMAScript11 (2020)!'; }
+    /** @readonly */static get E3() { return 'Fill up required fields!'; }
+    /** @readonly */static get E5() { return 'No valid Element found.'; }
+    /** @readonly */static get E6() { return 'No valid Element given.'; }
+    /** @readonly */static get E7() { return 'Form not found'; }
     /** @private */static __v;  //* value (instance)
     /** @private */static __p;  //* prefix
     /** @private */static __$i(i) { return document.getElementById(i); }
@@ -1118,9 +1143,15 @@ class VJS
     /** @private */static __$c(e, c) { return !e ? null : e.getElementsByClassName(c); }
     /** @private */static __$t(e, t) { return !e ? null : e.getElementsByTagName(t); }
     /** @private */static __$q(e, q, a) { try { return e[`querySelector${a ? 'All' : ''}`](q); } catch (_) { return null; } }
+    /** @private */static _err(m) { throw new Error(m); }
+
+    /** @private */  //* domError  (params:  `throw`, `message`, `notSupported`, `name`)
+    static __de(t = 0, m = VJS.E5, s = 0, n = '') {
+        if (t) throw new DOMException(m, s ? 'NotSupportedError' : (!n ? 'NotFoundError' : n));
+    }
 
     /** @private */  //* getObject  (params:  `selector`, `firstSymbol`, `element`, `all`)
-    static __go(s, f, e = null, a = false) {
+    static __go(s, f, e = null, a = 0) {
         if (typeof s !== 'string') return null;
         if (!['#', '.', '=', '@'].includes(s[0])) s = `${f}${s}`;  // don't add symbol `f`, if it has already
         return VJS.__e(s, e, a);
@@ -1173,7 +1204,7 @@ class VJS
     }
 
     /** @private */  //* dataName  (params: `name`, `ignorePrefix`)
-    static __dn(n, i = false) {
+    static __dn(n, i = 0) {
         if (!n) return '';
         if (VJS.__p) return `data-${ i ? n : `${VJS.__p}-${n}` }`;
         return `data-${n}`;
@@ -1224,7 +1255,7 @@ class VJS
     /** @private */static __w(e, t, v) { return VJS.__hw('Width', e, t, v); }
 
     /** @private */  //* element  (params: `stringQuery`, `element`, `all`)
-    static __e(s, e = null, a = false) {
+    static __e(s, e = null, a = 0) {
         let d = document;
 
         if (typeof s === 'string') {
