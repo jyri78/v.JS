@@ -30,7 +30,7 @@ describe('GLOBAL: selectors', () => {
             assert.isTrue( isLive(getElemsByName('test-name')) );
         });
         it('should have two elements', () => {
-            assert.strictEqual( $n('test-name').length, 2 );
+            assert.lengthOf( $n('test-name'), 2 );
         });
         it('should return first of found HTMLelements', () => {
             assert.instanceOf( $n('test-name', true), HTMLElement );
@@ -84,7 +84,7 @@ describe('GLOBAL: selectors', () => {
 
         });
         it('should have three elements', () => {
-            assert.strictEqual( $t('kbd').length, 3 );
+            assert.lengthOf( $t('kbd'), 3 );
         });
         it('should return first of found HTMLelements', () => {
             assert.instanceOf( $t('kbd', '#vjs-test', true), HTMLElement );
@@ -229,11 +229,11 @@ describe('GLOBAL: selectors', () => {
  
             assert.instanceOf( filtered1, Array );
             assert.instanceOf( filtered1[0], HTMLElement );
-            assert.equal( filtered1.length, 2 );
+            assert.lengthOf( filtered1, 2 );
  
             assert.instanceOf( filtered2, Array );
             assert.instanceOf( filtered2[0], HTMLElement );
-            assert.equal( filtered2.length, 2 );
+            assert.lengthOf( filtered2, 2 );
         });
     });
 
@@ -243,12 +243,12 @@ describe('GLOBAL: selectors', () => {
                 elems2 = containsSel('@b', 'dolor');
  
             assert.isArray( elems1 );
-            assert.equal( elems1.length, 2 );
+            assert.lengthOf( elems1, 2 );
             assert.instanceOf( elems1[0], HTMLElement );
             assert.instanceOf( elems1[1], HTMLElement );
  
             assert.isArray( elems2 );
-            assert.equal( elems2.length, 2 );
+            assert.lengthOf( elems2, 2 );
             assert.instanceOf( elems2[0], HTMLElement );
             assert.instanceOf( elems2[1], HTMLElement );
         });

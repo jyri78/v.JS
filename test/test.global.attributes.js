@@ -330,4 +330,65 @@ describe('GLOBAL: attributes', () => {
         });
     });
 
+    describe('$gcl(), getClasses()', () => {
+        it('should return array of classes', () => {
+            let el = $t('kbd', 'test-id')[1],
+                cls1 = $gcl(el),
+                cls2 = getClasses(el);
+ 
+            assert.isArray( cls1 );
+            assert.lengthOf( cls1, 2 );
+            assert.includeMembers( cls1, ['test-class', 'another-test-class'] );
+ 
+            assert.isArray( cls2 );
+            assert.lengthOf( cls2, 2 );
+            assert.includeMembers( cls2, ['test-class', 'another-test-class'] );
+        });
+        it('should return empty array', () => {
+            let cls = $gcl('test-num');
+ 
+            assert.isArray( cls );
+            assert.isEmpty( cls );
+        });
+        it('should return UNDEFINED', () => {
+            assert.isUndefined( $gcl('test00') );
+        });
+    });
+
+    describe('$acl(), addClass()', () => {
+        it('should add new class to the element', () => {
+            let clsList = ['second-new-class', 'third-new-class'],
+                el = $i('test-id');
+ 
+            // Confirm, that it has no classes yes
+            assert.isEmpty( $gcl(el) );
+ 
+            // Add new class and confirm it
+            $acl(el, 'new-class');
+            assert.include( $gcl(el), 'new-class' );
+ 
+            // Add array of classes and confirm
+            addClass(el, clsList);
+            assert.includeMembers( $gcl(el), ['new-class', ...clsList] );
+        });
+    });
+
+    describe('$rcl(), remClass()', () => {
+        it('should remove added classes from element', () => {
+            let clsList = ['second-new-class', 'third-new-class'],
+                el = $i('test-id');
+ 
+            // Confirm existence of classes
+            assert.includeMembers( $gcl(el), ['new-class', ...clsList] );
+
+            // Remove new class and confirm, that is removed
+            $rcl(el, 'new-class');
+            assert.includeMembers( $gcl(el), clsList );
+ 
+            // Remove array of classes and confirm, that classes are removed
+            remClass(el, clsList);
+            assert.isEmpty( $gcl(el) );
+        });
+    });
+
 });

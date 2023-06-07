@@ -457,7 +457,7 @@ class VJS
      * @return  {(boolean|undefined)}  If no valid element given, returns `undefined`, otherwise boolean value.
      */
     $ha(e, n = '') {
-        e = VJS.__o(e);
+        e = VJS.__o(e, null);
         return !e ? undefined : (!n ? e.hasAttributes() : e.hasAttribute(n));
     }
     /**
@@ -479,7 +479,7 @@ class VJS
      * @return  {(string|number|null)}
      */
     $ga(e, n, d = null) {
-        e = VJS.__o(e);
+        e = VJS.__o(e, null);
         if (!e || !VJS.__i().$ha(e, n)) return d;
 
         let v = e.getAttribute(n);
@@ -504,7 +504,7 @@ class VJS
      * @param   {(string|boolean)}      [value=true]   Value of the elements attribute; **note:** if set to boolean `false`, then attribute will be removed.
      */
     $sa(e, n, v = true) {
-        e = VJS.__o(e);
+        e = VJS.__o(e, null);
         if (!e) return;
         let r = 0;  // do remove instead of setting
 
@@ -535,11 +535,11 @@ class VJS
      * @method  $ra
      * @see     alias {@link remAttrib|remAttrib()}
      * 
-     * @param   {(HTMLElement|string)}  element        Document/HTMLElement or ID of element.
+     * @param   {(HTMLElement|string)}  element        HTMLElement or ID of element.
      * @param   {string}                attributeName  Name of the elements attribute.
      */
     $ra(e, n) {
-        e = VJS.__o(e);
+        e = VJS.__o(e, null);
         if (e) e.removeAttribute(n);
     }
     /**
@@ -726,7 +726,7 @@ class VJS
      * @return  {(boolean|undefined)}  If no valid element given, returns `undefined`, otherwise boolean value.
      */
     $hcl(e, c = '') {
-        e = VJS.__o(e);
+        e = VJS.__o(e, null);
         return !e ? undefined : (!c ? e.classList.length > 0 : e.classList.contains(c));
     }
     /**
@@ -736,24 +736,24 @@ class VJS
     hasClass(e, c) { return VJS.__i().$hcl(e, c); }
 
     /**
-     * `getClasses` - returns array of elements class names, or empty array.
+     * `getClasses` - returns array of elements class names, or `undefined` if element not found.
      *
      * @method  $gcl
-     * @see     alias {@link getClass|getClass()}
+     * @see     alias {@link getClasses|getClasses()}
      * 
      * @param   {(HTMLElement|string)}  element  HTMLElement or ID of element.
      * 
-     * @return  {Array}
+     * @return  {(Array|undefined)}
      */
     $gcl(e) {
-        e = VJS.__o(e);
-        return !e || !e.classList ? [] : [...e.classList];
+        e = VJS.__o(e, null);
+        return !e ? undefined : (!e.classList ? [] : [...e.classList]);
     }
     /**
-     * @method  getClass
+     * @method  getClasses
      * @see     read more {@link $gcl|$gcl()}
      */
-    getClass(e) { return VJS.__i().$gcl(e); }
+    getClasses(e) { return VJS.__i().$gcl(e); }
 
     /**
      * `addClass` - adds class name or array of class names to the element.
@@ -837,7 +837,7 @@ class VJS
      * @return  {(Position|undefined)}
      */
     $pos(e) {
-        e = VJS.__o(e);
+        e = VJS.__o(e, null);
         if (!e) return undefined;
         let {top, left} = e.getBoundingClientRect();
         return {top, left};
@@ -855,7 +855,7 @@ class VJS
      * @return  {(string|number|string[]|number[]|void)}
      */
     $val(e, v = '', a = false) {
-        e = VJS.__o(e);
+        e = VJS.__o(e, null);
         if (!e) return '';
 
         if (!v) {
@@ -966,14 +966,14 @@ class VJS
      * @method  $html
      * @throws  DOMException   If no valid element found or given, method raises DOM exception with the corresponding name.
      *
-     * @param   {(HTMLElement|string)}  element
+     * @param   {(HTMLElement|string)}  element     HTMLElement or ID of element.
      * @param   {string=}               [text]      HTML string to add to the element; if empty, then returns elements content.
      * @param   {string=}               [position]  If empty string, then replaces child elements, or inserts HTML string by next values: `beforebegin` – before element itself; `afterbegin` – before its first child; `beforeend` – after its last child; `afterend` – after element itself.
      *
      * @return  {(string|undefined)}
      */
     $html(e, t = '', p = '') {
-        e = VJS.__o(e);
+        e = VJS.__o(e, null);
         if (e) {
             if (t) {
                 if (e instanceof Element) {
@@ -1002,12 +1002,12 @@ class VJS
      * @method  offset
      * @see     also {@link position|position()} and {@link $pos|$pos()} 
      * 
-     * @param   {(HTMLElement|string)}  element
+     * @param   {(HTMLElement|string)}  element  HTMLElement or ID of element.
      *
      * @return  {(Position|undefined)}
      */
     offset(e) {
-        e = VJS.__o(e);
+        e = VJS.__o(e, null);
         if (!e) return undefined;
 
         let b = VJS.__i().$pos(e), d = document.documentElement, w = window;
@@ -1025,12 +1025,12 @@ class VJS
      * @method  position
      * @see     also {@link $pos|$pos()} and {@link offset|offset()} 
      * 
-     * @param   {(HTMLElement|string)}  element
+     * @param   {(HTMLElement|string)}  element  HTMLElement or ID of element.
      *
      * @return  {(Position|undefined)}
      */
     position(e) {
-        e = VJS.__o(e);
+        e = VJS.__o(e, null);
         if (!e) return undefined;
 
         let b = VJS.__i().$pos(e), s = getComputedStyle(e);
@@ -1051,7 +1051,7 @@ class VJS
      * @return  {string}
      */
     serialize(f, e = {}) {
-        f = VJS.__o(e);
+        f = VJS.__o(f, null);
         if (!f) return '';
 
         let u = new URLSearchParams(new FormData(f));
@@ -1094,7 +1094,7 @@ class VJS
      * @return  {boolean}
      */
     isHidden(e) {
-        e = VJS.__o(e);
+        e = VJS.__o(e, null);
         return !(e.offsetWidth || e.offsetHeight || e.getClientRects().height);
     }
 
@@ -1188,19 +1188,19 @@ class VJS
         return VJS.__v;
     }
 
-    /** @private */  //* object  (param: `element`)
-    static __o(e) {
+    /** @private */  //* object  (param: `element`, `default`)
+    static __o(e, d) {
         if (!e) return null;  // don't do anything
         if (typeof e === 'string' && e[0] !== '#') e = `#${e}`;
-        return this.__e(e) ?? null;
+        return this.__e(e, d) ?? null;
     }
 
     /** @private */  //* class  (params: `element`, `classList`, `function`)
     static __c(e, c, f) {
-        e = this.__o(e);
+        e = this.__o(e, null);
         if (!e) return;
         if (!(c instanceof Array)) c = [c];
-        else e.classList[f](...c);
+        e.classList[f](...c);
     }
 
     /** @private */  //* dataName  (params: `name`, `ignorePrefix`)
@@ -1212,7 +1212,7 @@ class VJS
 
     /** @private */  //* dataAttributes  (params: `element`, `all`)
     static __da(e, a) {
-        e = VJS.__o(e);
+        e = VJS.__o(e, null);
         if (!e) return undefined;
 
         let k = Object.keys(e.dataset),
@@ -1227,7 +1227,7 @@ class VJS
 
     /** @private */  //* heightWeight  (params:  `function`, `element`, `type`, `value`)
     static __hw(f, e, t, v) {
-        e = VJS.__o(e);
+        e = VJS.__o(e, null);
         if (!e) return !v ? 0 : undefined;
 
         let ff = f.toLowerCase(),
@@ -1255,7 +1255,7 @@ class VJS
     /** @private */static __w(e, t, v) { return VJS.__hw('Width', e, t, v); }
 
     /** @private */  //* element  (params: `stringQuery`, `element`, `all`)
-    static __e(s, e = null, a = 0) {
+    static __e(s, e, a = 0) {
         let d = document;
 
         if (typeof s === 'string') {
@@ -1289,6 +1289,7 @@ class VJS
             else return s;
         }
         else if (s instanceof Document || s instanceof HTMLElement) return s;
+        else if (e === null) return e;
         else return d;  // default to `document`
     }
 
@@ -1302,7 +1303,7 @@ class VJS
                 f = _f;
             }
             else {
-                let _f = VJS.__o(f);
+                let _f = VJS.__o(f, null);
                 if (!(_f instanceof HTMLFormElement)) return {err: 'nfe'};
                 f = new FormData(_f);
             }
