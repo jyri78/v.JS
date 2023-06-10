@@ -791,7 +791,7 @@ class VJS
      * `replaceClass` - replaces elements old class name with new one.
      *
      * @method  $pcl
-     * @see     alias {@link replClass|replClass()}
+     * @see     alias {@link replaceClass|replaceClass()}
      * 
      * @param   {(HTMLElement|string)}  element       HTMLElement or ID of element.
      * @param   {string}                oldClassName  Class name to be replaced.
@@ -799,10 +799,10 @@ class VJS
      */
     $pcl(e, o, n) { VJS.__c(e, [o, n], 'replace'); }
     /**
-     * @method  replClass
+     * @method  replaceClass
      * @see     read more {@link $pcl|$pcl()}
      */
-    replClass(e, o, n) { VJS.__i().$pcl(e, o, n); }
+    replaceClass(e, o, n) { VJS.__i().$pcl(e, o, n); }
 
     /**
      * `toggleClass` - toggles class name in the element.

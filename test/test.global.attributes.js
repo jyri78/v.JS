@@ -391,4 +391,71 @@ describe('GLOBAL: attributes', () => {
         });
     });
 
+    describe('$pcl(), replaceClass()', () => {
+        it('should replace existing class with other one', () => {
+            let el = $t('kbd', 'test-id')[1];
+ 
+            // Confirm existence of "another-test-class"
+            assert.isTrue( $hcl(el, 'another-test-class') );
+ 
+            // Replace it and confirm changes
+            $pcl(el, 'another-test-class', 'replaced-test-class');
+            assert.isFalse( $hcl(el, 'another-test-class') );
+            assert.isTrue( $hcl(el, 'replaced-test-class') );
+ 
+            // Change back with alias function and confirm
+            replaceClass(el, 'replaced-test-class', 'another-test-class');
+            assert.isFalse( $hcl(el, 'replaced-test-class') );
+            assert.isTrue( $hcl(el, 'another-test-class') );
+        });
+        it('should not replace non existent class', () => {
+            let el = $t('kbd', 'test-id')[1];
+ 
+            $pcl(el, 'non-existent-class', 'replaced-test-class');
+            assert.isFalse( $hcl(el, 'replaced-test-class') );
+ 
+            // Confirm, that element has only original classes
+            let cls = $gcl(el);
+            assert.lengthOf( cls, 2 );
+            assert.includeMembers( $gcl(el), ['test-class', 'another-test-class'] );
+        });
+    });
+
+    describe('$tcl(), toggleClass()', () => {
+        it('should toggle class', () => {
+            let el = $t('kbd', 'test-id')[1];
+ 
+            // Confirm that there is no class with name "toggled-test-class"
+            assert.isFalse( $hcl(el, 'toggled-test-class') );
+ 
+            // Toggle class and confirm
+            $tcl(el, 'toggled-test-class');
+            assert.isTrue( $hcl(el, 'toggled-test-class') );
+ 
+            // Make another toggle with alias function and confirm
+            toggleClass(el, 'toggled-test-class');
+            assert.isFalse( $hcl(el, 'toggled-test-class') );
+        });
+        it('should enforce class to be set', () => {
+            let el = $t('kbd', 'test-id')[1];
+ 
+            // Confirm existence of class
+            assert.isTrue( $hcl(el, 'another-test-class') );
+ 
+            // Toggle with one way-only key and confirm, that class still exists
+            $tcl(el, 'another-test-class', true);
+            assert.isTrue( $hcl(el, 'another-test-class') );
+        });
+        it('should enforce class to be removed', () => {
+            let el = $t('kbd', 'test-id')[1];
+ 
+            // Confirm, that class doesn't exist
+            assert.isFalse( $hcl(el, 'toggled-test-class') );
+ 
+            // Toggle with one way-only key and confirm, that class still doesn't exist
+            $tcl(el, 'toggled-test-class', false);
+            assert.isFalse( $hcl(el, 'toggled-test-class') );
+        });
+    });
+
 });
