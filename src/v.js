@@ -375,7 +375,7 @@ class VJS
     /**
      * `createElement` - creates new HTML Element by tagName, or an HTMLUnknownElement if tagName isn't recognized.
      *
-     * @method  $ce
+     * @method  $cel
      * @see     alias {@link createElem|createElem()}
      * 
      * @param   {string}   [tagName=div]  Name of the element to be created.
@@ -383,7 +383,7 @@ class VJS
      *
      * @return  {(Element|HTMLUnknownElement)}
      */
-    $ce(t = 'div', is = '')
+    $cel(t = 'div', is = '')
     {
         if (typeof t !== 'string') return null;
         let p = [t];
@@ -392,9 +392,9 @@ class VJS
     }
     /**
      * @method  createElem
-     * @see     read more {@link $ce|$ce()}
+     * @see     read more {@link $cel|$cel()}
      */
-    createElem(t = 'div', i = '') { return VJS.__i().$ce(t, i); }
+    createElem(t = 'div', i = '') { return VJS.__i().$cel(t, i); }
 
     /**
      * `createElements` - creates new HTML Element(s) by html string, and/or add to the specified element.
@@ -553,19 +553,22 @@ class VJS
      *
      * @method  $st
      * 
+     * @param   {number}      seconds           Timeout/Interval in seconds.
      * @param   {Function}    function          Function to call after time is up.
-     * @param   {number}      seconds           Timeout in seconds.
      * @param   {Array.<*>}   [parameters=[]]   Array of parameters or just one parameter to be passed to the function.
      * @param   {boolean}     [interval=false]  Set interval instead of timeout.
      *
-     * @return  {number}  `timeoutID`, that can be passed to {@link $ct|$ct()} to cancel timeout.
+     * @return  {number}  `timeoutID`, that can be passed to the {@link $ct|$ct()} to cancel timeout/interval.
      */
-    $st(f, s, p = [], i = false) {
+    $st(s, f, p = [], i = false) {
+        if (isNaN(s)) return 0;  // if seconds not numeric, don't try to set timeout
+
         let t = s * 1000;
-        if (!t) return 0;
         if (!(p instanceof Array)) p = [p];
-        if (!p.length) return i ? setInterval(f, t) : setTimeout(f, t);
-        return i ? setInterval(f, t, ...p) : setTimeout(f, t, ...p);
+
+        return !p.length ? 
+            (i ? setInterval(f, t) : setTimeout(f, t)) :
+            (i ? setInterval(f, t, ...p) : setTimeout(f, t, ...p));
     }
 
     /**
@@ -877,9 +880,9 @@ class VJS
      * @see     alias {@link addEvtListener|addEvtListener()}
      * @see     Look also {@link $aels|$aels()} (alias {@link addEvtListens|addEvtListens()})
      * 
-     * @param   {Function}              function          Function to call, if event occurs.
-     * @param   {string}                [event=load]      Name of the event to listen.
-     * @param   {(HTMLElement|string)}  [element=window]  Document/HTMLElement or ID of element (or array of elements).
+     * @param   {Function}                              function          Function to call, if event occurs.
+     * @param   {string}                                [event=load]      Name of the event to listen.
+     * @param   {(Window|Document|HTMLElement|string)}  [element=window]  Window/Document/HTMLElement or ID of element (or array of elements).
      */
     $ael(f, v = 'load', e = window) {
         if (typeof f !== 'function') return;
@@ -901,9 +904,9 @@ class VJS
      * @see     alias {@link remEvtListener|remEvtListener()}
      * @see     Look also {@link $rels|$rels()} (alias {@link addEvtListens|addEvtListens()})
      * 
-     * @param   {Function}              function          Function to call, if event occurs.
-     * @param   {string}                [event=load]      Name of the event to listen.
-     * @param   {(HTMLElement|string)}  [element=window]  Document/HTMLElement or ID of element (or array of elements).
+     * @param   {Function}                              function          Function to call, if event occurs.
+     * @param   {string}                                [event=load]      Name of the event to listen.
+     * @param   {(Window|Document|HTMLElement|string)}  [element=window]  Window/Document/HTMLElement or ID of element (or array of elements).
      */
     $rel(f, v = 'load', e = window) {
         if (typeof f !== 'function') return;
@@ -927,7 +930,7 @@ class VJS
      * 
      * @param   {Function}                  function       Function to call, if event occurs.
      * @param   {string}                    event          Name of the event to listen.
-     * @param   {(HTMLElement[]|string[])}  [elements=[]]  Array of Document/HTMLElement objects or IDs.
+     * @param   {(HTMLElement[]|string[])}  [elements=[]]  Array of HTMLElement objects or IDs.
      */
     $aels(f, v, e = []) {
         if (e instanceof Array) e.forEach(i => VJS.__i().$ael(f, v, i));
@@ -948,7 +951,7 @@ class VJS
      * 
      * @param   {Function}                  function       Function to call, if event occurs.
      * @param   {string}                    event          Name of the event to listen.
-     * @param   {(HTMLElement[]|string[])}  [elements=[]]  Array of Document/HTMLElement objects or IDs.
+     * @param   {(HTMLElement[]|string[])}  [elements=[]]  Array of HTMLElement objects or IDs.
      */
     $rels(f, v, e = []) {
         if (e instanceof Array) e.forEach(i => VJS.__i().$rel(f, v, i));
