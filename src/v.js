@@ -599,18 +599,18 @@ class VJS
      * @param   {string}                             [type=FormData]    Type of returned data. Accepted values are:  `string`, `json`, or `FormData`.
      * @param   {{error: string, success: string}=}  [validationClass]  Validation class to be set; for example for Bootstrap it would be `{error: 'is-invalid', success: 'is-valid'}`.
      *
-     * @return  {(FormData|object|string)}
+     * @return  {(FormData|object|string|null)}  On case of 
      */
     $fd(f, r = [], e = {}, t = '', v = null) {
         t = t.toLowerCase();
-        if (['string', 'json'].includes(t)) t = t.substring(0, 1);
+        if (['str', 'string', 'json'].includes(t)) t = t.substring(0, 1);
         else t = 'fd';
 
         let o = VJS.__fd(f, r, e, t);
 
-        if (o.err === 'nfe') VJS.__de(1, VJS.E7);
-        if (o.err === 'mrf') {  // "Missing Required Field(s)"
-            if (v && v.error && v.success) {
+        if (o.err === 'nfe') VJS.__de(1, VJS.E7);  // "NotFormElement"
+        if (o.err === 'mrf') {                     // "Missing Required Field(s)"
+            if (v && v.error && v.success) {  // if error and success classes is given, set them accordingly,...
                 o.ids.forEach(i => {
                     if (o.data.includes(i)) {
                         VJS.__c(i, [v.success], 'remove');
@@ -623,7 +623,7 @@ class VJS
                 });
                 return null;
             }
-            else VJS._err(VJS.E3);
+            else VJS._err(VJS.E3);  // ... else raise Error
         }
 
         return o.data;
@@ -1307,10 +1307,12 @@ class VJS
             }
             else {
                 let _f = VJS.__o(f, null);
-                if (!(_f instanceof HTMLFormElement)) return {err: 'nfe'};
+                if (!(_f instanceof HTMLFormElement)) return {err: 'nfe'};  // "NotFormElement"
                 f = new FormData(_f);
             }
         }
+
+        if (!(r instanceof Array)) r = [r];  // just-in-case
 
         /// Check for existence of required fields
         let _r = [...r], i = [];
@@ -1330,7 +1332,7 @@ class VJS
         }
         // });
 
-        if (!!r && _r.length) return {err: 'mrf', data: _r, ids: i};
+        if (/*!!r &&*/ _r.length) return {err: 'mrf', data: _r, ids: i};  // "MissingRequiredField"
 
         /// Add extra data to FormData
         if (typeof e === 'object') {

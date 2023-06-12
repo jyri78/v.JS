@@ -31,6 +31,27 @@
         <input type="text" id="test-input" class="test-input" value="">
     </div>
     <div id="test-num" width="7" height="3.5"></div>
+    <form id="test-form">
+        <div class="row">
+            <div class="col-4">
+                <input type="text" id="test-field-0" name="test-field-0" placeholder="[should_validate]">
+            </div>
+            <div class="col-4">
+                <input type="text" id="test-field-1" name="test-field-1" value="some value">
+            </div>
+            <div class="col-4">
+                <input type="text" id="test-field-2" name="test-field-2" value="other value" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <input type="text" id="test-field-3" name="test-field-3" placeholder="[sould_not_validate]">
+            </div>
+            <div class="col-4">
+                <input type="text" id="test-field-4" name="test-field-4" placeholder="[sould_not_validate]" required>
+            </div>
+        </div>
+    </form>
 </div>
 <div id="test-query" data-prfx-idVal="test-id" data-prfx-classVal="test-class" data-prfx-nameVal="test-name" data-prfx-tagVal="kbd"></div>
 <div id="test-qry00" data-prfx-idVal="test-00" data-prfx-classVal="test-00" data-prfx-nameVal="test-00" data-prfx-tagVal="map"></div>
