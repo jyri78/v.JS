@@ -38,4 +38,15 @@ describe('GLOBAL: form & ajax', () => {
         });
     });
 
+    describe('serialize()', () => {
+        it('should return serialized string', () => {
+            let str1 = 'test-field-0=&test-field-1=some+value&test-field-2=other+value&test-field-3=&test-field-4=',
+                str2 = 'test-field-5=textual+value&test-field-6=7';
+ 
+            assert.strictEqual( serialize('test-form'), '' );  // if non existent form, empty string is returned
+            assert.strictEqual( serialize('test-form-1'), str1 );
+            assert.strictEqual( serialize('test-form-2'), str2 );
+        });
+    });
+
 });

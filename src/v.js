@@ -1063,7 +1063,7 @@ class VJS
         f = VJS.__gf(f);
         if (!f) return '';
 
-        let u = new URLSearchParams(new FormData(f));
+        let u = new URLSearchParams(f);
         if (typeof e === 'object' && Object.keys(e).length) {
             for (let [k, v] in e) u.append(k, v);
         }
