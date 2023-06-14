@@ -635,27 +635,29 @@ class VJS
     }
 
     /**
-     * Returns form data.
+     * Returns form data object, string or JSON.
+     * 
+     * **Note!** The method differs from {@link serialize|serialize()} in a way that it checks if required fields are filled or not.
      * 
      * @method  $fd
      * @throws  {(DOMException|Error)}  If form not found, then function throws `DOMException` **NotFoundError**. If missing some required fields and validation classes not given, then function throws `Error`.
-     *
-     * @todo    Add to parameter `required` extra validation data and update validation functionality.
      * 
+     * @see     Look also {@link serialize|serialize()}
+     *
      * @param   {(HTMLElement|string)}               form               Form element or ID of form.
+     * @param   {string}                             [type=FormData]    Type of returned data. Accepted values are:  `string`, `json`, or `FormData`.&lt;br>**Note!** In case of `json` keys with hyphen are converted automatically to `camelCase` (i.e `test-field` is converted to `testField`).
      * @param   {string[]}                           [required=[]]      IDs of required fields.
      * @param   {object}                             [extraData={}]     Additional data to be added.
-     * @param   {string}                             [type=FormData]    Type of returned data. Accepted values are:  `string`, `json`, or `FormData`.
      * @param   {{error: string, success: string}=}  [validationClass]  Validation class to be set; for example for Bootstrap it would be `{error: 'is-invalid', success: 'is-valid'}`.
      *
      * @return  {(FormData|object|string|null)}  On case of 
      */
-    $fd(f, r = [], e = {}, t = '', v = null) {
+    $fd(f, t = '', r = [], e = {}, v = null) {
         t = t.toLowerCase();
         if (['str', 'string', 'json'].includes(t)) t = t.substring(0, 1);
         else t = 'fd';
 
-        let o = VJS.__fd(f, r, e, t);
+        let o = VJS.__fd(f, t, r, e);
 
         if (o.err === 'nfe') VJS.__de(1, VJS.E7);  // "NotFormElement"
         if (o.err === 'mrf') {                     // "Missing Required Field(s)"
@@ -1094,16 +1096,20 @@ class VJS
 
     /**
      * Returns serialized form data.
+     * 
+     * **Note!** The method differs from {@link $fd|$fd()} in a way that it doesn't check field requirements and returns only serialized string.
      *
      * @method  serialize
      * 
+     * @see     Look also {@link $fd|$fd()}
+     *
      * @param   {(HTMLElement|string)}  formElement
      * @param   {object}                extraData    Extra data to add to the form data.
      *
      * @return  {string}
      */
     serialize(f, e = {}) {
-        f = VJS.__o(f, null);
+        f = VJS.__gf(f);
         if (!f) return '';
 
         let u = new URLSearchParams(new FormData(f));
@@ -1187,7 +1193,7 @@ class VJS
     /** @readonly */static get E3() { return 'Fill up required fields!'; }
     /** @readonly */static get E5() { return 'No valid Element found.'; }
     /** @readonly */static get E6() { return 'No valid Element given.'; }
-    /** @readonly */static get E7() { return 'Form not found'; }
+    /** @readonly */static get E7() { return 'Form not found.'; }
     /** @private */static __v;  //* value (instance)
     /** @private */static __p;  //* prefix
     /** @private */static __$i(i) { return document.getElementById(i); }
@@ -1220,8 +1226,14 @@ class VJS
 
     /** @private */  //* valueToNum  (param: `value`)
     static __vn(v) {
+        // Keep Blob as it is
+        if (v instanceof Blob) return v;
+        if (typeof v !== 'string') return v;  // just-in-case, but souldn't happen
+
+        v = v.trim();
+
         // Don't convert empty string
-        if (typeof v !== 'string' || v.trim() === '') return '';
+        if (v === '') return '';
 
         // Try to convert to numeric value
         if (!isNaN(v)) {
@@ -1275,6 +1287,24 @@ class VJS
             if (d.includes(VJS.__p)) c.push(d);
         });
         return c;
+    }
+
+    /** @private */  //* getForm  (param:  `formSelector`)
+    static __gf(f) {
+        if (!f) return null;
+        if (!(f instanceof FormData)) { // try to convert to FormData
+            if (f.constructor === {}.constructor) {  // is JSON
+                let _f = new FormData();
+                for (let k in f) _f.append(k, f[k]);
+                f = _f;
+            }
+            else {
+                let _f = VJS.__o(f, null);
+                if (!(_f instanceof HTMLFormElement)) return null;  // "NotFormElement"
+                f = new FormData(_f);
+            }
+        }
+        return f;
     }
 
     /** @private */  //* heightWeight  (params:  `function`, `element`, `type`, `value`)
@@ -1347,41 +1377,26 @@ class VJS
 
 
     /** @private */  //* formData  (params: `form`, `required`, `extraData`, `type`)
-    static __fd(f, r = [], e = {}, t = 's') {  // `t` values: "s" (string), "j" (JSON), or "fd" (FormData)
-        if (!(f instanceof FormData)) { // try to convert to FormData
-            if (f.constructor === {}.constructor) {  // is JSON
-                let _f = new FormData();
-                for (let k in f) _f.append(k, f[k]);
-                f = _f;
-            }
-            else {
-                let _f = VJS.__o(f, null);
-                if (!(_f instanceof HTMLFormElement)) return {err: 'nfe'};  // "NotFormElement"
-                f = new FormData(_f);
-            }
-        }
+    static __fd(f, t, r = [], e = {}) {  // `t` values: "s" (string), "j" (JSON), or "fd" (FormData)
+        f = VJS.__gf(f);
 
+        if (!f) return {err: 'nfe'};  // "NotFormElement"
         if (!(r instanceof Array)) r = [r];  // just-in-case
 
         /// Check for existence of required fields
         let _r = [...r], i = [];
-        // d = [...f.entries()].map(([k, v]) => {
-        for (let [k, v] of f) {
+
+        for (let [k, v] of f) {  // or `[...f.entries()].map(([k, v]) => {`
             let _i = _r.indexOf(k);
             i.push(k);
 
-            if (typeof v === 'string') {
-                v = encodeURI(v.trim());
-                f.set(k, v);
-            }
             if (!v) {
                 if (VJS.__i().$ha(k, 'required')) _r.push(k);
             }
             else if (_i > -1) _r.splice(_i, 1);
         }
-        // });
 
-        if (/*!!r &amp;&amp;*/ _r.length) return {err: 'mrf', data: _r, ids: i};  // "MissingRequiredField"
+        if (_r.length) return {err: 'mrf', data: _r, ids: i};  // "MissingRequiredField"
 
         /// Add extra data to FormData
         if (typeof e === 'object') {
@@ -1389,8 +1404,20 @@ class VJS
         }
 
         let d;
+
         if (t === 's') d = new URLSearchParams(f).toString();
-        else if (t === 'j') d = Object.fromEntries(f);
+        else if (t === 'j') {
+            d = Object
+                .entries(Object.fromEntries(f))
+                .reduce((_a, [_k, _v]) => {
+                    return {
+                        ..._a,
+                        ...{
+                            [ _k.replace(/\-([\w])/g, g => g[1].toUpperCase()) ]: VJS.__vn(_v)
+                        }
+                    };
+                }, {});
+        }
         else d = f;
 
         return {err: '', data: d};
@@ -1460,7 +1487,7 @@ class VJS
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a> on Mon Jun 12 2023 15:18:35 GMT+0300 (Ida-Euroopa suveaeg) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a> on Wed Jun 14 2023 13:26:45 GMT+0300 (Ida-Euroopa suveaeg) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
