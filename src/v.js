@@ -373,59 +373,32 @@ class VJS
     }
 
     /**
-     * `createElement` - creates new HTML Element by tagName, or an HTMLUnknownElement if tagName isn't recognized.
+     * `selectParent` - returns parent element by Tag name or NULL if not found.
      *
-     * @method  $cel
-     * @see     alias {@link createElem|createElem()}
+     * @method  $sp
+     * @see     alias {@link selParent|selParent()}
      * 
-     * @param   {string}   [tagName=div]  Name of the element to be created.
-     * @param   {string=}  [optionsIs]    Name of the custom element.
-     *
-     * @return  {(Element|HTMLUnknownElement)}
-     */
-    $cel(t = 'div', is = '')
-    {
-        if (typeof t !== 'string') return null;
-        let p = [t];
-        if (is) p.push({is});
-        return document.createElement(...p);
-    }
-    /**
-     * @method  createElem
-     * @see     read more {@link $cel|$cel()}
-     */
-    createElem(t = 'div', i = '') { return VJS.__i().$cel(t, i); }
-
-    /**
-     * `createElements` - creates new HTML Element(s) by html string, and/or add to the specified element.
-     *
-     * @method  $cels
-     * @see     alias {@link createElems|createElems()}
+     * @param   {(HTMLElement|string)}  selector        Element or query string to search for.
+     * @param   {string}                [tagName=form]  Name of parent tag to select.
      * 
-     * @param   {string}                 html
-     * @param   {?(HTMLElement|string)}  [element=null]  An element to which add newly created elements.
-     *
-     * @return  {Element[]}
+     * @return  {(HTMLElement|null)}
      */
-    $cels(h, e = null)
+    $sp(e, t = 'form')
     {
-        if (typeof h !== 'string') return null;
-        let t = VJS.__i().$ce(), r;
+        e = VJS.__o(e);
+        if (!e || e instanceof Window) return null;
 
-        t.innerHTML = h.trim();
-        r = t.children;
-
-        if (e) {
-            e = VJS.__o(e);
-            if (e) for(let c of r) e.append(c);
+        while (e.nodeName.toLowerCase() !== t) {
+            if (!e.parentNode) return null;  // can't find parent element
+            e = e.parentNode;
         }
-        return r;
+        return e;
     }
     /**
-     * @method  createElems
-     * @see     read more {@link $cels|$cels()}
+     * @method  selParent
+     * @see     read more {@link $sp|$sp()}
      */
-    createElems(h) { return VJS.__i().$cels(h); }
+    selParent(e, t = 'form') { return VJS.__i().$sp(e, t); }
 
     /**
      * `containsSelector` - returns array of HTML Elements, that contain specified text, or all of them.
@@ -630,6 +603,61 @@ class VJS
 
         return o.data;
     }
+
+    /**
+     * `createElement` - creates new HTML Element by tagName, or an HTMLUnknownElement if tagName isn't recognized.
+     *
+     * @method  $cel
+     * @see     alias {@link createElem|createElem()}
+     * 
+     * @param   {string}   [tagName=div]  Name of the element to be created.
+     * @param   {string=}  [optionsIs]    Name of the custom element.
+     *
+     * @return  {(Element|HTMLUnknownElement)}
+     */
+    $cel(t = 'div', is = '')
+    {
+        if (typeof t !== 'string') return null;
+        let p = [t];
+        if (is) p.push({is});
+        return document.createElement(...p);
+    }
+    /**
+     * @method  createElem
+     * @see     read more {@link $cel|$cel()}
+     */
+    createElem(t = 'div', i = '') { return VJS.__i().$cel(t, i); }
+
+    /**
+     * `createElements` - creates new HTML Element(s) by html string, and/or add to the specified element.
+     *
+     * @method  $cels
+     * @see     alias {@link createElems|createElems()}
+     * 
+     * @param   {string}                 html
+     * @param   {?(HTMLElement|string)}  [element=null]  An element to which add newly created elements.
+     *
+     * @return  {Element[]}
+     */
+    $cels(h, e = null)
+    {
+        if (typeof h !== 'string') return null;
+        let t = VJS.__i().$ce(), r;
+
+        t.innerHTML = h.trim();
+        r = t.children;
+
+        if (e) {
+            e = VJS.__o(e);
+            if (e) for(let c of r) e.append(c);
+        }
+        return r;
+    }
+    /**
+     * @method  createElems
+     * @see     read more {@link $cels|$cels()}
+     */
+    createElems(h) { return VJS.__i().$cels(h); }
 
     /**
      * `hasDataAttribute` - returns boolean value if element has data attribute, or any data attributes at all (if attribute name is empty string).
@@ -1295,7 +1323,7 @@ class VJS
             s = s.trim();
 
             let _s = s.toLowerCase();
-            if (!e) e = document;
+            if (!e) e = d;
 
             if (_s.match(/^\#?document$/)) return d;
             else if (_s.match(/^\#?window$/)) return window;
@@ -1417,7 +1445,7 @@ class VJS
             let v = VJS.getInstance(p);
 
             Object.getOwnPropertyNames(VJS.prototype)
-                .filter(n => n!=='constructor' && !~n.indexOf('__'))
+                .filter(n => n!=='constructor' && !~n.indexOf('_'))
                 .forEach(f => window[f] = v[f]);
         }
         catch(e) { console.error(`${e.name}: ${e.message}`); }

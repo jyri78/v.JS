@@ -275,7 +275,7 @@ describe('GLOBAL: attributes', () => {
             assert.hasAllKeys( pos2, ['top', 'left'] );
             assert.hasAllKeys( pos3, ['top', 'left'] );
  
-            // Verify it's contents
+            // Verify it's contents (NB! Sometimes it fails, refresh Browser)
             assert.deepEqual( pos1, {top: -9990, left: -9990} );
             assert.deepEqual( pos2, {top: -9990, left: -9990} );
             assert.deepEqual( pos3, {top: -9990, left: -9990} );

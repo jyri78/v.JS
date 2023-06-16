@@ -264,4 +264,17 @@ describe('GLOBAL: selectors', () => {
         });
     });
 
+    describe('$sp(), selParent()', () => {
+        it('should return HTMLElement', () => {
+            assert.instanceOf( $sp('test-field-1'), HTMLElement );
+            assert.instanceOf( selParent('test-field-2'), HTMLElement );
+        });
+        it('should return NULL', () => {
+            assert.isNull( $sp('test-field-3', 'b') );
+            assert.isNull( $sp(document) );
+            assert.isNull( $sp(window) );
+            assert.isNull( $sp('window') );
+        });
+    });
+
 });
