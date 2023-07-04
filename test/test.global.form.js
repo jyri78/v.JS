@@ -1,4 +1,4 @@
-describe('GLOBAL: form & ajax', () => {
+describe('GLOBAL: form', () => {
     before(() => {
         if (!window.$$) VJS.register('prfx');  // for grep to properly work
     });

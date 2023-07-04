@@ -11,11 +11,24 @@
         crossorigin="anonymous"
         referrerpolicy="no-referrer"
     />
+    <style>
+        #btn {
+            background-color: #0d6efd;  color: #fff;  border: 1px solid #0dcaf0;  border-radius: .3rem;  display: inline-block;
+            padding: .3rem 1rem;  text-align: center;  text-decoration: none;  user-select: none;  vertical-align: middle;
+            transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+        }
+        #btn:hover {
+            background-color: #0b5ed7;  border: 1px solid #31d2f2;
+        }
+    </style>
 </head>
 <body>
+    <div style="padding: 1rem"><a id="btn"> </a></div>
     <div id="mocha"></div>
 
-    <!-- ------------------------------------------------------------------- -->
+    <!-- --------------------------------------------------------------------
+         HTML elements for testing
+        -------------------------------------------------------------------- -->
     <div id="vjs-test" style="position:absolute; left:-9990px; top:-9990px; display:none">
 
 <div
@@ -67,7 +80,9 @@
 <div id="test-qry00" data-prfx-idVal="test-00" data-prfx-classVal="test-00" data-prfx-nameVal="test-00" data-prfx-tagVal="map"></div>
 
     </div>
-    <!-- ------------------------------------------------------------------- -->
+    <!-- --------------------------------------------------------------------
+         End for testing area
+        -------------------------------------------------------------------- -->
 
 
     <script
@@ -87,31 +102,51 @@
     <!-- <script src="../v.min.js"></script> -->
 
     <script class="mocha-init">
-        mocha.setup('bdd');
-        mocha.checkLeaks();
-        // mocha.reporter('spec');  /// outputs to the console; try also 'tap'
+        let loc = location,
+            doc = document,
+            delay = (new URLSearchParams(loc.search)).get('async') ?? false,
+            btn = doc.getElementById('btn');
+            url = `${loc.origin}${loc.pathname}`,
+            opts = {
+                checkLeaks: true,
+                ui: 'bdd',
+                globals: [
+                    '$*', 'c*', 'is*', 'add*', 'get*', 'set*', 'rem*', 'has*',
+                    'querySel', 'filter', 'selParent', 'replaceClass', 'toggleClass',
+                    'height', 'width', 'size', 'offset', 'position', 'serialize', 'toArray'
+                ]
+            };
 
-        // `VJS.register()` creates global functions, allow them
-        mocha.globals([
-            '$*', 'c*', 'is*', 'add*', 'get*', 'set*', 'rem*', 'has*',
-            'querySel', 'filter', 'selParent', 'replaceClass', 'toggleClass',
-            'height', 'width', 'size', 'offset', 'position', 'serialize', 'toArray'
-        ]);
+        if (delay) {
+            opts.delay = true;
+            btn.innerHTML = 'DOM tests';
+        }
+        else {
+            btn.innerHTML = 'ASYNC tests';
+            url += '?async=1';
+        }
 
-        let assert = chai.assert;
-    </script>
+        btn.href = url;
+        mocha.setup(opts);
 
+        let fl1 = ['instance', 'global.selectors', 'global.attributes', 'global.form'],
+            fl2 = ['global.ajax'],
+            h = doc.getElementsByTagName('head')[0],
+            assert = chai.assert;
 
-    <!-- ---------------------------------------- -->
-    <script src="test.instance.js"></script>
-    <script src="test.global.selectors.js"></script>
-    <script src="test.global.attributes.js"></script>
-    <script src="test.global.form&ajax.js"></script>
-    <!-- ---------------------------------------- -->
+        // Tiny helper function
+        const loadScript = f => {
+            let s = doc.createElement('script');
+            s.src = `test.${f}.js`;
+            h.append(s);
+        }
 
+        setTimeout(() => {
+            if (!delay) fl1.forEach(f => loadScript(f));
+            else fl2.forEach(f => loadScript(f));
 
-    <script class="mocha-exec">
-        mocha.run();
+            setTimeout(() => { mocha.run(); }, 10);
+        }, 10);
     </script>
 </body>
 </html>

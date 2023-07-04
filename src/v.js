@@ -70,7 +70,7 @@ class VJS
      *           If `selector` string begins with symbol `@`, then function handles it as tag name (doesn't make simple tag name validation).
      * 
      * @method  $
-     * @see     also alternatives {@link $i|$i()}, {@link $n|$n()}, {@link $c|$c()}, and {@link $t|$t()}
+     * @see     Look also {@link $i|$i()}, {@link $n|$n()}, {@link $c|$c()}, and {@link $t|$t()}
      * 
      * @param   {string}                         selector
      * @param   {(Document|HTMLElement|string)}  [element=document]  Document/HTMLElement or ID of element (if can be used).
@@ -449,7 +449,7 @@ class VJS
      * @param   {string}                attributeName        Name of the elements attribute.
      * @param   {(string|null)}         [defaultValue=null]  Default value to return, if attribute not found.
      *
-     * @return  {(string|number|null)}
+     * @return  {(string|number|boolean|null)}
      */
     $ga(e, n, d = null) {
         e = VJS.__o(e, null);
@@ -574,7 +574,7 @@ class VJS
      * @param   {object}                             [extraData={}]     Additional data to be added.
      * @param   {{error: string, success: string}=}  [validationClass]  Validation class to be set; for example for Bootstrap it would be `{error: 'is-invalid', success: 'is-valid'}`.
      *
-     * @return  {(FormData|object|string|null)}  On case of 
+     * @return  {(FormData|object|string|null)}
      */
     $fd(f, t = '', r = [], e = {}, v = null) {
         t = t.toLowerCase();
@@ -885,7 +885,7 @@ class VJS
      * @param   {string=}               [value]      Value to be adde to the element; if empty, value will be returned.
      * @param   {boolean}               [all=false]  Return all text, including non-visible (i.e style or script, if present).
      *
-     * @return  {(string|number|string[]|number[]|void)}
+     * @return  {(string|number|boolean|string[]|number[]|boolean[]|void)}
      */
     $val(e, v = '', a = false) {
         e = VJS.__o(e, null);
@@ -993,11 +993,127 @@ class VJS
      */
     remEvtListeners(f, v, e = []) { VJS.__i().$rels(f, v, e); }
 
+
+    /**
+     * Makes AJAX GET request to the server and returns response `Promise` object.
+     *
+     * @async
+     * @method  $get
+     * @see     also {@link $post|$post()}, {@link $put|$put()}, {@link $patch|$patch()}, and {@link $del|$del()}
+     *
+     * @param   {string}   url                 URL to the server.
+     *
+     * @return  {Promise}
+     * @throws  {(DOMException|TypeError)}  If request is aborted, method will raise `DOMException` **AbortError**, or may raise `TypeError` by several different reasons.
+     */
+    $get(u) { return VJS.__r(u); }
+
+    /**
+     * Makes AJAX PUT request to the server and returns response `Promise` object.
+     *
+     * @async
+     * @method  $put
+     * @see     also {@link $get|$get()}, {@link $post|$post()}, {@link $patch|$patch()}, and {@link $del|$del()}
+     *
+     * @param   {string}                    url   URL to the server.
+     * @param   {(FormData|Object|string)}  data  Data or form ID (begin with symbol `#`) to be sent to the server.
+     * 
+     * @return  {Promise}
+     * @throws  {(DOMException|TypeError)}  If request is aborted, method will raise `DOMException` **AbortError**, or may raise `TypeError` by several different reasons.
+     */
+    $put(u, d = {}) { return VJS.__r(u, 'PUT', d); }
+
+    /**
+     * Makes AJAX DELETE request to the server and returns response `Promise` object.
+     *
+     * @async
+     * @method  $del
+     * @see     also {@link $get|$get()}, {@link $post|$post()}, {@link $put|$put()}, and {@link $patch|$patch()}
+     *
+     * @param   {string}                    url   URL to the server.
+     * @param   {(FormData|Object|string)}  data  Data or form ID (begin with symbol `#`) to be sent to the server.
+     * 
+     * @return  {Promise}
+     * @throws  {(DOMException|TypeError)}  If request is aborted, method will raise `DOMException` **AbortError**, or may raise `TypeError` by several different reasons.
+     */
+    $del(u, d = {}) { return VJS.__r(u, 'DELETE', d); }
+
+    /**
+     * Makes AJAX POST request to the server and returns response `Promise` object.
+     *
+     * @async
+     * @method  $post
+     * @see     also {@link $get|$get()}, {@link $put|$put()}, {@link $patch|$patch()}, and {@link $del|$del()}
+     *
+     * @param   {string}                    url                 URL to the server.
+     * @param   {(FormData|Object|string)}  [data={}]           Data or form ID (begin with symbol `#`) to be sent to the server.
+     *
+     * @return  {Promise}
+     * @throws  {(DOMException|TypeError)}  If request is aborted, method will raise `DOMException` **AbortError**, or may raise `TypeError` by several different reasons.
+     */
+    $post(u, d = {}) { return VJS.__r(u, 'POST', d); }
+
+    /**
+     * Makes AJAX PATCH request to the server and returns response `Promise` object.
+     *
+     * @async
+     * @method  $patch
+     * @see     also {@link $get|$get()}, {@link $post|$post()}, {@link $put|$put()}, and {@link $del|$del()}
+     *
+     * @param   {string}                    url                 URL to the server.
+     * @param   {(FormData|Object|string)}  [data={}]           Data or form ID (begin with symbol `#`) to be sent to the server.
+     *
+     * @return  {Promise}
+     * @throws  {(DOMException|TypeError)}  If request is aborted, method will raise `DOMException` **AbortError**, or may raise `TypeError` by several different reasons.
+     */
+    $patch(u, d = {}) { return VJS.__r(u, 'PATCH', d); }
+
+
+    /**
+     * `listenServerSentEvents` - adds event listener to the server-sent events (similar to WebSocket, but is a one-way connection) by URL.
+     * 
+     * @method  $lsse
+     * 
+     * @example <caption>Example usage of method.</caption>
+     * $lsse('http://localhost/sse.php', (data, id, origin) => {
+     *     $html('server-msg', `${id}: ${origin}<br>${data}`);
+     * }, 'ping');
+     *
+     * @param   {string}    url                      Events generating script.
+     * @param   {Function}  callback                 Function to be called on event message. Called function params (optional) are `data`, `id`, and `origin`.
+     * @param   {string=}   [eventName]              Name of event to listen. Default: empty string
+     * @param   {boolean}   [withCredentials=false]  If EventSource is instatiated with cross-origin credentials set, or not.
+     *
+     * @return  {(EventSource|null)}  If connection can't be created or fails, NULL is returned.
+     */
+    $lsse(u, c, e = '', w = false) {
+        if (!u || typeof c !== 'function') return null;  // nothing to listen
+
+        let es = new EventSource(u, {withCredentials: w});
+        if (!es) return null;
+        let f = evt => { c(evt.data, evt.lastEventId, evt.origin); };
+
+        if (!e) es.onmessage = f;
+        else es.addEventListener(e, f);
+        es.onerror = err => console.error(`'EventSource' ${(err.type ?? 'error')} @${VJS.__ms(err.timeStamp ?? 0)}`);
+        return es;
+    }
+
+    /**
+     * `closeServerSentEvents` - closes EventSource connection to the server, if any.
+     *
+     * @method  $csse
+     *
+     * @param   {EventSource}  eventSource
+     */
+    $csse(e) { if (e instanceof EventSource) e.close(); }
+
+
     /**
      * Inserts or returns elements HTML string.
      * 
      * @method  $html
-     * @throws  DOMException   If no valid element found or given, method raises DOM exception with the corresponding name.
+     * @throws  {DOMException}   If no valid element found or given, method raises DOM exception with the corresponding name.
      *
      * @param   {(HTMLElement|string)}  element     HTMLElement or ID of element.
      * @param   {string=}               [text]      HTML string to add to the element; if empty, then returns elements content.
@@ -1170,9 +1286,19 @@ class VJS
     /** @readonly */static get E1() { return 'VJS class works only in Browser!'; }
     /** @readonly */static get E2() { return 'Your Browser does not support ECMAScript11 (2020)!'; }
     /** @readonly */static get E3() { return 'Fill up required fields!'; }
+    /** @readonly */static get E4() { return 'No data given.'; }
     /** @readonly */static get E5() { return 'No valid Element found.'; }
     /** @readonly */static get E6() { return 'No valid Element given.'; }
     /** @readonly */static get E7() { return 'Form not found.'; }
+    /** @readonly */static get E8() { return 'Given data type not supported.'; }
+    /** @readonly */static get RSC() {
+        return {
+            400: 'Bad Request', 401: 'Unauthorized', 403: 'Forbidden', 404: 'Not Found',
+            406: 'Not Acceptable', 408: 'Request Timeout', 409: 'Conflict', 410: 'Gone',
+            500: 'Internal Server Error', 501: 'Not Implemented', 502: 'Bad Gateway',
+            503: 'Service Unavailable', 505: 'HTTP Version Not Supported'
+        }
+    };
     /** @private */static __v;  //* value (instance)
     /** @private */static __p;  //* prefix
     /** @private */static __$i(i) { return document.getElementById(i); }
@@ -1203,11 +1329,19 @@ class VJS
         }
     }
 
+    /** @private */  //* minSec  (param:  `millisec`)
+    static __ms(ms) {
+        let s = ms / 1000,
+            m = Math.floor(s/60),
+            _f = n => n<10 ? `0${n}` : n;
+
+        s = Math.round((s - m*60)*10) / 10;
+        return `${_f(m)}:${_f(s)}`;
+    }
+
     /** @private */  //* valueToNum  (param: `value`)
     static __vn(v) {
-        // Keep Blob as it is
-        if (v instanceof Blob) return v;
-        if (typeof v !== 'string') return v;  // just-in-case, but souldn't happen
+        if (typeof v !== 'string') return v;  // try to convert only string
 
         v = v.trim();
 
@@ -1221,6 +1355,12 @@ class VJS
             if (_n === _i) return _i;
             return _n;
         }
+
+        // Try to convert to boolean value
+        let _v = v.toLowerCase();
+        if (_v === 'true' || _v === 'on') return true;
+        if (_v === 'false' || _v === 'off') return false;
+
         return v;  // finally return string
     }
 
@@ -1355,7 +1495,7 @@ class VJS
     }
 
 
-    /** @private */  //* formData  (params: `form`, `required`, `extraData`, `type`)
+    /** @private */  //* formData  (params: `form`, `type`, `required`, `extraData`)
     static __fd(f, t, r = [], e = {}) {  // `t` values: "s" (string), "j" (JSON), or "fd" (FormData)
         f = VJS.__gf(f);
 
@@ -1403,6 +1543,82 @@ class VJS
     }
 
 
+    /** @private */  //* bodyData  (params: `bodyData`, `url`, `isPost`)
+    static __bd(b, u) {
+        if (typeof b === 'string') {
+            if (b[0] === '#') {
+                let o = VJS.__fd(b, 'j');
+                if (o.err === 'nfe') VJS.__de(1, VJS.E7);  // "NotFormElement"
+                if (o.err === 'mrf') VJS.__err(VJS.E3);    // "Missing Required Field(s)"
+                b = o.data;
+            }
+            else b = Object.fromEntries(new URLSearchParams(b));
+        }
+        else if (b instanceof FormData || b.constructor !== {}.constructor) {
+            if (!b[Symbol.iterator]) throw new TypeError(VJS.E8);  // "Unsupported Data"
+
+            let o = {}
+            for (let [k, v] of b) o[k] = v;
+            b = o;
+        }
+        return {...Object.fromEntries(u.searchParams), ...b};
+    }
+
+    /** @private */  //* request  (params: `url`, `blob`, `method`, `data`)
+    static async __r(u, m = 'GET', d = {}) {
+        m = m.toUpperCase();
+
+        let f, _e, _u = new URL(u),
+            _p = m === 'POST' || m === 'GET',  // GET for URL search params
+            o = {method: m, cache: 'no-cache'};
+
+        u = `${_u.origin}${_u.pathname}`;
+        d = VJS.__bd(d, _u);
+
+        let b = _p ? new URLSearchParams(d).toString() : JSON.stringify(d);
+
+        if (['PUT', 'PATCH', 'POST', 'DELETE'].includes(m)) {
+            if (!Object.keys(d).length) {
+                if (m !== 'DELETE') throw new TypeError(VJS.E4);  // just-in-case
+            }
+            else {
+                o.mode = 'cors';
+                o.credentials = 'same-origin';
+                o.headers = {
+                    'Content-Type': _p ? 'application/x-www-form-urlencoded' : 'application/json'
+                };
+                o.body = b;
+            }
+        }
+        else if (b) u += `?${b}`;
+
+        try { f = await fetch(u, o); }
+        catch (e) { _e = e; }
+        if (!f) throw _e;
+
+        let r, ct = f.headers.get('Content-Type');
+
+        if (f.ok) {
+            if (ct && ct.includes('/json')) {
+                r = await f.json();
+
+                if (r.constructor === {}.constructor)  // just-in-case if server sends other than JSON
+                    for (let k of Object.keys(r)) r[k] = VJS.__vn(r[k]);
+            }
+            else {
+                r = await f.blob();  // try to read as Blob
+                if (r.constructor.name !== 'Blob') r = await f.text();  // finally get plain text
+            }
+        }
+        else r = {
+            success: false,
+            message: `${f.status} ${VJS.RSC[f.status] ?? ''}`
+        };
+
+        return r;
+    }
+
+
 
     // =========================================================================
     //    Static methods
@@ -1413,7 +1629,7 @@ class VJS
     /**
      * Returns instance of VJS class or throws error, if `window` object doesn't exist (not in Browser).
      * 
-     * @example <caption>test</caption>
+     * @example
      * let vjs = VJS.getInstance();
      * 
      * @static
