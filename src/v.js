@@ -29,6 +29,13 @@
  * @property {number} height
  */
 
+/**
+ * @typedef  {Object}                     Response
+ * @property {boolean}                    success   If response was OK (status in the range 200-299), or not.
+ * @property {(Object|Blob|string|null)}  data      Response data, or `NULL`.
+ * @property {string}                     message   If `success == false`, then status code and text or error message (in case of AJAX error), otherwise empty string.
+ */
+
 
 /**
  * Vanilla JS (`VJS`) class with common methods plus some syntactic sugars.
@@ -1003,8 +1010,7 @@ class VJS
      *
      * @param   {string}   url                 URL to the server.
      *
-     * @return  {Promise}
-     * @throws  {(DOMException|TypeError)}  If request is aborted, method will raise `DOMException` **AbortError**, or may raise `TypeError` by several different reasons.
+     * @return  {Promise<Response>}
      */
     $get(u) { return VJS.__r(u); }
 
@@ -1018,8 +1024,7 @@ class VJS
      * @param   {string}                    url   URL to the server.
      * @param   {(FormData|Object|string)}  data  Data or form ID (begin with symbol `#`) to be sent to the server.
      * 
-     * @return  {Promise}
-     * @throws  {(DOMException|TypeError)}  If request is aborted, method will raise `DOMException` **AbortError**, or may raise `TypeError` by several different reasons.
+     * @return  {Promise<Response>}
      */
     $put(u, d = {}) { return VJS.__r(u, 'PUT', d); }
 
@@ -1033,8 +1038,7 @@ class VJS
      * @param   {string}                    url   URL to the server.
      * @param   {(FormData|Object|string)}  data  Data or form ID (begin with symbol `#`) to be sent to the server.
      * 
-     * @return  {Promise}
-     * @throws  {(DOMException|TypeError)}  If request is aborted, method will raise `DOMException` **AbortError**, or may raise `TypeError` by several different reasons.
+     * @return  {Promise<Response>}
      */
     $del(u, d = {}) { return VJS.__r(u, 'DELETE', d); }
 
@@ -1048,8 +1052,7 @@ class VJS
      * @param   {string}                    url                 URL to the server.
      * @param   {(FormData|Object|string)}  [data={}]           Data or form ID (begin with symbol `#`) to be sent to the server.
      *
-     * @return  {Promise}
-     * @throws  {(DOMException|TypeError)}  If request is aborted, method will raise `DOMException` **AbortError**, or may raise `TypeError` by several different reasons.
+     * @return  {Promise<Response>}
      */
     $post(u, d = {}) { return VJS.__r(u, 'POST', d); }
 
@@ -1063,8 +1066,7 @@ class VJS
      * @param   {string}                    url                 URL to the server.
      * @param   {(FormData|Object|string)}  [data={}]           Data or form ID (begin with symbol `#`) to be sent to the server.
      *
-     * @return  {Promise}
-     * @throws  {(DOMException|TypeError)}  If request is aborted, method will raise `DOMException` **AbortError**, or may raise `TypeError` by several different reasons.
+     * @return  {Promise<Response>}
      */
     $patch(u, d = {}) { return VJS.__r(u, 'PATCH', d); }
 
@@ -1293,10 +1295,11 @@ class VJS
     /** @readonly */static get E8() { return 'Given data type not supported.'; }
     /** @readonly */static get RSC() {
         return {
+            301: 'Moved Permanently', 307: 'Temporary Redirect', 308: 'Permanent Redirect',
             400: 'Bad Request', 401: 'Unauthorized', 403: 'Forbidden', 404: 'Not Found',
             406: 'Not Acceptable', 408: 'Request Timeout', 409: 'Conflict', 410: 'Gone',
             500: 'Internal Server Error', 501: 'Not Implemented', 502: 'Bad Gateway',
-            503: 'Service Unavailable', 505: 'HTTP Version Not Supported'
+            503: 'Service Unavailable', 504: 'Gateway Timeout', 505: 'HTTP Version Not Supported'
         }
     };
     /** @private */static __v;  //* value (instance)
@@ -1570,7 +1573,7 @@ class VJS
 
         let f, _e, _u = new URL(u),
             _p = m === 'POST' || m === 'GET',  // GET for URL search params
-            o = {method: m, cache: 'no-cache'};
+            o = {method: m, cache: 'no-cache'}, data = null;
 
         u = `${_u.origin}${_u.pathname}`;
         d = VJS.__bd(d, _u);
@@ -1593,25 +1596,33 @@ class VJS
         else if (b) u += `?${b}`;
 
         try { f = await fetch(u, o); }
-        catch (e) { _e = e; }
-        if (!f) throw _e;
+        catch (e) { _e = e.toString(); }
 
-        let r, ct = f.headers.get('Content-Type');
+        if (!f) return {success: false, data, message: _e};
 
-        if (f.ok) {
-            if (ct && ct.includes('/json')) {
-                r = await f.json();
+        let r, ct = f.headers.get('Content-Type'), success = f.ok;
 
-                if (r.constructor === {}.constructor)  // just-in-case if server sends other than JSON
-                    for (let k of Object.keys(r)) r[k] = VJS.__vn(r[k]);
-            }
+        if (success) {
+            let message = '';
+
+            if (f.status === 204) message = '204 No Content';
             else {
-                r = await f.blob();  // try to read as Blob
-                if (r.constructor.name !== 'Blob') r = await f.text();  // finally get plain text
+                if (ct && ct.includes('/json')) {
+                    data = await f.json();
+
+                    // Try to convert JSON and Array values
+                    if (data.constructor === {}.constructor || Array.isArray(data))
+                        for (let k of Object.keys(data)) data[k] = VJS.__vn(data[k]);
+                }
+                else {
+                    data = await f.blob();  // try to read as Blob
+                    if (data.constructor.name !== 'Blob') data = await f.text();  // finally get plain text
+                }
             }
+            r = {success, data, message}
         }
         else r = {
-            success: false,
+            success, data,
             message: `${f.status} ${VJS.RSC[f.status] ?? ''}`
         };
 
