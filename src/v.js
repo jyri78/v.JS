@@ -286,7 +286,7 @@ class VJS
 
         if(!d) o = VJS.__i().$(s, 0, 1);  // '0' defaults to `document`
         else {
-            let p = d.split('|');
+            const p = d.split('|');
             if (p.length < 2) return [];  // avoid error
             o = VJS.__i().$$(p[0], s, p[1], 1);
         }
@@ -317,7 +317,7 @@ class VJS
      * @return  {(number|void)}
      */
     $h(e, t = '', v = null) {
-        let h = VJS.__h(e, t, v);
+        const h = VJS.__h(e, t, v);
         if (!v) return h;
     }
     /**
@@ -325,7 +325,7 @@ class VJS
      * @see     read more {@link $h|$h()}
      */
     height(e, t = '', v = null) {
-        let h = VJS.__h(e, t, v);
+        const h = VJS.__h(e, t, v);
         if (!v) return h;
     }
 
@@ -343,7 +343,7 @@ class VJS
      * @return  {(number|void)}
      */
     $w(e, t = '', v = null) {
-        let w = VJS.__w(e, t, v);
+        const w = VJS.__w(e, t, v);
         if (!v) return w;
     }
     /**
@@ -351,7 +351,7 @@ class VJS
      * @see     read more {@link $w|$w()}
      */
     width(e, t = '', v = null) {
-        let w = VJS.__w(e, t, v);
+        const w = VJS.__w(e, t, v);
         if (!v) return w;
     }
 
@@ -371,7 +371,7 @@ class VJS
      */
     $s(e, t = '', w = null, h = null)
     {
-        let s = {
+        const s = {
             width:  VJS.__w(e, t, !w ? h : w),  // just-in case
             height: VJS.__h(e, t, !h ? w : h)
         };
@@ -383,7 +383,7 @@ class VJS
      */
     size(e, t = '', w = null, h = null)
     {
-        let s = VJS.__i().$s(e, t, w, h);
+        const s = VJS.__i().$s(e, t, w, h);
         if (s) return s;
     }
 
@@ -470,7 +470,7 @@ class VJS
         e = VJS.__o(e, null);
         if (!e || !VJS.__i().$ha(e, n)) return d;
 
-        let v = e.getAttribute(n);
+        const v = e.getAttribute(n);
         if (!v) return d;
 
         return VJS.__vn(v);
@@ -551,7 +551,7 @@ class VJS
     $st(s, f, p = [], i = false) {
         if (isNaN(s)) return 0;  // if seconds not numeric, don't try to set timeout
 
-        let t = s * 1000;
+        const t = s * 1000;
         if (!(p instanceof Array)) p = [p];
 
         return !p.length ? 
@@ -596,7 +596,7 @@ class VJS
         if (['str', 'string', 'json'].includes(t)) t = t.substring(0, 1);
         else t = 'fd';
 
-        let o = VJS.__fd(f, t, r, e);
+        const o = VJS.__fd(f, t, r, e);
 
         if (o.err === 'nfe') VJS.__de(1, VJS.E7);  // "NotFormElement"
         if (o.err === 'mrf') {                     // "Missing Required Field(s)"
@@ -630,7 +630,8 @@ class VJS
      * @return  {(WebSocket|null)}  In case of any error `null` is returned, otherwise on success `WebSocket` instance.
      */
     $ws(u, c) {
-        let _f = ['open', 'message', 'close', 'error'], ok = false, _u, ws;
+        const _f = ['open', 'message', 'close', 'error'];
+        let ok = false, _u, ws;
 
         try {
             if (u.substring(0, 2) === '//') u = `wss:${u}`;  // prefer secure connection
@@ -668,7 +669,7 @@ class VJS
     $cel(t = 'div', is = '')
     {
         if (typeof t !== 'string') return null;
-        let p = [t];
+        const p = [t];
         if (is) p.push({is});
         return document.createElement(...p);
     }
@@ -723,10 +724,10 @@ class VJS
      */
     $hda(e, n, i = false) {
         // if (!n) return VJS.__i().$ha(e);
-        let dn = VJS.__dn(n, i);
+        const dn = VJS.__dn(n, i);
 
         if (!dn) {
-            let da = VJS.__da(e, i);
+            const da = VJS.__da(e, i);
 
             if (!da) return undefined;
             return da.length > 0;
@@ -922,7 +923,7 @@ class VJS
     $pos(e) {
         e = VJS.__o(e, null);
         if (!e) return undefined;
-        let {top, left} = e.getBoundingClientRect();
+        const {top, left} = e.getBoundingClientRect();
         return {top, left};
     }
 
@@ -1134,12 +1135,13 @@ class VJS
     $lsse(u, c, e = '', w = false) {
         if (!u || typeof c !== 'function') return null;  // nothing to listen
 
-        let es = new EventSource(u, {withCredentials: w});
+        const es = new EventSource(u, {withCredentials: w});
         if (!es) return null;
-        let f = evt => { c(evt.data, evt.lastEventId, evt.origin); };
+        const f = evt => { c(evt.data, evt.lastEventId, evt.origin); };
 
         if (!e) es.onmessage = f;
         else es.addEventListener(e, f);
+
         es.onerror = err => console.error(`'EventSource' ${(err.type ?? 'error')} @${VJS.__ms(err.timeStamp ?? 0)}`);
         return es;
     }
@@ -1204,7 +1206,7 @@ class VJS
         e = VJS.__o(e, null);
         if (!e) return undefined;
 
-        let b = VJS.__i().$pos(e), d = document.documentElement, w = window;
+        const b = VJS.__i().$pos(e), d = document.documentElement, w = window;
         return {
             top:   b.top + w.scrollY - d.clientTop,
             left:  b.left + w.scrollX - d.clientLeft
@@ -1227,7 +1229,7 @@ class VJS
         e = VJS.__o(e, null);
         if (!e) return undefined;
 
-        let b = VJS.__i().$pos(e), s = getComputedStyle(e);
+        const b = VJS.__i().$pos(e), s = getComputedStyle(e);
         return {
             top:   b.top - parseInt(s.marginTop),
             left:  b.left - parseInt(s.marginLeft)
@@ -1270,15 +1272,19 @@ class VJS
      */
     isLive(c) {
         if (c instanceof HTMLCollection) return true;
-        let l = c.length;
+        const l = c.length;
         if (!l) return undefined;
-        let e = c.item(0);
-        let p = e.parentNode;
-        let n = e.cloneNode();
+
+        let e = c.item(0),
+            p = e.parentNode,
+            n = e.cloneNode();
+
         n.style = "display:none!important";
         p.appendChild(n);
-        let i = c.length !== l;
+
+        const i = c.length !== l;
         p.removeChild(n);
+
         return i;
     }
 
@@ -1363,6 +1369,7 @@ class VJS
     static __go(s, f, e = null, a = 0) {
         if (typeof s !== 'string') return null;
         if (!['#', '.', '=', '@'].includes(s[0])) s = `${f}${s}`;  // don't add symbol `f`, if it has already
+
         return VJS.__e(s, e, a);
     }
 
@@ -1396,14 +1403,14 @@ class VJS
 
         // Try to convert to numeric value
         if (!isNaN(v)) {
-            let _n = +v, _i = _n|0;
+            const _n = +v, _i = _n|0;
 
             if (_n === _i) return _i;
             return _n;
         }
 
         // Try to convert to boolean value
-        let _v = v.toLowerCase();
+        const _v = v.toLowerCase();
         if (_v === 'true' || _v === 'on') return true;
         if (_v === 'false' || _v === 'off') return false;
 
@@ -1414,6 +1421,7 @@ class VJS
     static __i(p = '') {
         if (!VJS.__v) VJS.__v = new VJS(p);
         else VJS.__sp(p);
+
         return VJS.__v;
     }
 
@@ -1421,14 +1429,17 @@ class VJS
     static __o(e, d) {
         if (!e) return null;  // don't do anything
         if (typeof e === 'string' && e[0] !== '#') e = `#${e}`;
+
         return this.__e(e, d) ?? null;
     }
 
     /** @private */  //* class  (params: `element`, `classList`, `function`)
     static __c(e, c, f) {
         e = this.__o(e, null);
+
         if (!e) return;
         if (!(c instanceof Array)) c = [c];
+
         e.classList[f](...c);
     }
 
@@ -1436,6 +1447,7 @@ class VJS
     static __dn(n, i = 0) {
         if (!n) return '';
         if (VJS.__p) return `data-${ i ? n : `${VJS.__p}-${n}` }`;
+
         return `data-${n}`;
     }
 
@@ -1448,6 +1460,7 @@ class VJS
             c = [];
 
         if (a || !VJS.__p) return k;
+
         k.forEach(d => {
             if (d.includes(VJS.__p)) c.push(d);
         });
@@ -1477,11 +1490,12 @@ class VJS
         e = VJS.__o(e, null);
         if (!e) return !v ? 0 : undefined;
 
-        let ff = f.toLowerCase(),
-            b = f === 'Height' ? ['Top', 'Bottom'] : ['Left', 'Right'];
+        const ff = f.toLowerCase(),
+              b = f === 'Height' ? ['Top', 'Bottom'] : ['Left', 'Right'];
 
         if (!v) {
             let r;
+
             if (t === 'inner') r = e[`client${f}`];
             else if (t === 'outer') r = e[`offset${f}`];
             else if (t === 'with-margin') {
@@ -1489,12 +1503,14 @@ class VJS
                 r = e.getBoundingClientRect()[ff] + parseInt(s[`margin${b[0]}`]) + parseInt(s[`margin${b[1]}`]);
             }
             else r = parseInt(e.style[ff]);
+
             return r;
         }
         else {
             if (typeof v === 'function') v = v();
             if (typeof v === 'string') e.style[ff] = v;
             else e.style[ff] = `${v}px`;
+
             return undefined;
         }
     }
@@ -1503,30 +1519,30 @@ class VJS
 
     /** @private */  //* element  (params: `stringQuery`, `element`, `all`)
     static __e(s, e, a = 0) {
-        let d = document;
+        const d = document;
 
         if (typeof s === 'string') {
             s = s.trim();
 
-            let _s = s.toLowerCase();
+            const _s = s.toLowerCase();
             if (!e) e = d;
 
             if (_s.match(/^\#?document$/)) return d;
             else if (_s.match(/^\#?window$/)) return window;
             else if (_s.match(/^\#[a-z][\w\-]+$/)) return VJS.__$i(s.substring(1));
             else if (_s.match(/^\.[a-z][\w\-]+$/)) {
-                let r = VJS.__$c(VJS.__o(e), s.substring(1));
+                const r = VJS.__$c(VJS.__o(e), s.substring(1));
                 return a ? r : r.item(0);
             }
             else if (_s.match(/^\=["']?[a-z][\w\-]+["']?$/)) {
-                let r = VJS.__$n(s.substring(1));
+                const r = VJS.__$n(s.substring(1));
                 return a ? r : r.item(0);
             }
             else if (
                 _s.match(/^\@[a-z][\w\-]*$/) ||
                 _s.match(/^(?:h[1-6]|[abipqsu]|[a-z]{2,})$/)
             ) {
-                let r = VJS.__$t(VJS.__o(e), s[0] === '@' ? s.substring(1) : s);
+                const r = VJS.__$t(VJS.__o(e), s[0] === '@' ? s.substring(1) : s);
                 return a ? r : r.item(0);
             }
             else return VJS.__$q(e, s, a);
@@ -1552,7 +1568,7 @@ class VJS
         let _r = [...r], i = [];
 
         for (let [k, v] of f) {  // or `[...f.entries()].map(([k, v]) => {`
-            let _i = _r.indexOf(k);
+            const _i = _r.indexOf(k);
             i.push(k);
 
             if (!v) {
@@ -1593,9 +1609,11 @@ class VJS
     static __bd(b, u) {
         if (typeof b === 'string') {
             if (b[0] === '#') {
-                let o = VJS.__fd(b, 'j');
+                const o = VJS.__fd(b, 'j');
+
                 if (o.err === 'nfe') VJS.__de(1, VJS.E7);  // "NotFormElement"
                 if (o.err === 'mrf') VJS.__err(VJS.E3);    // "Missing Required Field(s)"
+
                 b = o.data;
             }
             else b = Object.fromEntries(new URLSearchParams(b));
@@ -1614,8 +1632,8 @@ class VJS
     static async __r(u, m = 'GET', d = {}) {
         m = m.toUpperCase();
 
+        const _p = m === 'POST' || m === 'GET';  // GET for URL search params
         let f, _e, _u,
-            _p = m === 'POST' || m === 'GET',  // GET for URL search params
             o = {method: m, cache: 'no-cache'},
             success = false, data = null;
 
@@ -1626,7 +1644,7 @@ class VJS
         }
         catch(e) { return {success, data, message: e.toString()}; }
 
-        let b = _p ? new URLSearchParams(d).toString() : JSON.stringify(d);
+        const b = _p ? new URLSearchParams(d).toString() : JSON.stringify(d);
 
         if (['PUT', 'PATCH', 'POST', 'DELETE'].includes(m)) {
             try {
@@ -1721,7 +1739,7 @@ class VJS
      */
     static register(p = '') {
         try {
-            let v = VJS.getInstance(p);
+            const v = VJS.getInstance(p);
 
             Object.getOwnPropertyNames(VJS.prototype)
                 .filter(n => n!=='constructor' && !~n.indexOf('_'))
