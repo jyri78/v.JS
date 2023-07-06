@@ -18,19 +18,27 @@
 
 // Define some object types for JSDoc.
 /**
- * @typedef  {Object} Position
+ * @typedef  {Object} Position  HTMLElement position returned by {@link $pos|$pos()} and {@link offset|offset()}.
  * @property {number} top
  * @property {number} left
  */
 
 /**
- * @typedef  {Object} Size
+ * @typedef  {Object} Size    HTMLElement size returned by {@link $s|$s()}.
  * @property {number} width
  * @property {number} height
  */
 
 /**
- * @typedef  {Object}                     Response
+ * @typedef  {Object}   WsEvent         Object with callbacks to be added as methods {@link $ws|$ws()} second parameter.
+ * @property {function} [open=null]
+ * @property {function} [message=null]
+ * @property {function} [close=null]
+ * @property {function} [error=null]
+ */
+
+/**
+ * @typedef  {Object}                     Response  Returned by AJAX request (GET, POST etc).
  * @property {boolean}                    success   If response was OK (status in the range 200-299), or not.
  * @property {(Object|Blob|string|null)}  data      Response data, or `NULL`.
  * @property {string}                     message   If `success == false`, then status code and text or error message (in case of AJAX error), otherwise empty string.
@@ -609,6 +617,41 @@ class VJS
         }
 
         return o.data;
+    }
+
+    /**
+     * `WebSocket` - creates new connection instance, adds event listeners, and returns it.
+     * 
+     * @method  $ws
+     *
+     * @param   {string}   url        URL to the server.
+     * @param   {WsEvent}  callbacks  Object of callbacks. Needs include at least one of `open`, `message`, `close` or `error`; all other keys are ignored.
+     *
+     * @return  {(WebSocket|null)}  In case of any error `null` is returned, otherwise on success `WebSocket` instance.
+     */
+    $ws(u, c) {
+        let _f = ['open', 'message', 'close', 'error'], ok = false, _u, ws;
+
+        try {
+            if (u.substring(0, 2) === '//') u = `wss:${u}`;  // prefer secure connection
+            _u = new URL(u.trim());
+        }
+        catch (e) { return null; }
+
+        if (_u.protocol !== 'ws:' && _u.protocol !== 'wss:') return null;  // allow only WebSocket url
+        for (const k in Object.keys(c)) {
+            if (_f.includes(k)) ok = true;  // there is at least one accepted callback
+        }
+        u = `${_u.origin}${_u.pathname}${_u.search}`;  // "clean" URL (hash/fragment not allowed)
+
+        try { ws = new WebSocket(u); }
+        catch (e) { return null; }
+
+        // Finally add event listeners callbacks
+        for (const k in Object.keys(c)) {
+            if (_f.includes(k)) ws[`on${k}`] = c[k];
+        }
+        return ws;
     }
 
     /**
@@ -1571,36 +1614,45 @@ class VJS
     static async __r(u, m = 'GET', d = {}) {
         m = m.toUpperCase();
 
-        let f, _e, _u = new URL(u),
+        let f, _e, _u,
             _p = m === 'POST' || m === 'GET',  // GET for URL search params
-            o = {method: m, cache: 'no-cache'}, data = null;
+            o = {method: m, cache: 'no-cache'},
+            success = false, data = null;
 
-        u = `${_u.origin}${_u.pathname}`;
-        d = VJS.__bd(d, _u);
+        try {
+            _u = new URL(u);
+            u = `${_u.origin}${_u.pathname}`;
+            d = VJS.__bd(d, _u);
+        }
+        catch(e) { return {success, data, message: e.toString()}; }
 
         let b = _p ? new URLSearchParams(d).toString() : JSON.stringify(d);
 
         if (['PUT', 'PATCH', 'POST', 'DELETE'].includes(m)) {
-            if (!Object.keys(d).length) {
-                if (m !== 'DELETE') throw new TypeError(VJS.E4);  // just-in-case
+            try {
+                if (!Object.keys(d).length) {
+                    if (m !== 'DELETE') throw new TypeError(VJS.E4);  // just-in-case
+                }
+                else {
+                    o.mode = 'cors';
+                    o.credentials = 'same-origin';
+                    o.headers = {
+                        'Content-Type': _p ? 'application/x-www-form-urlencoded' : 'application/json'
+                    };
+                    o.body = b;
+                }
             }
-            else {
-                o.mode = 'cors';
-                o.credentials = 'same-origin';
-                o.headers = {
-                    'Content-Type': _p ? 'application/x-www-form-urlencoded' : 'application/json'
-                };
-                o.body = b;
-            }
+            catch (e) { return {success, data, message: e.toString()} }
         }
         else if (b) u += `?${b}`;
 
         try { f = await fetch(u, o); }
         catch (e) { _e = e.toString(); }
 
-        if (!f) return {success: false, data, message: _e};
+        if (!f) return {success, data, message: _e};
 
-        let r, ct = f.headers.get('Content-Type'), success = f.ok;
+        let r, ct = f.headers.get('Content-Type');
+        success = f.ok;
 
         if (success) {
             let message = '';
@@ -1623,7 +1675,7 @@ class VJS
         }
         else r = {
             success, data,
-            message: `${f.status} ${VJS.RSC[f.status] ?? ''}`
+            message: `Response: ${f.status} ${VJS.RSC[f.status] ?? ''}`
         };
 
         return r;
