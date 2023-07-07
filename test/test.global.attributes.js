@@ -373,7 +373,7 @@ describe('GLOBAL: attributes', () => {
         });
     });
 
-    describe('$rcl(), remClass()', () => {
+    describe('$rcl(), remClass(), replClass()', () => {
         it('should remove added classes from element', () => {
             let clsList = ['second-new-class', 'third-new-class'],
                 el = $i('test-id');
@@ -389,9 +389,6 @@ describe('GLOBAL: attributes', () => {
             remClass(el, clsList);
             assert.isEmpty( $gcl(el) );
         });
-    });
-
-    describe('$pcl(), replaceClass()', () => {
         it('should replace existing class with other one', () => {
             let el = $t('kbd', 'test-id')[1];
  
@@ -399,19 +396,19 @@ describe('GLOBAL: attributes', () => {
             assert.isTrue( $hcl(el, 'another-test-class') );
  
             // Replace it and confirm changes
-            $pcl(el, 'another-test-class', 'replaced-test-class');
+            $rcl(el, 'another-test-class', 'replaced-test-class');
             assert.isFalse( $hcl(el, 'another-test-class') );
             assert.isTrue( $hcl(el, 'replaced-test-class') );
  
             // Change back with alias function and confirm
-            replaceClass(el, 'replaced-test-class', 'another-test-class');
+            replClass(el, 'replaced-test-class', 'another-test-class');
             assert.isFalse( $hcl(el, 'replaced-test-class') );
             assert.isTrue( $hcl(el, 'another-test-class') );
         });
         it('should not replace non existent class', () => {
             let el = $t('kbd', 'test-id')[1];
  
-            $pcl(el, 'non-existent-class', 'replaced-test-class');
+            $rcl(el, 'non-existent-class', 'replaced-test-class');
             assert.isFalse( $hcl(el, 'replaced-test-class') );
  
             // Confirm, that element has only original classes

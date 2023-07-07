@@ -108,9 +108,9 @@ class VJS
      * @return  {(HTMLElement|HTMLCollection|NodeList|null)}
      */
     $$(e, n, t = 'id', a = false) {
-        let s = {id: '#', class: '.', name: '=', tag: '@'},
-            i = VJS.__i(),
-            q = i.$gda(e, n);  // get data attribute value (selector)
+        const s = {id: '#', class: '.', name: '=', tag: '@'},
+              i = VJS.__i();
+        let q = i.$gda(e, n);  // get data attribute value (selector)
 
         if (!q) return null;
         if (Object.keys(s).includes(t)) q = `${s[t]}${q}`;
@@ -574,7 +574,7 @@ class VJS
     }
 
     /**
-     * Returns form data object, string or JSON.
+     * `formData` - returns form data object, string or JSON.
      * 
      * **Note!** The method differs from {@link serialize|serialize()} in a way that it checks if required fields are filled or not.
      * 
@@ -856,37 +856,32 @@ class VJS
     addClass(e, c) { VJS.__i().$acl(e, c); }
 
     /**
-     * `removeClass` - removes class name or array of class names from the element.
+     * `removeClass`/`replaceClass` - removes class name or array of class names from the element.
      *
      * @method  $rcl
      * @see     alias {@link remClass|remClass()}
      * 
-     * @param   {(HTMLElement|string)}  element    HTMLElement or ID of element.
-     * @param   {(string|string[])}     className  Class name or array of class names to remove.
+     * @param   {(HTMLElement|string)}  element         HTMLElement or ID of element.
+     * @param   {(string|string[])}     className       Class name to remove/replace. If `newClassName` not given, can be also array of class names.
+     * @param   {string=}               [newClassName]  Class name to replace with. If not given, `className` will be removed, otherwise will be replaced with this one.
      */
-    $rcl(e, c) { VJS.__c(e, c, 'remove'); }
+    $rcl(e, c, n = '') {
+        if (!n) VJS.__c(e, c, 'remove');
+        else {
+            if (Array.isArray(c)) c = c[0];  // replace only one class
+            VJS.__c(e, [c, n], 'replace');
+        }
+    }
     /**
      * @method  remClass
      * @see     read more {@link $rcl|$rcl()}
      */
     remClass(e, c) { VJS.__i().$rcl(e, c); }
-
     /**
-     * `replaceClass` - replaces elements old class name with new one.
-     *
-     * @method  $pcl
-     * @see     alias {@link replaceClass|replaceClass()}
-     * 
-     * @param   {(HTMLElement|string)}  element       HTMLElement or ID of element.
-     * @param   {string}                oldClassName  Class name to be replaced.
-     * @param   {string}                newClassName  Class name to replace with.
+     * @method  replClass
+     * @see     read more {@link $rcl|$rcl()}
      */
-    $pcl(e, o, n) { VJS.__c(e, [o, n], 'replace'); }
-    /**
-     * @method  replaceClass
-     * @see     read more {@link $pcl|$pcl()}
-     */
-    replaceClass(e, o, n) { VJS.__i().$pcl(e, o, n); }
+    replClass(e, o, n) { VJS.__i().$rcl(e, o, n); }
 
     /**
      * `toggleClass` - toggles class name in the element.
