@@ -185,6 +185,21 @@ describe('GLOBAL: attributes', () => {
         });
     });
 
+    describe('$dav', () => {
+        it('should return object', () => {
+            let obj1 = $dav('test-query', ['idVal', 'classVal', 'nameVal']),
+                obj2 = $dav('test-query', ['classVal', 'nameVal', 'tagVal', 'missingVal'], true);
+ 
+            assert.isObject( obj1 );
+            assert.hasAllKeys( obj1, ['idVal', 'classVal', 'nameVal'] );
+            assert.deepEqual( obj1, {idVal: 'test-id', classVal: 'test-class', nameVal: 'test-name'} );
+ 
+            assert.isObject( obj2 );
+            assert.hasAllKeys( obj2, ['c', 'n', 't', 'm'] );
+            assert.deepEqual( obj2, {c: 'test-class', n: 'test-name', t: 'kbd', m: ''} );
+        });
+    });
+
     describe('$w(), $h(), width(), height()', () => {
         before(() => $('#vjs-test').style.display = 'block');
         after(() => $('#vjs-test').style.display = 'none');

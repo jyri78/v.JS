@@ -789,7 +789,7 @@ class VJS
      * @see     alias {@link remDataAttrib|remDataAttrib()}
      * 
      * @param   {(HTMLElement|string)}  element        HTMLElement or ID of element.
-     * @param   {string}                attributeName  Name of the elements attribute.
+     * @param   {string}                attributeName  Name of the elements data attribute.
      */
     $rda(e, n) { if (n) VJS.__i().$ra(e, VJS.__dn(n)); }
     /**
@@ -797,6 +797,31 @@ class VJS
      * @see     read more {@link $rda|$rda()}
      */
     remDataAttrib(e, n) { VJS.__i().$rda(e, n); }
+
+    /**
+     * `dataAttributeValues` - reads elements data attribute values and returns object with result.
+     *
+     * @method  $dav
+     * @see     alias {@link dataAttribVals|dataAttribVals()}
+     *
+     * @param   {(HTMLElement|string)}  element                  HTMLElement or ID of element.
+     * @param   {string[]}              dataAttributes           Array of elements data attributes.
+     * @param   {boolean}               [firstLetterOnly=false]  Does returned object contain keys with first letter only or full keyname (data attribute name). **Note!** If `firstLetterOnly = true`, then make sure you are using data attribute names beginning with different letters, or you may lose some data.
+     *
+     * @return  {object}
+     */
+    $dav(e, a, f = false) {
+        let r = {}, i = VJS.__i();
+        if (!Array.isArray(a)) a = [a];  // just-in-case
+        a.forEach(d => { r[ f ? d[0] : d ] = i.$gda(e, d) ?? ''; });
+        return r;
+    }
+    /**
+     * @method  dataAttribVals
+     * @see     read more {@link $dav|$dav()}
+     */
+    dataAttribVals(e, a, f = false) { VJS.__i().$dav(e, a, f); }
+
 
     /**
      * `hasClass` - returns boolean value if the element contains class name or not.
