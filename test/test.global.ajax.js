@@ -1,5 +1,5 @@
 (async function() {
-    if (!window.$$) VJS.register('prfx');  // for grep to properly work
+    if (!window.$$) VJS.register({prefix: 'prfx'});  // for grep to properly work
 
     let u = 'https://jsonplaceholder.typicode.com',  // Free fake API for testing and prototyping.
         rGet1 = await $get(`${u}/todos/29`),

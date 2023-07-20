@@ -1,6 +1,6 @@
 describe('GLOBAL: selectors', () => {
     before(() => {
-        if (!window.$$) VJS.register('prfx');  // for grep to properly work
+        if (!window.$$) VJS.register({prefix: 'prfx'});  // for grep to properly work
     });
 
 

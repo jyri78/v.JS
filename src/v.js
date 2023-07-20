@@ -18,6 +18,13 @@
 
 // Define some object types for JSDoc.
 /**
+ * @typedef  {Object}    Options             Object with key-settings for `VJS.register()` (will be "remembered" statically).
+ * @property {string=}   [prefix]            String to be prepended to the data name.
+ * @property {boolean}   [raiseError=false]  In case of some error, new Error will be thrown. Set either it to `true` or define `errorFunc` option.
+ * @property {function}  [errorFunc=null]    In case of some error, call this function. Called function gets one, message parameter. **Note!** if `raiseError = true`, then function is ignored and not called.
+ */
+
+/**
  * @typedef  {Object} Position  HTMLElement position returned by {@link $pos|$pos()} and {@link offset|offset()}.
  * @property {number} top
  * @property {number} left
@@ -41,7 +48,7 @@
  * @typedef  {Object}                     Response  Returned by AJAX request (GET, POST etc).
  * @property {boolean}                    success   If response was OK (status in the range 200-299), or not.
  * @property {(Object|Blob|string|null)}  data      Response data, or `NULL`.
- * @property {string}                     message   If `success == false`, then status code and text or error message (in case of AJAX error), otherwise empty string.
+ * @property {string}                     message   If `success == false`, then status code and text or error message (in case of AJAX error), otherwise empty string.
  */
 
 
@@ -65,15 +72,14 @@ class VJS
     /**
      * Constructor of VJS.
      * 
-     * @param   {string=}  [prefix] String to be prepended to the data attribute name (will be "remembered" statically).
+     * @param   {Options}  [options={}]  Some options for VJS class (will be "remembered" statically); look at {@link Options|Options} for a setting keys.
      *
      * @return  {VJS}
      */
-    constructor(p = '') {
-        if (typeof window === 'undefined') VJS._err(VJS.E1);
-        if (typeof String.prototype.replaceAll !== 'function') VJS._err(VJS.E2);
-
-        VJS.__sp(p);
+    constructor(o = {}) {
+        if (typeof window === 'undefined') VJS._err(VJS.E1, 1);
+        if (typeof String.prototype.replaceAll !== 'function') VJS._err(VJS.E2, 0);
+        if (o && o.constructor === {}.constructor) VJS.__so(o);
     }
 
 
@@ -247,7 +253,7 @@ class VJS
     getElemsByTag(t, e = document, f = false) { return VJS.__i().$t(t, e, f); }
 
     /**
-     * `querySelector` - returns a static (non-live) NodeList if `all = true`, HTMLElement otherwise.
+     * `querySelector` - returns a static (non-live) NodeList if `all = true`, HTMLElement otherwise.
      *
      * @method  $q
      * @see     alias {@link querySel|querySel()}
@@ -579,7 +585,7 @@ class VJS
      * **Note!** The method differs from {@link serialize|serialize()} in a way that it checks if required fields are filled or not.
      * 
      * @method  $fd
-     * @throws  {(DOMException|Error)}  If form not found, then function throws `DOMException` **NotFoundError**. If missing some required fields and validation classes not given, then function throws `Error`.
+     * @throws  {(DOMException|Error)}  In case of options set to `raiseError = true` (read more {@link register|register()}):<br>   &bull;  if form not found, then function throws `DOMException` **NotFoundError**;<br>   &bull;  if missing some required fields and validation classes not given, then function throws `Error`.
      * 
      * @see     Look also {@link serialize|serialize()}
      *
@@ -598,8 +604,8 @@ class VJS
 
         const o = VJS.__fd(f, t, r, e);
 
-        if (o.err === 'nfe') VJS.__de(1, VJS.E7);  // "NotFormElement"
-        if (o.err === 'mrf') {                     // "Missing Required Field(s)"
+        if (o.err === 'nfe') VJS.__de(VJS.E7);  // "NotFormElement"
+        if (o.err === 'mrf') {                  // "Missing Required Field(s)"
             if (v && v.error && v.success) {  // if error and success classes is given, set them accordingly,...
                 o.ids.forEach(i => {
                     if (o.data.includes(i)) {
@@ -611,11 +617,12 @@ class VJS
                         VJS.__c(i, [v.success], 'add');
                     }
                 });
-                return null;
+                // return null;
             }
             else VJS._err(VJS.E3);  // ... else raise Error
         }
 
+        if (o.err) return null;  // if only message alert or conslole.error()
         return o.data;
     }
 
@@ -623,9 +630,10 @@ class VJS
      * `WebSocket` - creates new connection instance, adds event listeners, and returns it.
      * 
      * @method  $ws
+     * @throws  {(DOMException|TypeError|Error)}  In case of options set to `raiseError = true` (read more {@link register|register()}):<br>   &bull;  if no valid protocol given, `DOMException` **SyntaxError** will be raised;<br>   &bull;  if no valid URL given, `TypeError` will be raised;<br>   &bull;  if some other error occurs, `Error` will be raised.
      *
      * @param   {string}   url        URL to the server.
-     * @param   {WsEvent}  callbacks  Object of callbacks. Needs include at least one of `open`, `message`, `close` or `error`; all other keys are ignored.
+     * @param   {WsEvent}  callbacks  Object of callbacks. Must contain at least one of `open`, `message`, `close` or `error`; all other keys are ignored.
      *
      * @return  {(WebSocket|null)}  In case of any error `null` is returned, otherwise on success `WebSocket` instance.
      */
@@ -637,16 +645,25 @@ class VJS
             if (u.substring(0, 2) === '//') u = `wss:${u}`;  // prefer secure connection
             _u = new URL(u.trim());
         }
-        catch (e) { return null; }
+        catch (e) {
+            VJS._err(VJS.E9, 0, TypeError, e);
+            return null;
+        }
 
-        if (_u.protocol !== 'ws:' && _u.protocol !== 'wss:') return null;  // allow only WebSocket url
+        if (_u.protocol !== 'ws:' && _u.protocol !== 'wss:') {  // allow only WebSocket url
+            VJS.__de(VJS.E9, 0, 'SyntaxError');
+            return null;
+        }
         for (const k in Object.keys(c)) {
             if (_f.includes(k)) ok = true;  // there is at least one accepted callback
         }
         u = `${_u.origin}${_u.pathname}${_u.search}`;  // "clean" URL (hash/fragment not allowed)
 
         try { ws = new WebSocket(u); }
-        catch (e) { return null; }
+        catch (e) {  // just-in-case, but shouldn't happen
+            VJS._err(e.message);
+            return null;
+        }
 
         // Finally add event listeners callbacks
         for (const k in Object.keys(c)) {
@@ -1070,6 +1087,8 @@ class VJS
      *
      * @async
      * @method  $get
+     * @throws  {TypeError}  If bad URL given and options set to `raiseError = true` (read more {@link register|register()}).
+     * 
      * @see     also {@link $post|$post()}, {@link $put|$put()}, {@link $patch|$patch()}, and {@link $del|$del()}
      *
      * @param   {string}   url                 URL to the server.
@@ -1083,6 +1102,8 @@ class VJS
      *
      * @async
      * @method  $put
+     * @throws  {TypeError}  If bad URL given or missing data, and options set to `raiseError = true` (read more {@link register|register()}).
+     * 
      * @see     also {@link $get|$get()}, {@link $post|$post()}, {@link $patch|$patch()}, and {@link $del|$del()}
      *
      * @param   {string}                    url   URL to the server.
@@ -1097,6 +1118,8 @@ class VJS
      *
      * @async
      * @method  $del
+     * @throws  {TypeError}  If bad URL given and options set to `raiseError = true` (read more {@link register|register()}).
+     * 
      * @see     also {@link $get|$get()}, {@link $post|$post()}, {@link $put|$put()}, and {@link $patch|$patch()}
      *
      * @param   {string}                    url   URL to the server.
@@ -1111,6 +1134,8 @@ class VJS
      *
      * @async
      * @method  $post
+     * @throws  {TypeError}  If bad URL given or missing data, and options set to `raiseError = true` (read more {@link register|register()}).
+     * 
      * @see     also {@link $get|$get()}, {@link $put|$put()}, {@link $patch|$patch()}, and {@link $del|$del()}
      *
      * @param   {string}                    url                 URL to the server.
@@ -1125,6 +1150,8 @@ class VJS
      *
      * @async
      * @method  $patch
+     * @throws  {TypeError}  If bad URL given or missing data, and options set to `raiseError = true` (read more {@link register|register()}).
+     * 
      * @see     also {@link $get|$get()}, {@link $post|$post()}, {@link $put|$put()}, and {@link $del|$del()}
      *
      * @param   {string}                    url                 URL to the server.
@@ -1180,7 +1207,7 @@ class VJS
      * Inserts or returns elements HTML string.
      * 
      * @method  $html
-     * @throws  {DOMException}   If no valid element found or given, method raises DOM exception with the corresponding name.
+     * @throws  {DOMException}   If no valid element found (or given) and options set to `raiseError = true` (read more {@link register|register()}), method raises DOM exception with the corresponding name.
      *
      * @param   {(HTMLElement|string)}  element     HTMLElement or ID of element.
      * @param   {string=}               [text]      HTML string to add to the element; if empty, then returns elements content.
@@ -1200,13 +1227,13 @@ class VJS
                         }
                         else e.innerHTML = t;
                     }
-                    catch (e) { VJS.__de(1, e.message, 0, e.name); }
+                    catch (e) { VJS.__de(e.message, 0, e.name); }
                 }
-                else VJS.__de(1, VJS.E6, 1);
+                else VJS.__de(VJS.E6, 1);
             }
             else return e.innerHTML;
         }
-        else if (t) VJS.__de(1);
+        else if (t) VJS.__de();
     }
 
 
@@ -1354,15 +1381,16 @@ class VJS
     //    So-called private static helper methods (should not called outside)
     // =========================================================================
 
-    /** @readonly */static get E1() { return 'VJS class works only in Browser!'; }
-    /** @readonly */static get E2() { return 'Your Browser does not support ECMAScript11 (2020)!'; }
-    /** @readonly */static get E3() { return 'Fill up required fields!'; }
-    /** @readonly */static get E4() { return 'No data given.'; }
-    /** @readonly */static get E5() { return 'No valid Element found.'; }
-    /** @readonly */static get E6() { return 'No valid Element given.'; }
-    /** @readonly */static get E7() { return 'Form not found.'; }
-    /** @readonly */static get E8() { return 'Given data type not supported.'; }
-    /** @readonly */static get RSC() {
+    /** @ignore */static get E1() { return 'VJS class works only in Browser!'; }
+    /** @ignore */static get E2() { return 'Your Browser does not support ECMAScript11 (2020)!'; }
+    /** @ignore */static get E3() { return 'Fill up required fields!'; }
+    /** @ignore */static get E4() { return 'No data given.'; }
+    /** @ignore */static get E5() { return 'No valid Element found.'; }
+    /** @ignore */static get E6() { return 'No valid Element given.'; }
+    /** @ignore */static get E7() { return 'Form not found.'; }
+    /** @ignore */static get E8() { return 'Given data type not supported.'; }
+    /** @ignore */static get E9() { return 'No valid URL given.'; }
+    /** @ignore */static get RSC() {
         return {
             301: 'Moved Permanently', 307: 'Temporary Redirect', 308: 'Permanent Redirect',
             400: 'Bad Request', 401: 'Unauthorized', 403: 'Forbidden', 404: 'Not Found',
@@ -1371,18 +1399,34 @@ class VJS
             503: 'Service Unavailable', 504: 'Gateway Timeout', 505: 'HTTP Version Not Supported'
         }
     };
-    /** @private */static __v;  //* value (instance)
-    /** @private */static __p;  //* prefix
+    /** @private */static _ᐩi;  //* instance
+    /** @private */static _ㅣp;  //* prefix
+    /** @private */static _ㅣr;  //* raiseError
+    /** @private */static _ㅣe;  //* errorFunc
     /** @private */static __$i(i) { return document.getElementById(i); }
     /** @private */static __$n(n) { return document.getElementsByName(n); }
     /** @private */static __$c(e, c) { return !e ? null : e.getElementsByClassName(c); }
     /** @private */static __$t(e, t) { return !e ? null : e.getElementsByTagName(t); }
     /** @private */static __$q(e, q, a) { try { return e[`querySelector${a ? 'All' : ''}`](q); } catch (_) { return null; } }
-    /** @private */static _err(m) { throw new Error(m); }
 
-    /** @private */  //* domError  (params:  `throw`, `message`, `notSupported`, `name`)
-    static __de(t = 0, m = VJS.E5, s = 0, n = '') {
-        if (t) throw new DOMException(m, s ? 'NotSupportedError' : (!n ? 'NotFoundError' : n));
+    /** @private */  //* error  (params: `message`, `force`, `errorClass`, `cause`)
+    static _err(m, f = 0, e = Error, c = null) {
+        if (VJS._ㅣr || f) {
+            let _p = [m];
+            if (c) _p.push({cause: c});
+            throw new e(..._p);
+        }
+        else if (VJS._ㅣe) VJS._ㅣe(m);
+        else console.error(`Error: ${m}`);
+    }
+
+    /** @private */  //* domError  (params:  `message`, `notSupported`, `name`)
+    static __de(m = VJS.E5, s = 0, n = '') {
+        let _n = s ? 'NotSupportedError' : (!n ? 'NotFoundError' : n);
+
+        if (VJS._ㅣr) throw new DOMException(m, _n);
+        else if (VJS._ㅣe) VJS._ㅣe(m);
+        else console.error(`${_n}: ${m}`)
     }
 
     /** @private */  //* getObject  (params:  `selector`, `firstSymbol`, `element`, `all`)
@@ -1393,13 +1437,26 @@ class VJS
         return VJS.__e(s, e, a);
     }
 
-    /** @private */  //* setPrefix  (param: `prefix`)
-    static __sp(p = '') {
-        p = p.trim();
-        if (p) {
-            p = p.replace(/[^\w\d]/gi, '');
-            if (p) VJS.__p = p;
-        }
+    /** @private */  //* setOptions  (params: `options`, `change`)
+    static __so(o, c = 0) {
+        let def = {  // defaults
+                prefix: '',
+                raiseError: false,
+                errorFunc: null
+            },
+            _t = s => {
+                if (typeof s !== 'string') return s;
+                return s.trim();
+            },
+            k = Object.keys(o);
+
+        Object.keys(def).forEach(_k => {
+            if (k.includes(_k)) VJS[`_ㅣ${_k[0]}`] = _t(o[_k]);  // if key exists, set it
+            else if (!c) VJS[`_ㅣ${k[0]}`] = def[_k];  // if not change (construct), reset to default
+        });
+
+        if (VJS._ㅣp) VJS._ㅣp = VJS._ㅣp.replace(/[^\w\d]/gi, '');  // clean prefix name
+        if (VJS._ㅣe && typeof VJS._ㅣe !== 'function') VJS._ㅣe = null;  // confirm, that callback is function
     }
 
     /** @private */  //* minSec  (param:  `millisec`)
@@ -1437,12 +1494,12 @@ class VJS
         return v;  // finally return string
     }
 
-    /** @private */  //* instance  (param: `prefix`)
-    static __i(p = '') {
-        if (!VJS.__v) VJS.__v = new VJS(p);
-        else VJS.__sp(p);
+    /** @private */  //* instance  (param: `options`)
+    static __i(o = null) {
+        if (!VJS._ᐩi) VJS._ᐩi = new VJS(o);
+        else if (o && o.constructor === {}.constructor && Object.keys(o).length) VJS.__so(o, 1);
 
-        return VJS.__v;
+        return VJS._ᐩi;
     }
 
     /** @private */  //* object  (param: `element`, `default`)
@@ -1466,7 +1523,7 @@ class VJS
     /** @private */  //* dataName  (params: `name`, `ignorePrefix`)
     static __dn(n, i = 0) {
         if (!n) return '';
-        if (VJS.__p) return `data-${ i ? n : `${VJS.__p}-${n}` }`;
+        if (VJS._ㅣp) return `data-${ i ? n : `${VJS._ㅣp}-${n}` }`;
 
         return `data-${n}`;
     }
@@ -1479,10 +1536,10 @@ class VJS
         let k = Object.keys(e.dataset),
             c = [];
 
-        if (a || !VJS.__p) return k;
+        if (a || !VJS._ㅣp) return k;
 
         k.forEach(d => {
-            if (d.includes(VJS.__p)) c.push(d);
+            if (d.includes(VJS._ㅣp)) c.push(d);
         });
         return c;
     }
@@ -1631,15 +1688,15 @@ class VJS
             if (b[0] === '#') {
                 const o = VJS.__fd(b, 'j');
 
-                if (o.err === 'nfe') VJS.__de(1, VJS.E7);  // "NotFormElement"
-                if (o.err === 'mrf') VJS.__err(VJS.E3);    // "Missing Required Field(s)"
+                if (o.err === 'nfe') VJS.__de(VJS.E7);   // "NotFormElement"
+                if (o.err === 'mrf') VJS._err(VJS.E3);  // "Missing Required Field(s)"
 
                 b = o.data;
             }
             else b = Object.fromEntries(new URLSearchParams(b));
         }
         else if (b instanceof FormData || b.constructor !== {}.constructor) {
-            if (!b[Symbol.iterator]) throw new TypeError(VJS.E8);  // "Unsupported Data"
+            if (!b[Symbol.iterator]) VJS._err(VJS.E8, 0, TypeError);  // "Unsupported Data"
 
             let o = {}
             for (let [k, v] of b) o[k] = v;
@@ -1662,14 +1719,17 @@ class VJS
             u = `${_u.origin}${_u.pathname}`;
             d = VJS.__bd(d, _u);
         }
-        catch(e) { return {success, data, message: e.toString()}; }
+        catch(e) {
+            VJS._err(VJS.E9, 0, TypeError, e);
+            return {success, data, message: e.toString()};
+        }
 
         const b = _p ? new URLSearchParams(d).toString() : JSON.stringify(d);
 
         if (['PUT', 'PATCH', 'POST', 'DELETE'].includes(m)) {
             try {
                 if (!Object.keys(d).length) {
-                    if (m !== 'DELETE') throw new TypeError(VJS.E4);  // just-in-case
+                    if (m !== 'DELETE') VJS._err(VJS.E4, 1, TypeError);  // just-in-case
                 }
                 else {
                     o.mode = 'cors';
@@ -1680,7 +1740,10 @@ class VJS
                     o.body = b;
                 }
             }
-            catch (e) { return {success, data, message: e.toString()} }
+            catch (e) {
+                VJS._err(e.message, 0, TypeError, e);
+                return {success, data, message: e.toString()};
+            }
         }
         else if (b) u += `?${b}`;
 
@@ -1739,33 +1802,34 @@ class VJS
      * @constructs  VJS
      * @throws      {Error}    If script is not runned in Browser (ex. Node.js).
      * 
-     * @param       {string=}  [prefix] String to be prepended to the data name (will be "remembered" statically).
+     * @param       {Options}  [options={}]  Some options for VJS class (will be "remembered" statically); look at {@link Options|Options} for a setting keys.
      *
      * @return      {object}
      */
-    static getInstance(p = '') { return VJS.__i(p); }
+    static getInstance(o = {}) {return VJS.__i(o);}
 
     /**
      * Registers VJS Methods to the window object (makes global functions).
      * 
-     * **Warning!** To avoid conflicts don't use this function with jQuery.
+     * **Warning!** To avoid conflicts don't use this method with jQuery.
      * 
      * @static
-     * @function  register
+     * @method  register
+     * @throws  {Error}    If script is not runned in Browser (ex. Node.js).
      * 
-     * @param   {string=}  [prefix] String to be prepended to the data name (will be "remembered" statically).
+     * @param   {Options}  [options={}]  Some options for VJS class (will be "remembered" statically); look at {@link Options|Options} for a setting keys.
      *
      * @return  {void}
      */
-    static register(p = '') {
+    static register(o = {}) {
         try {
-            const v = VJS.getInstance(p);
+            const v = VJS.getInstance(o);
 
             Object.getOwnPropertyNames(VJS.prototype)
                 .filter(n => n!=='constructor' && !~n.indexOf('_'))
                 .forEach(f => window[f] = v[f]);
         }
-        catch(e) { console.error(`${e.name}: ${e.message}`); }
+        catch(e) { VJS._err(e.message); }
     }
 
 }

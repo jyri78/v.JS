@@ -1,6 +1,6 @@
 describe('GLOBAL: form', () => {
     before(() => {
-        if (!window.$$) VJS.register('prfx');  // for grep to properly work
+        /*if (!window.$$)*/ VJS.register({prefix: 'prfx', raiseError: true});  // set options to raise error (for testing purpose)
     });
 
 
