@@ -50,7 +50,7 @@ describe('GLOBAL: attributes', () => {
 
     describe('$sa(), setAttrib()', () => {
         it('should add new attribute', () => {
-            let span = $('@span'),
+            var span = $('@span'),
                 kbd = $('@kbd');
  
             // Confirm, that element doesn't have attribute yet
@@ -71,7 +71,7 @@ describe('GLOBAL: attributes', () => {
 
     describe('$ra(), remAttrib()', () => {
         it('should remove added attribute', () => {
-            let span = $('@span'),
+            var span = $('@span'),
                 kbd = $('@kbd');
  
             // Confirm, that added attribute still exists
@@ -144,7 +144,7 @@ describe('GLOBAL: attributes', () => {
 
     describe('$sda(), setDataAttrib', () => {
         it('should set data attribute to the element', () => {
-            let del = $('@del'),
+            var del = $('@del'),
                 b = $('@b');
  
             // Confirm, that element doesn't have data attribute yet
@@ -169,7 +169,7 @@ describe('GLOBAL: attributes', () => {
 
     describe('$rda(), remDataAttrib()', () => {
         it('should remove added data attribute', () => {
-            let del = $('@del'),
+            var del = $('@del'),
                 b = $('@b');
  
             // Confirm, that added data attribute still exists
@@ -187,7 +187,7 @@ describe('GLOBAL: attributes', () => {
 
     describe('$dav', () => {
         it('should return object', () => {
-            let obj1 = $dav('test-query', ['idVal', 'classVal', 'nameVal']),
+            var obj1 = $dav('test-query', ['idVal', 'classVal', 'nameVal']),
                 obj2 = $dav('test-query', ['classVal', 'nameVal', 'tagVal', 'missingVal'], true);
  
             assert.isObject( obj1 );
@@ -242,7 +242,7 @@ describe('GLOBAL: attributes', () => {
         after(() => $('#vjs-test').style.display = 'none');
 
         it('should return "Size" object', () => {
-            let size1 = $s('test-id'),
+            var size1 = $s('test-id'),
                 size2 = size('test-id');
  
             // Check if it is object
@@ -276,7 +276,7 @@ describe('GLOBAL: attributes', () => {
         after(() => $('#vjs-test').style.display = 'none');
 
         it('should return "Position" object', () => {
-            let pos1 = $pos('vjs-test'),
+            var pos1 = $pos('vjs-test'),
                 pos2 = position('vjs-test'),
                 pos3 = offset('vjs-test');
  
@@ -310,7 +310,7 @@ describe('GLOBAL: attributes', () => {
             assert.strictEqual( $val('test-input'), '' );
         });
         it('should set new value', () => {
-            let em = $t('em', null, true);
+            var em = $t('em', null, true);
 
             $val('test-input', 'lorem...');
             $val(em, 'irure');
@@ -326,7 +326,7 @@ describe('GLOBAL: attributes', () => {
 
     describe('$hcl(), hasClass()', () => {
         it('should return TRUE', () => {
-            let el = $n('test-name')[1];  // second element contains also class attribute
+            var el = $n('test-name')[1];  // second element contains also class attribute
  
             assert.isTrue( $hcl(el, 'test-class') );
             assert.isTrue( hasClass(el, 'test-class') );
@@ -347,7 +347,7 @@ describe('GLOBAL: attributes', () => {
 
     describe('$gcl(), getClasses()', () => {
         it('should return array of classes', () => {
-            let el = $t('kbd', 'test-id')[1],
+            var el = $t('kbd', 'test-id')[1],
                 cls1 = $gcl(el),
                 cls2 = getClasses(el);
  
@@ -360,7 +360,7 @@ describe('GLOBAL: attributes', () => {
             assert.includeMembers( cls2, ['test-class', 'another-test-class'] );
         });
         it('should return empty array', () => {
-            let cls = $gcl('test-num');
+            var cls = $gcl('test-num');
  
             assert.isArray( cls );
             assert.isEmpty( cls );
@@ -372,7 +372,7 @@ describe('GLOBAL: attributes', () => {
 
     describe('$acl(), addClass()', () => {
         it('should add new class to the element', () => {
-            let clsList = ['second-new-class', 'third-new-class'],
+            var clsList = ['second-new-class', 'third-new-class'],
                 el = $i('test-id');
  
             // Confirm, that it has no classes yes
@@ -390,7 +390,7 @@ describe('GLOBAL: attributes', () => {
 
     describe('$rcl(), remClass(), replClass()', () => {
         it('should remove added classes from element', () => {
-            let clsList = ['second-new-class', 'third-new-class'],
+            var clsList = ['second-new-class', 'third-new-class'],
                 el = $i('test-id');
  
             // Confirm existence of classes
@@ -405,7 +405,7 @@ describe('GLOBAL: attributes', () => {
             assert.isEmpty( $gcl(el) );
         });
         it('should replace existing class with other one', () => {
-            let el = $t('kbd', 'test-id')[1];
+            var el = $t('kbd', 'test-id')[1];
  
             // Confirm existence of "another-test-class"
             assert.isTrue( $hcl(el, 'another-test-class') );
@@ -421,13 +421,13 @@ describe('GLOBAL: attributes', () => {
             assert.isTrue( $hcl(el, 'another-test-class') );
         });
         it('should not replace non existent class', () => {
-            let el = $t('kbd', 'test-id')[1];
+            var el = $t('kbd', 'test-id')[1];
  
             $rcl(el, 'non-existent-class', 'replaced-test-class');
             assert.isFalse( $hcl(el, 'replaced-test-class') );
  
             // Confirm, that element has only original classes
-            let cls = $gcl(el);
+            var cls = $gcl(el);
             assert.lengthOf( cls, 2 );
             assert.includeMembers( $gcl(el), ['test-class', 'another-test-class'] );
         });
@@ -435,7 +435,7 @@ describe('GLOBAL: attributes', () => {
 
     describe('$tcl(), toggleClass()', () => {
         it('should toggle class', () => {
-            let el = $t('kbd', 'test-id')[1];
+            var el = $t('kbd', 'test-id')[1];
  
             // Confirm that there is no class with name "toggled-test-class"
             assert.isFalse( $hcl(el, 'toggled-test-class') );
@@ -449,7 +449,7 @@ describe('GLOBAL: attributes', () => {
             assert.isFalse( $hcl(el, 'toggled-test-class') );
         });
         it('should enforce class to be set', () => {
-            let el = $t('kbd', 'test-id')[1];
+            var el = $t('kbd', 'test-id')[1];
  
             // Confirm existence of class
             assert.isTrue( $hcl(el, 'another-test-class') );
@@ -459,7 +459,7 @@ describe('GLOBAL: attributes', () => {
             assert.isTrue( $hcl(el, 'another-test-class') );
         });
         it('should enforce class to be removed', () => {
-            let el = $t('kbd', 'test-id')[1];
+            var el = $t('kbd', 'test-id')[1];
  
             // Confirm, that class doesn't exist
             assert.isFalse( $hcl(el, 'toggled-test-class') );

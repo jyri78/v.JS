@@ -1,6 +1,8 @@
 # [Vanilla JavaScript](https://github.com/jyri78/v.JS)
 
-Simple plain Javascript `class` with a set of common functions.
+Tiny plain Javascript `class` with a set of common functions.
+
+The reason I did this project is that every time I started a new project, I first created some helper functions to use. Over and over again. So I decided to create this tiny "library" of functions to use instead of re-creating.
 
 **Warning!** This project is under early development stage.
 
@@ -10,7 +12,7 @@ Targeted are ES11 (ECMAScript 2020) supporting browsers, released since about mi
 
 ## Usage
 
-Include `v.JS` into HTML file and call `register()`:
+Include `v.JS` into HTML file and call `register()` function:
 
 ```HTML
 <!DOCTYPE html>

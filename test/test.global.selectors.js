@@ -37,7 +37,7 @@ describe('GLOBAL: selectors', () => {
             assert.equal( $n('test-name', true).innerText, 'incidunt' );
         });
         it('should return empty list', () => {
-            let elems = $n('test00');  // non-existent name
+            var elems = $n('test00');  // non-existent name
  
             assert.instanceOf( elems, NodeList );
             assert.isEmpty( elems );
@@ -113,7 +113,7 @@ describe('GLOBAL: selectors', () => {
             assert.isFalse( isLive($q('#test-id>kbd', '', true)) );
         });
         it('should return empty list', () => {
-            let elems = $q('#test-id>test00', '', true);
+            var elems = $q('#test-id>test00', '', true);
  
             assert.instanceOf( elems, NodeList );
             assert.isEmpty( elems );
@@ -223,7 +223,7 @@ describe('GLOBAL: selectors', () => {
 
     describe('$f(), filter()', () => {
         it('should return array with two HTMLElements', () => {
-            let callback = el => el.innerText === 'elit' || el.innerText === 'amet',
+            var callback = el => el.innerText === 'elit' || el.innerText === 'amet',
                 filtered1 = $f('@kbd', callback),
                 filtered2 = filter('tagVal', callback, 'test-query|tag');
  
@@ -239,7 +239,7 @@ describe('GLOBAL: selectors', () => {
 
     describe('$cs(), containsSel()', () => {
         it('should return array with two HTMLElements', () => {
-            let elems1 = $cs('@b', 'dolor'),
+            var elems1 = $cs('@b', 'dolor'),
                 elems2 = containsSel('@b', 'dolor');
  
             assert.isArray( elems1 );
@@ -253,7 +253,7 @@ describe('GLOBAL: selectors', () => {
             assert.instanceOf( elems2[1], HTMLElement );
         });
         it('should return empty array', () => {
-            let elems1 = $cs('@b', 'elit'),
+            var elems1 = $cs('@b', 'elit'),
                 elems2 = $cs('@map', 'lorem');  // non-existent element(s)
  
             assert.isArray( elems1 );

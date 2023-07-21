@@ -18,26 +18,27 @@
 
 // Define some object types for JSDoc.
 /**
- * @typedef  {Object}    Options             Object with key-settings for `VJS.register()` (will be "remembered" statically).
- * @property {string=}   [prefix]            String to be prepended to the data name.
- * @property {boolean}   [raiseError=false]  In case of some error, new Error will be thrown. Set either it to `true` or define `errorFunc` option.
- * @property {function}  [errorFunc=null]    In case of some error, call this function. Called function gets one, message parameter. **Note!** if `raiseError = true`, then function is ignored and not called.
+ * @typedef  {object}    Options               Object with key-settings for `VJS.register()` (will be "remembered" statically).
+ * @property {string=}   [prefix]              String to be prepended to the data name.
+ * @property {boolean}   [raiseError=false]    In case of some error, new Error will be thrown. Set either it to `true` or define `errorFunc` option.
+ * @property {function}  [errorCallable=null]  In case of some error, this function will be called (if defined). Called function gets one, message parameter. **Note!** if `raiseError = true`, then function is ignored and not called.
+ * @property {object}    [onEvtActions=null]   Object with events and callables to be added automatically to the elements event listener in format: `{ event: { callable1: function(e) { … }, callable2: function(e) { … }, … }, … }`.<br>**Example:** event callback is `{ click: { message: e => alert('Hi, I am ' + e.target.name) }}` and in HTML is element `<button name="special-button" data-prfx-click="message" value="Click me!" />`. Here button gets automatically click event listener with function `message()`.<br>**PS!** If callback function name begins with underscore `_`, then it will be ignored (can be used as helper).
  */
 
 /**
- * @typedef  {Object} Position  HTMLElement position returned by {@link $pos|$pos()} and {@link offset|offset()}.
+ * @typedef  {object} Position  HTMLElement position returned by {@link $pos|$pos()} and {@link offset|offset()}.
  * @property {number} top
  * @property {number} left
  */
 
 /**
- * @typedef  {Object} Size    HTMLElement size returned by {@link $s|$s()}.
+ * @typedef  {object} Size    HTMLElement size returned by {@link $s|$s()}.
  * @property {number} width
  * @property {number} height
  */
 
 /**
- * @typedef  {Object}   WsEvent         Object with callbacks to be added as methods {@link $ws|$ws()} second parameter.
+ * @typedef  {object}   WsEvent         Object with callbacks to be added as methods {@link $ws|$ws()} second parameter.
  * @property {function} [open=null]
  * @property {function} [message=null]
  * @property {function} [close=null]
@@ -45,7 +46,7 @@
  */
 
 /**
- * @typedef  {Object}                     Response  Returned by AJAX request (GET, POST etc).
+ * @typedef  {object}                     Response  Returned by AJAX request (GET, POST etc).
  * @property {boolean}                    success   If response was OK (status in the range 200-299), or not.
  * @property {(Object|Blob|string|null)}  data      Response data, or `NULL`.
  * @property {string}                     message   If `success == false`, then status code and text or error message (in case of AJAX error), otherwise empty string.
@@ -72,14 +73,14 @@ class VJS
     /**
      * Constructor of VJS.
      * 
-     * @param   {Options}  [options={}]  Some options for VJS class (will be "remembered" statically); look at {@link Options|Options} for a setting keys.
+     * @param   {Options}  [options={}]  Some options for VJS class; look at {@link Options|Options} for a setting keys.
      *
      * @return  {VJS}
      */
     constructor(o = {}) {
-        if (typeof window === 'undefined') VJS._err(VJS.E1, 1);
-        if (typeof String.prototype.replaceAll !== 'function') VJS._err(VJS.E2, 0);
-        if (o && o.constructor === {}.constructor) VJS.__so(o);
+        if (typeof window === 'undefined') VJS._err(VJS._E1, 1);
+        if (typeof String.prototype.replaceAll !== 'function') VJS._err(VJS._E2, 0);
+        if (o && o.constructor === {}.constructor) VJS._ᐦso(o);
     }
 
 
@@ -99,7 +100,7 @@ class VJS
      * 
      * @return  {(HTMLElement|HTMLCollection|NodeList|null)}
      */
-    $(s, e = document, a = false) { return VJS.__e(s, e, a); }
+    $(s, e = document, a = false) { return VJS._ᐦe(s, e, a); }
 
     /**
      * `getElementByDataAttributeValue` - returns HTMLElement or `NULL` by other elements data attribute value.
@@ -115,7 +116,7 @@ class VJS
      */
     $$(e, n, t = 'id', a = false) {
         const s = {id: '#', class: '.', name: '=', tag: '@'},
-              i = VJS.__i();
+              i = VJS._ᐦi();
         let q = i.$gda(e, n);  // get data attribute value (selector)
 
         if (!q) return null;
@@ -134,7 +135,7 @@ class VJS
      * 
      * @return  {(HTMLElement|NodeList|null)}
      */
-    $$n(e, n, a = false) { return VJS.__i().$$(e, n, 'name', a); }
+    $$n(e, n, a = false) { return VJS._ᐦi().$$(e, n, 'name', a); }
 
     /**
      * `getElementByDataAttributeValueClass` - returns HTMLElement or `NULL` by other elements data attribute value (handles as class).
@@ -147,7 +148,7 @@ class VJS
      * 
      * @return  {(HTMLElement|HTMLCollection|null)}
      */
-    $$c(e, n, a = false) { return VJS.__i().$$(e, n, 'class', a); }
+    $$c(e, n, a = false) { return VJS._ᐦi().$$(e, n, 'class', a); }
 
     /**
      * `getElementByDataAttributeValueTagName` - returns HTMLElement or `NULL` by other elements data attribute value (handles as tag name).
@@ -160,7 +161,7 @@ class VJS
      * 
      * @return  {(HTMLElement|HTMLCollection|NodeList|null)}
      */
-    $$t(e, n, a = false) { return VJS.__i().$$(e, n, 'tag', a); }
+    $$t(e, n, a = false) { return VJS._ᐦi().$$(e, n, 'tag', a); }
 
     /**
      * `getElementByDataAttributeValueQuery` - returns HTMLElement or `NULL` by other elements data attribute value (handles as query string).
@@ -173,7 +174,7 @@ class VJS
      * 
      * @return  {(HTMLElement|HTMLCollection|NodeList|null)}
      */
-    $$q(e, n, a = false) { return VJS.__i().$$(e, n, 'query', a); }
+    $$q(e, n, a = false) { return VJS._ᐦi().$$(e, n, 'query', a); }
 
     /**
      * `getElementById` - returns HTMLElement by ID, or `null` if not found.
@@ -186,12 +187,12 @@ class VJS
      * 
      * @return  {(HTMLElement|null)}
      */
-    $i(i) { return VJS.__go(i, '#'); }
+    $i(i) { return VJS._ᐦgo(i, '#'); }
     /**
      * @method  getElemById
      * @see     read more {@link $i|$i()}
      */
-    getElemById(i) { return VJS.__i().$i(i); }
+    getElemById(i) { return VJS._ᐦi().$i(i); }
 
     /**
      * `getElementsByName` - returns a live NodeList of all found elements or first HTMLElement by name attribute.
@@ -205,12 +206,12 @@ class VJS
      * 
      * @return  {(NodeList|HTMLElement|null)}
      */
-    $n(n, f = false) { return VJS.__go(n, '=', null, !f); }
+    $n(n, f = false) { return VJS._ᐦgo(n, '=', null, !f); }
     /**
      * @method  getElemsByName
      * @see     read more {@link $n|$n()}
      */
-    getElemsByName (n, f = false) { return VJS.__$n(n, f); }
+    getElemsByName (n, f = false) { return VJS._ᐟ$n(n, f); }
 
     /**
      * `getElementsByClassName` - returns a live HTMLCollection of all found elements by class name.
@@ -225,12 +226,12 @@ class VJS
      * 
      * @return  {(HTMLCollection|HTMLElement|null)}
      */
-    $c(c, e = document, f = false) { return VJS.__go(c, '.', e, !f); }
+    $c(c, e = document, f = false) { return VJS._ᐦgo(c, '.', e, !f); }
     /**
      * @method  getElemsByClass
      * @see     read more {@link $c|$c()}
      */
-    getElemsByClass(c, e = document, f = false) { return VJS.__i().$c(c, e, f); }
+    getElemsByClass(c, e = document, f = false) { return VJS._ᐦi().$c(c, e, f); }
 
     /**
      * `getElementsByTagName` - returns a live HTMLCollection of all found elements or first HTMLElement by tag name.
@@ -245,12 +246,12 @@ class VJS
      * 
      * @return  {(HTMLCollection|NodeList|HTMLElement|null)}  WebKit (like Firefox) browsers return `NodeList` instead of `HTMLCollection` (see {@link https://bugzil.la/14869|Firefox bug 14869}).
      */
-    $t(t, e = document, f = false) { return VJS.__go(t, '@', e, !f); }
+    $t(t, e = document, f = false) { return VJS._ᐦgo(t, '@', e, !f); }
     /**
      * @method  getElemsByTag
      * @see     read more {@link $t|$t()}
      */
-    getElemsByTag(t, e = document, f = false) { return VJS.__i().$t(t, e, f); }
+    getElemsByTag(t, e = document, f = false) { return VJS._ᐦi().$t(t, e, f); }
 
     /**
      * `querySelector` - returns a static (non-live) NodeList if `all = true`, HTMLElement otherwise.
@@ -265,15 +266,15 @@ class VJS
      * @return  {(HTMLElement|HTMLCollection|NodeList|null)}
      */
     $q(q, e = document, a = false) {
-        e = VJS.__o(e);
+        e = VJS._ᐦo(e);
         if (!e) e = document;  // default to Document
-        return VJS.__$q(e, q, a);
+        return VJS._ᐟ$q(e, q, a);
     }
     /**
      * @method  querySel
      * @see     read more {@link $q|$q()}
      */
-    querySel(q, e = document, a = false) { return VJS.__i().$q(q, e, a); }
+    querySel(q, e = document, a = false) { return VJS._ᐦi().$q(q, e, a); }
 
     /**
      * `filter` - returns an array of HTMLElements of filtered (by function) HTMLCollection/NodeList.
@@ -290,11 +291,11 @@ class VJS
     $f(s, c, d = '') {
         let o;
 
-        if(!d) o = VJS.__i().$(s, 0, 1);  // '0' defaults to `document`
+        if(!d) o = VJS._ᐦi().$(s, 0, 1);  // '0' defaults to `document`
         else {
             const p = d.split('|');
             if (p.length < 2) return [];  // avoid error
-            o = VJS.__i().$$(p[0], s, p[1], 1);
+            o = VJS._ᐦi().$$(p[0], s, p[1], 1);
         }
 
         return !o ? [] : (
@@ -307,7 +308,7 @@ class VJS
      * @method  filter
      * @see     read more {@link $f|$f()}
      */
-    filter(s, c, d = '') { return VJS.__i().$f(s, c, d); }
+    filter(s, c, d = '') { return VJS._ᐦi().$f(s, c, d); }
 
     /**
      * `height` - returns or sets elements height.
@@ -323,7 +324,7 @@ class VJS
      * @return  {(number|void)}
      */
     $h(e, t = '', v = null) {
-        const h = VJS.__h(e, t, v);
+        const h = VJS._ᐦh(e, t, v);
         if (!v) return h;
     }
     /**
@@ -331,7 +332,7 @@ class VJS
      * @see     read more {@link $h|$h()}
      */
     height(e, t = '', v = null) {
-        const h = VJS.__h(e, t, v);
+        const h = VJS._ᐦh(e, t, v);
         if (!v) return h;
     }
 
@@ -349,7 +350,7 @@ class VJS
      * @return  {(number|void)}
      */
     $w(e, t = '', v = null) {
-        const w = VJS.__w(e, t, v);
+        const w = VJS._ᐦw(e, t, v);
         if (!v) return w;
     }
     /**
@@ -357,7 +358,7 @@ class VJS
      * @see     read more {@link $w|$w()}
      */
     width(e, t = '', v = null) {
-        const w = VJS.__w(e, t, v);
+        const w = VJS._ᐦw(e, t, v);
         if (!v) return w;
     }
 
@@ -378,8 +379,8 @@ class VJS
     $s(e, t = '', w = null, h = null)
     {
         const s = {
-            width:  VJS.__w(e, t, !w ? h : w),  // just-in case
-            height: VJS.__h(e, t, !h ? w : h)
+            width:  VJS._ᐦw(e, t, !w ? h : w),  // just-in case
+            height: VJS._ᐦh(e, t, !h ? w : h)
         };
         if (!w && !h) return s;
     }
@@ -389,7 +390,7 @@ class VJS
      */
     size(e, t = '', w = null, h = null)
     {
-        const s = VJS.__i().$s(e, t, w, h);
+        const s = VJS._ᐦi().$s(e, t, w, h);
         if (s) return s;
     }
 
@@ -406,7 +407,7 @@ class VJS
      */
     $sp(e, t = 'form')
     {
-        e = VJS.__o(e);
+        e = VJS._ᐦo(e);
         if (!e || e instanceof Window) return null;
 
         while (e.nodeName.toLowerCase() !== t) {
@@ -419,7 +420,7 @@ class VJS
      * @method  selParent
      * @see     read more {@link $sp|$sp()}
      */
-    selParent(e, t = 'form') { return VJS.__i().$sp(e, t); }
+    selParent(e, t = 'form') { return VJS._ᐦi().$sp(e, t); }
 
     /**
      * `containsSelector` - returns array of HTML Elements, that contain specified text, or all of them.
@@ -432,12 +433,12 @@ class VJS
      *
      * @return  {HTMLElement[]}
      */
-    $cs(s, i = '') { return VJS.__i().$f(s, e => e.textContent.includes(i)); }
+    $cs(s, i = '') { return VJS._ᐦi().$f(s, e => e.textContent.includes(i)); }
     /**
      * @method  containsSel
      * @see     read more {@link $cs|$cs()}
      */
-    containsSel(s, i = '') { return VJS.__i().$cs(s, i); }
+    containsSel(s, i = '') { return VJS._ᐦi().$cs(s, i); }
 
     /**
      * `hasAttribute` - returns boolean value if element has attribute, or any attributes at all (if attribute name not given).
@@ -451,14 +452,14 @@ class VJS
      * @return  {(boolean|undefined)}  If no valid element given, returns `undefined`, otherwise boolean value.
      */
     $ha(e, n = '') {
-        e = VJS.__o(e, null);
+        e = VJS._ᐦo(e, null);
         return !e ? undefined : (!n ? e.hasAttributes() : e.hasAttribute(n));
     }
     /**
      * @method  hasAttrib
      * @see     read more {@link $ha|$ha()}
      */
-    hasAttrib(e, n = '') { return VJS.__i().$ha(e, n); }
+    hasAttrib(e, n = '') { return VJS._ᐦi().$ha(e, n); }
 
     /**
      * `getAttribute` - returns elements attribute value or null (or whatever default value).
@@ -473,19 +474,19 @@ class VJS
      * @return  {(string|number|boolean|null)}
      */
     $ga(e, n, d = null) {
-        e = VJS.__o(e, null);
-        if (!e || !VJS.__i().$ha(e, n)) return d;
+        e = VJS._ᐦo(e, null);
+        if (!e || !VJS._ᐦi().$ha(e, n)) return d;
 
         const v = e.getAttribute(n);
         if (!v) return d;
 
-        return VJS.__vn(v);
+        return VJS._ᐦvn(v);
     }
     /**
      * @method  getAttrib
      * @see     read more {@link $ga|$ga()}
      */
-    getAttrib(e, n, d = null) { return VJS.__i().$ga(e, n, d); }
+    getAttrib(e, n, d = null) { return VJS._ᐦi().$ga(e, n, d); }
 
     /**
      * `setAttribute` - sets elements attribute value; attributes with boolean value don't need value (same for anumerated attributes except for setting falsy value).
@@ -498,7 +499,7 @@ class VJS
      * @param   {(string|boolean)}      [value=true]   Value of the elements attribute; **note:** if set to boolean `false`, then attribute will be removed.
      */
     $sa(e, n, v = true) {
-        e = VJS.__o(e, null);
+        e = VJS._ᐦo(e, null);
         if (!e) return;
         let r = 0;  // do remove instead of setting
 
@@ -514,14 +515,14 @@ class VJS
         }
         else if (!v) r = 1;  // in case of empty string remove it
 
-        if (r) VJS.__i().$ra(e, n);
+        if (r) VJS._ᐦi().$ra(e, n);
         else e.setAttribute(n, v);
     }
     /**
      * @method  setAttrib
      * @see     read more {@link $sa|$sa()}
      */
-    setAttrib(e, n, v = true) { VJS.__i().$sa(e, n, v); }
+    setAttrib(e, n, v = true) { VJS._ᐦi().$sa(e, n, v); }
 
     /**
      * `removeAttribute` - removes attribute from element.
@@ -533,14 +534,14 @@ class VJS
      * @param   {string}                attributeName  Name of the elements attribute.
      */
     $ra(e, n) {
-        e = VJS.__o(e, null);
+        e = VJS._ᐦo(e, null);
         if (e) e.removeAttribute(n);
     }
     /**
      * @method  remAttrib
      * @see     read more {@link $ra|$ra()}
      */
-    remAttrib(e, n) { VJS.__i().$ra(e, n); }
+    remAttrib(e, n) { VJS._ᐦi().$ra(e, n); }
 
     /**
      * `setTimeout` / `setInterval` - sets timeout or interval to call a function.
@@ -602,24 +603,24 @@ class VJS
         if (['str', 'string', 'json'].includes(t)) t = t.substring(0, 1);
         else t = 'fd';
 
-        const o = VJS.__fd(f, t, r, e);
+        const o = VJS._ᐦfd(f, t, r, e);
 
-        if (o.err === 'nfe') VJS.__de(VJS.E7);  // "NotFormElement"
+        if (o.err === 'nfe') VJS._ᐦde(VJS._E7);  // "NotFormElement"
         if (o.err === 'mrf') {                  // "Missing Required Field(s)"
             if (v && v.error && v.success) {  // if error and success classes is given, set them accordingly,...
                 o.ids.forEach(i => {
                     if (o.data.includes(i)) {
-                        VJS.__c(i, [v.success], 'remove');
-                        VJS.__c(i, [v.error], 'add');
+                        VJS._ᐦc(i, [v.success], 'remove');
+                        VJS._ᐦc(i, [v.error], 'add');
                     }
                     else {
-                        VJS.__c(i, [v.error], 'remove');
-                        VJS.__c(i, [v.success], 'add');
+                        VJS._ᐦc(i, [v.error], 'remove');
+                        VJS._ᐦc(i, [v.success], 'add');
                     }
                 });
                 // return null;
             }
-            else VJS._err(VJS.E3);  // ... else raise Error
+            else VJS._err(VJS._E3);  // ... else raise Error
         }
 
         if (o.err) return null;  // if only message alert or conslole.error()
@@ -646,12 +647,12 @@ class VJS
             _u = new URL(u.trim());
         }
         catch (e) {
-            VJS._err(VJS.E9, 0, TypeError, e);
+            VJS._err(VJS._E9, 0, TypeError, e);
             return null;
         }
 
         if (_u.protocol !== 'ws:' && _u.protocol !== 'wss:') {  // allow only WebSocket url
-            VJS.__de(VJS.E9, 0, 'SyntaxError');
+            VJS._ᐦde(VJS._E9, 0, 'SyntaxError');
             return null;
         }
         for (const k in Object.keys(c)) {
@@ -694,7 +695,7 @@ class VJS
      * @method  createElem
      * @see     read more {@link $cel|$cel()}
      */
-    createElem(t = 'div', i = '') { return VJS.__i().$cel(t, i); }
+    createElem(t = 'div', i = '') { return VJS._ᐦi().$cel(t, i); }
 
     /**
      * `createElements` - creates new HTML Element(s) by html string, and/or add to the specified element.
@@ -710,13 +711,13 @@ class VJS
     $cels(h, e = null)
     {
         if (typeof h !== 'string') return null;
-        let t = VJS.__i().$ce(), r;
+        let t = VJS._ᐦi().$ce(), r;
 
         t.innerHTML = h.trim();
         r = t.children;
 
         if (e) {
-            e = VJS.__o(e);
+            e = VJS._ᐦo(e);
             if (e) for(let c of r) e.append(c);
         }
         return r;
@@ -725,7 +726,7 @@ class VJS
      * @method  createElems
      * @see     read more {@link $cels|$cels()}
      */
-    createElems(h) { return VJS.__i().$cels(h); }
+    createElems(h) { return VJS._ᐦi().$cels(h); }
 
     /**
      * `hasDataAttribute` - returns boolean value if element has data attribute, or any data attributes at all (if attribute name is empty string).
@@ -740,22 +741,22 @@ class VJS
      * @return  {(boolean|undefined)}  If no valid element given, returns `undefined`, otherwise boolean value.
      */
     $hda(e, n, i = false) {
-        // if (!n) return VJS.__i().$ha(e);
-        const dn = VJS.__dn(n, i);
+        // if (!n) return VJS._ᐦi().$ha(e);
+        const dn = VJS._ᐦdn(n, i);
 
         if (!dn) {
-            const da = VJS.__da(e, i);
+            const da = VJS._ᐦda(e, i);
 
             if (!da) return undefined;
             return da.length > 0;
         }
-        return VJS.__i().$ha(e, dn);
+        return VJS._ᐦi().$ha(e, dn);
     }
     /**
      * @method  hasDataAttrib
      * @see     read more {@link $hda|$hda()}
      */
-    hasDataAttrib(e, n) { return VJS.__i().$hda(e, n); }
+    hasDataAttrib(e, n) { return VJS._ᐦi().$hda(e, n); }
 
     /**
      * `getDataAttribute` - returns elements data attribute value or null (or whatever default value).
@@ -770,12 +771,12 @@ class VJS
      *
      * @return  {(string|null)}
      */
-    $gda(e, n, d = null, i = false) { return VJS.__i().$ga(e, VJS.__dn(n, i), d); }
+    $gda(e, n, d = null, i = false) { return VJS._ᐦi().$ga(e, VJS._ᐦdn(n, i), d); }
     /**
      * @method  getDataAttrib
      * @see     read more {@link $gda|$gda()}
      */
-    getDataAttrib(e, n, d = null, i = false) { return VJS.__i().$gda(e, n, d, i); }
+    getDataAttrib(e, n, d = null, i = false) { return VJS._ᐦi().$gda(e, n, d, i); }
 
     /**
      * `setDataAttribute` - sets elements data attribute value.
@@ -790,14 +791,14 @@ class VJS
     $sda(e, n, v = true) {
         if (n) {
             if (typeof v === 'boolean') v = v|0;  // turn boolean value to integer
-            VJS.__i().$sa(e, VJS.__dn(n), v);
+            VJS._ᐦi().$sa(e, VJS._ᐦdn(n), v);
         }
     }
     /**
      * @method  setDataAttrib
      * @see     read more {@link $sda|$sda()}
      */
-    setDataAttrib(e, n, v) { VJS.__i().$sda(e, n, v); }
+    setDataAttrib(e, n, v) { VJS._ᐦi().$sda(e, n, v); }
 
     /**
      * `removeDataAttribute` - removes attribute from element.
@@ -808,12 +809,12 @@ class VJS
      * @param   {(HTMLElement|string)}  element        HTMLElement or ID of element.
      * @param   {string}                attributeName  Name of the elements data attribute.
      */
-    $rda(e, n) { if (n) VJS.__i().$ra(e, VJS.__dn(n)); }
+    $rda(e, n) { if (n) VJS._ᐦi().$ra(e, VJS._ᐦdn(n)); }
     /**
      * @method  remDataAttrib
      * @see     read more {@link $rda|$rda()}
      */
-    remDataAttrib(e, n) { VJS.__i().$rda(e, n); }
+    remDataAttrib(e, n) { VJS._ᐦi().$rda(e, n); }
 
     /**
      * `dataAttributeValues` - reads elements data attribute values and returns object with result.
@@ -828,7 +829,7 @@ class VJS
      * @return  {object}
      */
     $dav(e, a, f = false) {
-        let r = {}, i = VJS.__i();
+        let r = {}, i = VJS._ᐦi();
         if (!Array.isArray(a)) a = [a];  // just-in-case
         a.forEach(d => { r[ f ? d[0] : d ] = i.$gda(e, d) ?? ''; });
         return r;
@@ -837,7 +838,7 @@ class VJS
      * @method  dataAttribVals
      * @see     read more {@link $dav|$dav()}
      */
-    dataAttribVals(e, a, f = false) { VJS.__i().$dav(e, a, f); }
+    dataAttribVals(e, a, f = false) { VJS._ᐦi().$dav(e, a, f); }
 
 
     /**
@@ -852,14 +853,14 @@ class VJS
      * @return  {(boolean|undefined)}  If no valid element given, returns `undefined`, otherwise boolean value.
      */
     $hcl(e, c = '') {
-        e = VJS.__o(e, null);
+        e = VJS._ᐦo(e, null);
         return !e ? undefined : (!c ? e.classList.length > 0 : e.classList.contains(c));
     }
     /**
      * @method  hasClass
      * @see     read more {@link $hcl|$hcl()}
      */
-    hasClass(e, c) { return VJS.__i().$hcl(e, c); }
+    hasClass(e, c) { return VJS._ᐦi().$hcl(e, c); }
 
     /**
      * `getClasses` - returns array of elements class names, or `undefined` if element not found.
@@ -872,14 +873,14 @@ class VJS
      * @return  {(Array|undefined)}
      */
     $gcl(e) {
-        e = VJS.__o(e, null);
+        e = VJS._ᐦo(e, null);
         return !e ? undefined : (!e.classList ? [] : [...e.classList]);
     }
     /**
      * @method  getClasses
      * @see     read more {@link $gcl|$gcl()}
      */
-    getClasses(e) { return VJS.__i().$gcl(e); }
+    getClasses(e) { return VJS._ᐦi().$gcl(e); }
 
     /**
      * `addClass` - adds class name or array of class names to the element.
@@ -890,12 +891,12 @@ class VJS
      * @param   {(HTMLElement|string)}  element    HTMLElement or ID of element.
      * @param   {(string|string[])}     className  Class name or array of class names to add.
      */
-    $acl(e, c) { VJS.__c(e, c, 'add'); }
+    $acl(e, c) { VJS._ᐦc(e, c, 'add'); }
     /**
      * @method  addClass
      * @see     read more {@link $acl|$acl()}
      */
-    addClass(e, c) { VJS.__i().$acl(e, c); }
+    addClass(e, c) { VJS._ᐦi().$acl(e, c); }
 
     /**
      * `removeClass`/`replaceClass` - removes class name or array of class names from the element.
@@ -908,22 +909,22 @@ class VJS
      * @param   {string=}               [newClassName]  Class name to replace with. If not given, `className` will be removed, otherwise will be replaced with this one.
      */
     $rcl(e, c, n = '') {
-        if (!n) VJS.__c(e, c, 'remove');
+        if (!n) VJS._ᐦc(e, c, 'remove');
         else {
             if (Array.isArray(c)) c = c[0];  // replace only one class
-            VJS.__c(e, [c, n], 'replace');
+            VJS._ᐦc(e, [c, n], 'replace');
         }
     }
     /**
      * @method  remClass
      * @see     read more {@link $rcl|$rcl()}
      */
-    remClass(e, c) { VJS.__i().$rcl(e, c); }
+    remClass(e, c) { VJS._ᐦi().$rcl(e, c); }
     /**
      * @method  replClass
      * @see     read more {@link $rcl|$rcl()}
      */
-    replClass(e, o, n) { VJS.__i().$rcl(e, o, n); }
+    replClass(e, o, n) { VJS._ᐦi().$rcl(e, o, n); }
 
     /**
      * `toggleClass` - toggles class name in the element.
@@ -937,13 +938,13 @@ class VJS
      */
     $tcl(e, c, f) {
         if (typeof f !== 'undefined') c = [c, f];
-        VJS.__c(e, c, 'toggle');
+        VJS._ᐦc(e, c, 'toggle');
     }
     /**
      * @method  toggleClass
      * @see     read more {@link $tcl|$tcl()}
      */
-    toggleClass(e, c, f) { VJS.__i().$tcl(e, c, f); }
+    toggleClass(e, c, f) { VJS._ᐦi().$tcl(e, c, f); }
 
     /**
      * Returns elements position relative to viewport or undefined if element not found.
@@ -958,7 +959,7 @@ class VJS
      * @return  {(Position|undefined)}
      */
     $pos(e) {
-        e = VJS.__o(e, null);
+        e = VJS._ᐦo(e, null);
         if (!e) return undefined;
         const {top, left} = e.getBoundingClientRect();
         return {top, left};
@@ -976,14 +977,14 @@ class VJS
      * @return  {(string|number|boolean|string[]|number[]|boolean[]|void)}
      */
     $val(e, v = '', a = false) {
-        e = VJS.__o(e, null);
+        e = VJS._ᐦo(e, null);
         if (!e) return '';
 
         if (!v) {
             if (e.options && e.multiple)
-                return e.options.filter(o => o.selected).map(o => VJS.__vn(o.value));
+                return e.options.filter(o => o.selected).map(o => VJS._ᐦvn(o.value));
 
-            return VJS.__vn(e.value || (a ? e.textContent : e.innerText));
+            return VJS._ᐦvn(e.value || (a ? e.textContent : e.innerText));
         }
         else {
             if (typeof e.value === 'undefined') e.textContent = v;
@@ -1004,8 +1005,8 @@ class VJS
      */
     $ael(f, v = 'load', e = window) {
         if (typeof f !== 'function') return;
-        if (e instanceof Array) return VJS.__i().$aels(f, v, e);  // in case of array of elements
-        e = VJS.__o(e);
+        if (e instanceof Array) return VJS._ᐦi().$aels(f, v, e);  // in case of array of elements
+        e = VJS._ᐦo(e, window);
         if (!e) return;
         e.addEventListener(v, f);
     }
@@ -1013,7 +1014,7 @@ class VJS
      * @method  addEvtListener
      * @see     read more {@link $ael|$ael()}
      */
-    addEvtListener(f, v = 'load', e = window) { VJS.__i().$ael(f, v, e); }
+    addEvtListener(f, v = 'load', e = window) { VJS._ᐦi().$ael(f, v, e); }
 
     /**
      * `removeEventListener` - removes event listener from the element or elements.
@@ -1028,8 +1029,8 @@ class VJS
      */
     $rel(f, v = 'load', e = window) {
         if (typeof f !== 'function') return;
-        if (e instanceof Array) return VJS.__i().$rels(f, v, e);  // in case of array of elements
-        e = VJS.__o(e);
+        if (e instanceof Array) return VJS._ᐦi().$rels(f, v, e);  // in case of array of elements
+        e = VJS._ᐦo(e);
         if (!e) return;
         e.removeEventListener(v, f);
     }
@@ -1037,7 +1038,7 @@ class VJS
      * @method  remEvtListener
      * @see     read more {@link $rel|$rel()}
      */
-    remEvtListener(f, v = 'load', e = window) { VJS.__i().$rel(f, v, e); }
+    remEvtListener(f, v = 'load', e = window) { VJS._ᐦi().$rel(f, v, e); }
 
     /**
      * `addEventListeners` - adds event listener to several elements at once.
@@ -1051,14 +1052,14 @@ class VJS
      * @param   {(HTMLElement[]|string[])}  [elements=[]]  Array of HTMLElement objects or IDs.
      */
     $aels(f, v, e = []) {
-        if (e instanceof Array) e.forEach(i => VJS.__i().$ael(f, v, i));
-        else VJS.__i().$ael(f, v, e);  // just-in-case
+        if (e instanceof Array) e.forEach(i => VJS._ᐦi().$ael(f, v, i));
+        else VJS._ᐦi().$ael(f, v, e);  // just-in-case
     }
     /**
      * @method  addEvtListeners
      * @see     read more {@link $aels|$aels()}
      */
-    addEvtListeners(f, v, e = []) { VJS.__i().$aels(f, v, e); }
+    addEvtListeners(f, v, e = []) { VJS._ᐦi().$aels(f, v, e); }
 
     /**
      * `removeEventListeners` - removes event listener from several elements at once.
@@ -1072,14 +1073,14 @@ class VJS
      * @param   {(HTMLElement[]|string[])}  [elements=[]]  Array of HTMLElement objects or IDs.
      */
     $rels(f, v, e = []) {
-        if (e instanceof Array) e.forEach(i => VJS.__i().$rel(f, v, i));
-        else VJS.__i().$rel(f, v, e);  // just-in-case
+        if (e instanceof Array) e.forEach(i => VJS._ᐦi().$rel(f, v, i));
+        else VJS._ᐦi().$rel(f, v, e);  // just-in-case
     }
     /**
      * @method  remEvtListeners
      * @see     read more {@link $rels|$rels()}
      */
-    remEvtListeners(f, v, e = []) { VJS.__i().$rels(f, v, e); }
+    remEvtListeners(f, v, e = []) { VJS._ᐦi().$rels(f, v, e); }
 
 
     /**
@@ -1095,7 +1096,7 @@ class VJS
      *
      * @return  {Promise<Response>}
      */
-    $get(u) { return VJS.__r(u); }
+    $get(u) { return VJS._ᐦr(u); }
 
     /**
      * Makes AJAX PUT request to the server and returns response `Promise` object.
@@ -1111,7 +1112,7 @@ class VJS
      * 
      * @return  {Promise<Response>}
      */
-    $put(u, d = {}) { return VJS.__r(u, 'PUT', d); }
+    $put(u, d = {}) { return VJS._ᐦr(u, 'PUT', d); }
 
     /**
      * Makes AJAX DELETE request to the server and returns response `Promise` object.
@@ -1127,7 +1128,7 @@ class VJS
      * 
      * @return  {Promise<Response>}
      */
-    $del(u, d = {}) { return VJS.__r(u, 'DELETE', d); }
+    $del(u, d = {}) { return VJS._ᐦr(u, 'DELETE', d); }
 
     /**
      * Makes AJAX POST request to the server and returns response `Promise` object.
@@ -1143,7 +1144,7 @@ class VJS
      *
      * @return  {Promise<Response>}
      */
-    $post(u, d = {}) { return VJS.__r(u, 'POST', d); }
+    $post(u, d = {}) { return VJS._ᐦr(u, 'POST', d); }
 
     /**
      * Makes AJAX PATCH request to the server and returns response `Promise` object.
@@ -1159,7 +1160,7 @@ class VJS
      *
      * @return  {Promise<Response>}
      */
-    $patch(u, d = {}) { return VJS.__r(u, 'PATCH', d); }
+    $patch(u, d = {}) { return VJS._ᐦr(u, 'PATCH', d); }
 
 
     /**
@@ -1189,7 +1190,7 @@ class VJS
         if (!e) es.onmessage = f;
         else es.addEventListener(e, f);
 
-        es.onerror = err => console.error(`'EventSource' ${(err.type ?? 'error')} @${VJS.__ms(err.timeStamp ?? 0)}`);
+        es.onerror = err => console.error(`'EventSource' ${(err.type ?? 'error')} @${VJS._ᐦms(err.timeStamp ?? 0)}`);
         return es;
     }
 
@@ -1216,7 +1217,7 @@ class VJS
      * @return  {(string|undefined)}
      */
     $html(e, t = '', p = '') {
-        e = VJS.__o(e, null);
+        e = VJS._ᐦo(e, null);
         if (e) {
             if (t) {
                 if (e instanceof Element) {
@@ -1227,13 +1228,13 @@ class VJS
                         }
                         else e.innerHTML = t;
                     }
-                    catch (e) { VJS.__de(e.message, 0, e.name); }
+                    catch (e) { VJS._ᐦde(e.message, 0, e.name); }
                 }
-                else VJS.__de(VJS.E6, 1);
+                else VJS._ᐦde(VJS._E6, 1);
             }
             else return e.innerHTML;
         }
-        else if (t) VJS.__de();
+        else if (t) VJS._ᐦde();
     }
 
 
@@ -1250,10 +1251,10 @@ class VJS
      * @return  {(Position|undefined)}
      */
     offset(e) {
-        e = VJS.__o(e, null);
+        e = VJS._ᐦo(e, null);
         if (!e) return undefined;
 
-        const b = VJS.__i().$pos(e), d = document.documentElement, w = window;
+        const b = VJS._ᐦi().$pos(e), d = document.documentElement, w = window;
         return {
             top:   b.top + w.scrollY - d.clientTop,
             left:  b.left + w.scrollX - d.clientLeft
@@ -1273,10 +1274,10 @@ class VJS
      * @return  {(Position|undefined)}
      */
     position(e) {
-        e = VJS.__o(e, null);
+        e = VJS._ᐦo(e, null);
         if (!e) return undefined;
 
-        const b = VJS.__i().$pos(e), s = getComputedStyle(e);
+        const b = VJS._ᐦi().$pos(e), s = getComputedStyle(e);
         return {
             top:   b.top - parseInt(s.marginTop),
             left:  b.left - parseInt(s.marginLeft)
@@ -1298,7 +1299,7 @@ class VJS
      * @return  {string}
      */
     serialize(f, e = {}) {
-        f = VJS.__gf(f);
+        f = VJS._ᐦgf(f);
         if (!f) return '';
 
         let u = new URLSearchParams(f);
@@ -1345,7 +1346,7 @@ class VJS
      * @return  {boolean}
      */
     isHidden(e) {
-        e = VJS.__o(e, null);
+        e = VJS._ᐦo(e, null);
         return !(e.offsetWidth || e.offsetHeight || e.getClientRects().height);
     }
 
@@ -1358,7 +1359,7 @@ class VJS
      *
      * @return  {boolean}
      */
-    isVisible(e) { return !VJS.__i().isHidden(e); }
+    isVisible(e) { return !VJS._ᐦi().isHidden(e); }
 
     /**
      * Converts HTMLCollection/NodeList or HTMLElement to the array.
@@ -1370,7 +1371,7 @@ class VJS
      * @return  {Array.<*>}
      */
     toArray(e) {
-        e = VJS.__o(e);
+        e = VJS._ᐦo(e);
         if (e instanceof NodeList || e instanceof HTMLCollection) return [...e];
         return [e];
     }
@@ -1381,16 +1382,16 @@ class VJS
     //    So-called private static helper methods (should not called outside)
     // =========================================================================
 
-    /** @ignore */static get E1() { return 'VJS class works only in Browser!'; }
-    /** @ignore */static get E2() { return 'Your Browser does not support ECMAScript11 (2020)!'; }
-    /** @ignore */static get E3() { return 'Fill up required fields!'; }
-    /** @ignore */static get E4() { return 'No data given.'; }
-    /** @ignore */static get E5() { return 'No valid Element found.'; }
-    /** @ignore */static get E6() { return 'No valid Element given.'; }
-    /** @ignore */static get E7() { return 'Form not found.'; }
-    /** @ignore */static get E8() { return 'Given data type not supported.'; }
-    /** @ignore */static get E9() { return 'No valid URL given.'; }
-    /** @ignore */static get RSC() {
+    /** @ignore */static get _E1() { return 'VJS class works only in Browser!'; }
+    /** @ignore */static get _E2() { return 'Your Browser does not support ECMAScript11 (2020)!'; }
+    /** @ignore */static get _E3() { return 'Fill up required fields!'; }
+    /** @ignore */static get _E4() { return 'No data given.'; }
+    /** @ignore */static get _E5() { return 'No valid Element found.'; }
+    /** @ignore */static get _E6() { return 'No valid Element given.'; }
+    /** @ignore */static get _E7() { return 'Form not found.'; }
+    /** @ignore */static get _E8() { return 'Given data type not supported.'; }
+    /** @ignore */static get _E9() { return 'No valid URL given.'; }
+    /** @ignore */static get _RSC() {
         return {
             301: 'Moved Permanently', 307: 'Temporary Redirect', 308: 'Permanent Redirect',
             400: 'Bad Request', 401: 'Unauthorized', 403: 'Forbidden', 404: 'Not Found',
@@ -1399,15 +1400,16 @@ class VJS
             503: 'Service Unavailable', 504: 'Gateway Timeout', 505: 'HTTP Version Not Supported'
         }
     };
-    /** @private */static _ᐩi;  //* instance
+    /** @private */static _ᐩi;   //* instance
     /** @private */static _ㅣp;  //* prefix
     /** @private */static _ㅣr;  //* raiseError
-    /** @private */static _ㅣe;  //* errorFunc
-    /** @private */static __$i(i) { return document.getElementById(i); }
-    /** @private */static __$n(n) { return document.getElementsByName(n); }
-    /** @private */static __$c(e, c) { return !e ? null : e.getElementsByClassName(c); }
-    /** @private */static __$t(e, t) { return !e ? null : e.getElementsByTagName(t); }
-    /** @private */static __$q(e, q, a) { try { return e[`querySelector${a ? 'All' : ''}`](q); } catch (_) { return null; } }
+    /** @private */static _ㅣe;  //* errorCallable
+    /** @private */static _ㅣo;  //* onEvtActions
+    /** @private */static _ᐟ$i(i) { return document.getElementById(i); }
+    /** @private */static _ᐟ$n(n) { return document.getElementsByName(n); }
+    /** @private */static _ᐟ$c(e, c) { return !e ? null : e.getElementsByClassName(c); }
+    /** @private */static _ᐟ$t(e, t) { return !e ? null : e.getElementsByTagName(t); }
+    /** @private */static _ᐟ$q(e, q, a) { try { return e[`querySelector${a ? 'All' : ''}`](q); } catch (_) { return null; } }
 
     /** @private */  //* error  (params: `message`, `force`, `errorClass`, `cause`)
     static _err(m, f = 0, e = Error, c = null) {
@@ -1421,7 +1423,7 @@ class VJS
     }
 
     /** @private */  //* domError  (params:  `message`, `notSupported`, `name`)
-    static __de(m = VJS.E5, s = 0, n = '') {
+    static _ᐦde(m = VJS._E5, s = 0, n = '') {
         let _n = s ? 'NotSupportedError' : (!n ? 'NotFoundError' : n);
 
         if (VJS._ㅣr) throw new DOMException(m, _n);
@@ -1430,37 +1432,64 @@ class VJS
     }
 
     /** @private */  //* getObject  (params:  `selector`, `firstSymbol`, `element`, `all`)
-    static __go(s, f, e = null, a = 0) {
+    static _ᐦgo(s, f, e = null, a = 0) {
         if (typeof s !== 'string') return null;
         if (!['#', '.', '=', '@'].includes(s[0])) s = `${f}${s}`;  // don't add symbol `f`, if it has already
 
-        return VJS.__e(s, e, a);
+        return VJS._ᐦe(s, e, a);
     }
 
     /** @private */  //* setOptions  (params: `options`, `change`)
-    static __so(o, c = 0) {
+    static _ᐦso(o, c = 0) {
         let def = {  // defaults
                 prefix: '',
                 raiseError: false,
-                errorFunc: null
+                errorCallable: null,
+                onEvtActions: null
             },
-            _t = s => {
+            trim = s => {
                 if (typeof s !== 'string') return s;
                 return s.trim();
             },
-            k = Object.keys(o);
+            opts = Object.keys(o);
 
-        Object.keys(def).forEach(_k => {
-            if (k.includes(_k)) VJS[`_ㅣ${_k[0]}`] = _t(o[_k]);  // if key exists, set it
-            else if (!c) VJS[`_ㅣ${k[0]}`] = def[_k];  // if not change (construct), reset to default
+        Object.keys(def).forEach(_o => {
+            if (opts.includes(_o)) VJS[`_ㅣ${_o[0]}`] = trim(o[_o]);  // if key exists, set it
+            else if (!c) VJS[`_ㅣ${opts[0]}`] = def[_o];  // if not change (construct), reset to default
         });
 
         if (VJS._ㅣp) VJS._ㅣp = VJS._ㅣp.replace(/[^\w\d]/gi, '');  // clean prefix name
-        if (VJS._ㅣe && typeof VJS._ㅣe !== 'function') VJS._ㅣe = null;  // confirm, that callback is function
+        if (VJS._ㅣe && typeof VJS._ㅣe !== 'function') VJS._ㅣe = null;  // make sure, that callback is only a function
+
+        if (VJS._ㅣo) {
+            if (VJS._ㅣo.constructor !== {}.constructor) VJS._ㅣo = null;  // accept only object
+            else {
+                let _i = VJS._ᐦi(),
+                    _f = () => {
+                        Object.keys(VJS._ㅣo).forEach(evt => {    // for each declared event names
+                            let _c = Object.keys(VJS._ㅣo[evt]);  // get declared event callbacks
+
+                            _i.$q(`[${VJS._ᐦdn(evt)}]`, document, true).forEach(el => {  // for each elements with 'data-<prefix>-<event>'
+                                let _fn = _i.$gda(el, evt);  // get elements data attribute value (function name)
+
+                                if (typeof el[`on${evt}`] === 'undefined' || _fn[0] === '_') return;
+                                if (_c.includes(_fn)) _i.$ael(VJS._ㅣo[evt][_fn], evt, el);
+                                else {
+                                    el.style.opacity = .25;
+                                    el.disabled = true;
+                                }
+                            });
+                        });
+                    };
+
+                if (document.readyState !== 'loading') _f();
+                else _i.$ael(_f, 'DOMContentLoaded');
+            }
+        }
     }
 
     /** @private */  //* minSec  (param:  `millisec`)
-    static __ms(ms) {
+    static _ᐦms(ms) {
         let s = ms / 1000,
             m = Math.floor(s/60),
             _f = n => n<10 ? `0${n}` : n;
@@ -1470,7 +1499,7 @@ class VJS
     }
 
     /** @private */  //* valueToNum  (param: `value`)
-    static __vn(v) {
+    static _ᐦvn(v) {
         if (typeof v !== 'string') return v;  // try to convert only string
 
         v = v.trim();
@@ -1495,24 +1524,24 @@ class VJS
     }
 
     /** @private */  //* instance  (param: `options`)
-    static __i(o = null) {
+    static _ᐦi(o = null) {
         if (!VJS._ᐩi) VJS._ᐩi = new VJS(o);
-        else if (o && o.constructor === {}.constructor && Object.keys(o).length) VJS.__so(o, 1);
+        else if (o && o.constructor === {}.constructor && Object.keys(o).length) VJS._ᐦso(o, 1);
 
         return VJS._ᐩi;
     }
 
     /** @private */  //* object  (param: `element`, `default`)
-    static __o(e, d) {
+    static _ᐦo(e, d) {
         if (!e) return null;  // don't do anything
         if (typeof e === 'string' && e[0] !== '#') e = `#${e}`;
 
-        return this.__e(e, d) ?? null;
+        return this._ᐦe(e, d) ?? null;
     }
 
     /** @private */  //* class  (params: `element`, `classList`, `function`)
-    static __c(e, c, f) {
-        e = this.__o(e, null);
+    static _ᐦc(e, c, f) {
+        e = this._ᐦo(e, null);
 
         if (!e) return;
         if (!(c instanceof Array)) c = [c];
@@ -1521,7 +1550,7 @@ class VJS
     }
 
     /** @private */  //* dataName  (params: `name`, `ignorePrefix`)
-    static __dn(n, i = 0) {
+    static _ᐦdn(n, i = 0) {
         if (!n) return '';
         if (VJS._ㅣp) return `data-${ i ? n : `${VJS._ㅣp}-${n}` }`;
 
@@ -1529,8 +1558,8 @@ class VJS
     }
 
     /** @private */  //* dataAttributes  (params: `element`, `all`)
-    static __da(e, a) {
-        e = VJS.__o(e, null);
+    static _ᐦda(e, a) {
+        e = VJS._ᐦo(e, null);
         if (!e) return undefined;
 
         let k = Object.keys(e.dataset),
@@ -1545,7 +1574,7 @@ class VJS
     }
 
     /** @private */  //* getForm  (param:  `formSelector`)
-    static __gf(f) {
+    static _ᐦgf(f) {
         if (!f) return null;
         if (!(f instanceof FormData)) { // try to convert to FormData
             if (f.constructor === {}.constructor) {  // is JSON
@@ -1554,7 +1583,7 @@ class VJS
                 f = _f;
             }
             else {
-                let _f = VJS.__o(f, null);
+                let _f = VJS._ᐦo(f, null);
                 if (!(_f instanceof HTMLFormElement)) return null;  // "NotFormElement"
                 f = new FormData(_f);
             }
@@ -1563,8 +1592,8 @@ class VJS
     }
 
     /** @private */  //* heightWeight  (params:  `function`, `element`, `type`, `value`)
-    static __hw(f, e, t, v) {
-        e = VJS.__o(e, null);
+    static _ᐦhw(f, e, t, v) {
+        e = VJS._ᐦo(e, null);
         if (!e) return !v ? 0 : undefined;
 
         const ff = f.toLowerCase(),
@@ -1591,11 +1620,11 @@ class VJS
             return undefined;
         }
     }
-    /** @private */static __h(e, t, v) { return VJS.__hw('Height', e, t, v); }
-    /** @private */static __w(e, t, v) { return VJS.__hw('Width', e, t, v); }
+    /** @private */static _ᐦh(e, t, v) { return VJS._ᐦhw('Height', e, t, v); }
+    /** @private */static _ᐦw(e, t, v) { return VJS._ᐦhw('Width', e, t, v); }
 
     /** @private */  //* element  (params: `stringQuery`, `element`, `all`)
-    static __e(s, e, a = 0) {
+    static _ᐦe(s, e, a = 0) {
         const d = document;
 
         if (typeof s === 'string') {
@@ -1606,23 +1635,23 @@ class VJS
 
             if (_s.match(/^\#?document$/)) return d;
             else if (_s.match(/^\#?window$/)) return window;
-            else if (_s.match(/^\#[a-z][\w\-]+$/)) return VJS.__$i(s.substring(1));
+            else if (_s.match(/^\#[a-z][\w\-]+$/)) return VJS._ᐟ$i(s.substring(1));
             else if (_s.match(/^\.[a-z][\w\-]+$/)) {
-                const r = VJS.__$c(VJS.__o(e), s.substring(1));
+                const r = VJS._ᐟ$c(VJS._ᐦo(e), s.substring(1));
                 return a ? r : r.item(0);
             }
             else if (_s.match(/^\=["']?[a-z][\w\-]+["']?$/)) {
-                const r = VJS.__$n(s.substring(1));
+                const r = VJS._ᐟ$n(s.substring(1));
                 return a ? r : r.item(0);
             }
             else if (
                 _s.match(/^\@[a-z][\w\-]*$/) ||
                 _s.match(/^(?:h[1-6]|[abipqsu]|[a-z]{2,})$/)
             ) {
-                const r = VJS.__$t(VJS.__o(e), s[0] === '@' ? s.substring(1) : s);
+                const r = VJS._ᐟ$t(VJS._ᐦo(e), s[0] === '@' ? s.substring(1) : s);
                 return a ? r : r.item(0);
             }
-            else return VJS.__$q(e, s, a);
+            else return VJS._ᐟ$q(e, s, a);
         }
         else if (s instanceof Window) {
             if (!e && !a) return d;  // prevent requesting elements from `window`
@@ -1635,8 +1664,8 @@ class VJS
 
 
     /** @private */  //* formData  (params: `form`, `type`, `required`, `extraData`)
-    static __fd(f, t, r = [], e = {}) {  // `t` values: "s" (string), "j" (JSON), or "fd" (FormData)
-        f = VJS.__gf(f);
+    static _ᐦfd(f, t, r = [], e = {}) {  // `t` values: "s" (string), "j" (JSON), or "fd" (FormData)
+        f = VJS._ᐦgf(f);
 
         if (!f) return {err: 'nfe'};  // "NotFormElement"
         if (!(r instanceof Array)) r = [r];  // just-in-case
@@ -1649,7 +1678,7 @@ class VJS
             i.push(k);
 
             if (!v) {
-                if (VJS.__i().$ha(k, 'required')) _r.push(k);
+                if (VJS._ᐦi().$ha(k, 'required')) _r.push(k);
             }
             else if (_i > -1) _r.splice(_i, 1);
         }
@@ -1671,7 +1700,7 @@ class VJS
                     return {
                         ..._a,
                         ...{
-                            [ _k.replace(/\-([\w])/g, g => g[1].toUpperCase()) ]: VJS.__vn(_v)
+                            [ _k.replace(/\-([\w])/g, g => g[1].toUpperCase()) ]: VJS._ᐦvn(_v)
                         }
                     };
                 }, {});
@@ -1683,20 +1712,20 @@ class VJS
 
 
     /** @private */  //* bodyData  (params: `bodyData`, `url`, `isPost`)
-    static __bd(b, u) {
+    static _ᐦbd(b, u) {
         if (typeof b === 'string') {
             if (b[0] === '#') {
-                const o = VJS.__fd(b, 'j');
+                const o = VJS._ᐦfd(b, 'j');
 
-                if (o.err === 'nfe') VJS.__de(VJS.E7);   // "NotFormElement"
-                if (o.err === 'mrf') VJS._err(VJS.E3);  // "Missing Required Field(s)"
+                if (o.err === 'nfe') VJS._ᐦde(VJS._E7);   // "NotFormElement"
+                if (o.err === 'mrf') VJS._err(VJS._E3);  // "Missing Required Field(s)"
 
                 b = o.data;
             }
             else b = Object.fromEntries(new URLSearchParams(b));
         }
         else if (b instanceof FormData || b.constructor !== {}.constructor) {
-            if (!b[Symbol.iterator]) VJS._err(VJS.E8, 0, TypeError);  // "Unsupported Data"
+            if (!b[Symbol.iterator]) VJS._err(VJS._E8, 0, TypeError);  // "Unsupported Data"
 
             let o = {}
             for (let [k, v] of b) o[k] = v;
@@ -1706,7 +1735,7 @@ class VJS
     }
 
     /** @private */  //* request  (params: `url`, `blob`, `method`, `data`)
-    static async __r(u, m = 'GET', d = {}) {
+    static async _ᐦr(u, m = 'GET', d = {}) {
         m = m.toUpperCase();
 
         const _p = m === 'POST' || m === 'GET';  // GET for URL search params
@@ -1717,10 +1746,10 @@ class VJS
         try {
             _u = new URL(u);
             u = `${_u.origin}${_u.pathname}`;
-            d = VJS.__bd(d, _u);
+            d = VJS._ᐦbd(d, _u);
         }
         catch(e) {
-            VJS._err(VJS.E9, 0, TypeError, e);
+            VJS._err(VJS._E9, 0, TypeError, e);
             return {success, data, message: e.toString()};
         }
 
@@ -1729,7 +1758,7 @@ class VJS
         if (['PUT', 'PATCH', 'POST', 'DELETE'].includes(m)) {
             try {
                 if (!Object.keys(d).length) {
-                    if (m !== 'DELETE') VJS._err(VJS.E4, 1, TypeError);  // just-in-case
+                    if (m !== 'DELETE') VJS._err(VJS._E4, 1, TypeError);  // just-in-case
                 }
                 else {
                     o.mode = 'cors';
@@ -1765,7 +1794,7 @@ class VJS
 
                     // Try to convert JSON and Array values
                     if (data.constructor === {}.constructor || Array.isArray(data))
-                        for (let k of Object.keys(data)) data[k] = VJS.__vn(data[k]);
+                        for (let k of Object.keys(data)) data[k] = VJS._ᐦvn(data[k]);
                 }
                 else {
                     data = await f.blob();  // try to read as Blob
@@ -1776,7 +1805,7 @@ class VJS
         }
         else r = {
             success, data,
-            message: `Response: ${f.status} ${VJS.RSC[f.status] ?? ''}`
+            message: `Response: ${f.status} ${VJS._RSC[f.status] ?? ''}`
         };
 
         return r;
@@ -1802,11 +1831,11 @@ class VJS
      * @constructs  VJS
      * @throws      {Error}    If script is not runned in Browser (ex. Node.js).
      * 
-     * @param       {Options}  [options={}]  Some options for VJS class (will be "remembered" statically); look at {@link Options|Options} for a setting keys.
+     * @param       {Options}  [options={}]  Some options for VJS class; look at {@link Options|Options} for a setting keys.
      *
      * @return      {object}
      */
-    static getInstance(o = {}) {return VJS.__i(o);}
+    static getInstance(o = {}) {return VJS._ᐦi(o);}
 
     /**
      * Registers VJS Methods to the window object (makes global functions).
@@ -1817,7 +1846,7 @@ class VJS
      * @method  register
      * @throws  {Error}    If script is not runned in Browser (ex. Node.js).
      * 
-     * @param   {Options}  [options={}]  Some options for VJS class (will be "remembered" statically); look at {@link Options|Options} for a setting keys.
+     * @param   {Options}  [options={}]  Some options for VJS class; look at {@link Options|Options} for a setting keys.
      *
      * @return  {void}
      */
