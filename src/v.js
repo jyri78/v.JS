@@ -18,11 +18,11 @@
 
 // Define some object types for JSDoc.
 /**
- * @typedef  {object}    Options               Object with key-settings for `VJS.register()` (will be "remembered" statically).
- * @property {string=}   [prefix]              String to be prepended to the data name.
- * @property {boolean}   [raiseError=false]    In case of some error, new Error will be thrown. Set either it to `true` or define `errorFunc` option.
- * @property {function}  [errorCallable=null]  In case of some error, this function will be called (if defined). Called function gets one, message parameter. **Note!** if `raiseError = true`, then function is ignored and not called.
- * @property {object}    [onEvtActions=null]   Object with events and callables to be added automatically to the elements event listener in format: `{ event: { callable1: function(e) { … }, callable2: function(e) { … }, … }, … }`.<br>**Example:** event callback is `{ click: { message: e => alert('Hi, I am ' + e.target.name) }}` and in HTML is element `<button name="special-button" data-prfx-click="message" value="Click me!" />`. Here button gets automatically click event listener with function `message()`.<br>**PS!** If callback function name begins with underscore `_`, then it will be ignored (can be used as helper).
+ * @typedef  {object}   Options               Object with key-settings for `VJS.register()` (will be "remembered" statically).
+ * @property {string=}  [prefix]              String to be prepended to the data name.
+ * @property {boolean}  [raiseError=false]    In case of some error, new Error will be thrown. Set either it to `true` or define `errorFunc` option.
+ * @property {function} [errorCallable=null]  In case of some error, this function will be called (if defined). Called function gets one, message parameter. **Note!** if `raiseError = true`, then function is ignored and not called.
+ * @property {object}   [onEvtActions=null]   Object with events and callables to be added automatically to the elements event listener in format: `{ event: { callable1: function(e) { … }, callable2: function(e) { … }, … }, … }`.<br>**Example:** event callback is `{ click: { message: e => alert('Hi, I am ' + e.target.name) }}` and in HTML is element `<button name="special-button" data-prfx-click="message" value="Click me!" />`. Here button gets automatically click event listener with function `message()`.<br>**PS!** If callback function name begins with underscore `_`, then it will be ignored (can be used as helper).<br>     This option can also be used to automate the form submit.
  */
 
 /**
@@ -46,10 +46,10 @@
  */
 
 /**
- * @typedef  {object}                     Response  Returned by AJAX request (GET, POST etc).
- * @property {boolean}                    success   If response was OK (status in the range 200-299), or not.
- * @property {(Object|Blob|string|null)}  data      Response data, or `NULL`.
- * @property {string}                     message   If `success == false`, then status code and text or error message (in case of AJAX error), otherwise empty string.
+ * @typedef  {object}                    Response  Returned by AJAX request (GET, POST etc).
+ * @property {boolean}                   success   If response was OK (status in the range 200-299), or not.
+ * @property {(Object|Blob|string|null)} data      Response data, or `NULL`.
+ * @property {string}                    message   If `success == false`, then status code and text or error message (in case of AJAX error), otherwise empty string.
  */
 
 
@@ -1439,19 +1439,28 @@ class VJS
         return VJS._ᐦe(s, e, a);
     }
 
+
+    /** @private */  //* registerEvent  (param: `function`)
+    static _ᐦre(f) {
+        if (document.readyState !== 'loading') f();
+        else i.$ael(_f, 'DOMContentLoaded');
+    }
+
     /** @private */  //* setOptions  (params: `options`, `change`)
     static _ᐦso(o, c = 0) {
         let def = {  // defaults
                 prefix: '',
                 raiseError: false,
                 errorCallable: null,
-                onEvtActions: null
+                onEvtActions: null,
+                formSubmits: null
             },
             trim = s => {
                 if (typeof s !== 'string') return s;
                 return s.trim();
             },
-            opts = Object.keys(o);
+            opts = Object.keys(o),
+            cI = VJS._ᐦi();
 
         Object.keys(def).forEach(_o => {
             if (opts.includes(_o)) VJS[`_ㅣ${_o[0]}`] = trim(o[_o]);  // if key exists, set it
@@ -1463,29 +1472,41 @@ class VJS
 
         if (VJS._ㅣo) {
             if (VJS._ㅣo.constructor !== {}.constructor) VJS._ㅣo = null;  // accept only object
-            else {
-                let _i = VJS._ᐦi(),
-                    _f = () => {
-                        Object.keys(VJS._ㅣo).forEach(evt => {    // for each declared event names
-                            let _c = Object.keys(VJS._ㅣo[evt]);  // get declared event callbacks
+            else 
+                VJS._ᐦre(() => {
+                    Object.keys(VJS._ㅣo).forEach(evt => {    // for each declared event names
+                        let _c = Object.keys(VJS._ㅣo[evt]);  // get declared event callbacks
 
-                            _i.$q(`[${VJS._ᐦdn(evt)}]`, document, true).forEach(el => {  // for each elements with 'data-<prefix>-<event>'
-                                let _fn = _i.$gda(el, evt);  // get elements data attribute value (function name)
+                        cI.$q(`[${VJS._ᐦdn(evt)}]`, document, true).forEach(el => {  // for each elements with 'data-<prefix>-<event>'
+                            let _fn = cI.$gda(el, evt);  // get elements data attribute value (function name)
 
-                                if (typeof el[`on${evt}`] === 'undefined' || _fn[0] === '_') return;
-                                if (_c.includes(_fn)) _i.$ael(VJS._ㅣo[evt][_fn], evt, el);
-                                else {
-                                    el.style.opacity = .25;
-                                    el.disabled = true;
-                                }
-                            });
+                            if (typeof el[`on${evt}`] === 'undefined' || _fn[0] === '_') return;
+                            if (_c.includes(_fn)) cI.$ael(VJS._ㅣo[evt][_fn], evt, el);
+                            else {
+                                el.style.opacity = .25;
+                                el.disabled = true;
+                            }
                         });
-                    };
-
-                if (document.readyState !== 'loading') _f();
-                else _i.$ael(_f, 'DOMContentLoaded');
-            }
+                    });
+                });
         }
+
+        // Finally add submit listener to form, if form exists and callable function is declared
+        VJS._ᐦre(() => {
+            [...cI.$t('form')].map(f => {
+                let gB = e => cI.$q(`[${VJS._ᐦdn(e)}]`, f),
+                    b = gB('submit');
+
+                if (!b) b = gB('click');
+                if (b) {  // "take over" only in case of existence of declared function
+                    cI.$ael(e => {
+                        e.preventDefault();
+                        b.click();
+                        return false;
+                    }, 'submit', f);
+                }
+            });
+        });
     }
 
     /** @private */  //* minSec  (param:  `millisec`)
@@ -1673,7 +1694,7 @@ class VJS
         /// Check for existence of required fields
         let _r = [...r], i = [];
 
-        for (let [k, v] of f) {  // or `[...f.entries()].map(([k, v]) => {`
+        for (let [k, v] of f) {  // or `[...f].map(([k, v]) => {`
             const _i = _r.indexOf(k);
             i.push(k);
 
@@ -1728,7 +1749,7 @@ class VJS
             if (!b[Symbol.iterator]) VJS._err(VJS._E8, 0, TypeError);  // "Unsupported Data"
 
             let o = {}
-            for (let [k, v] of b) o[k] = v;
+            for (let [k, v] of b) o[k] = v;  // or `[...b].map(([k, v]) => o[k] = v)`
             b = o;
         }
         return {...Object.fromEntries(u.searchParams), ...b};
@@ -1794,7 +1815,7 @@ class VJS
 
                     // Try to convert JSON and Array values
                     if (data.constructor === {}.constructor || Array.isArray(data))
-                        for (let k of Object.keys(data)) data[k] = VJS._ᐦvn(data[k]);
+                        Object.keys(data).map(k => data[k] = VJS._ᐦvn(data[k]));
                 }
                 else {
                     data = await f.blob();  // try to read as Blob
