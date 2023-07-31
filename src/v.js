@@ -1443,7 +1443,7 @@ class VJS
     /** @private */  //* registerEvent  (param: `function`)
     static _ᐦre(f) {
         if (document.readyState !== 'loading') f();
-        else i.$ael(_f);
+        else VJS._ᐦi().$ael(f);
     }
 
     /** @private */  //* setOptions  (params: `options`, `change`)
