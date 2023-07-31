@@ -999,13 +999,13 @@ class VJS
      * @see     alias {@link addEvtListener|addEvtListener()}
      * @see     Look also {@link $aels|$aels()} (alias {@link addEvtListens|addEvtListens()})
      * 
-     * @param   {Function}                              function          Function to call, if event occurs.
-     * @param   {string}                                [event=load]      Name of the event to listen.
-     * @param   {(Window|Document|HTMLElement|string)}  [element=window]  Window/Document/HTMLElement or ID of element (or array of elements).
+     * @param   {Function}                              function                  Function to call, if event occurs.
+     * @param   {(Window|Document|HTMLElement|string)}  [element=window]          Window/Document/HTMLElement or ID of element (or array of elements).
+     * @param   {string}                                [event=DOMContentLoaded]  Name of the event to listen.
      */
-    $ael(f, v = 'load', e = window) {
+    $ael(f, e = window, v = 'DOMContentLoaded') {
         if (typeof f !== 'function') return;
-        if (e instanceof Array) return VJS._ᐦi().$aels(f, v, e);  // in case of array of elements
+        if (e instanceof Array) return VJS._ᐦi().$aels(f, e, v);  // in case of array of elements
         e = VJS._ᐦo(e, window);
         if (!e) return;
         e.addEventListener(v, f);
@@ -1014,7 +1014,7 @@ class VJS
      * @method  addEvtListener
      * @see     read more {@link $ael|$ael()}
      */
-    addEvtListener(f, v = 'load', e = window) { VJS._ᐦi().$ael(f, v, e); }
+    addEvtListener(f, e = window, v = VJS._L) { VJS._ᐦi().$ael(f, e, v); }
 
     /**
      * `removeEventListener` - removes event listener from the element or elements.
@@ -1023,13 +1023,13 @@ class VJS
      * @see     alias {@link remEvtListener|remEvtListener()}
      * @see     Look also {@link $rels|$rels()} (alias {@link addEvtListens|addEvtListens()})
      * 
-     * @param   {Function}                              function          Function to call, if event occurs.
-     * @param   {string}                                [event=load]      Name of the event to listen.
-     * @param   {(Window|Document|HTMLElement|string)}  [element=window]  Window/Document/HTMLElement or ID of element (or array of elements).
+     * @param   {Function}                              function                  Function to call, if event occurs.
+     * @param   {(Window|Document|HTMLElement|string)}  [element=window]          Window/Document/HTMLElement or ID of element (or array of elements).
+     * @param   {string}                                [event=DOMContentLoaded]  Name of the event to listen.
      */
-    $rel(f, v = 'load', e = window) {
+    $rel(f, e = window, v = 'DOMContentLoaded') {
         if (typeof f !== 'function') return;
-        if (e instanceof Array) return VJS._ᐦi().$rels(f, v, e);  // in case of array of elements
+        if (e instanceof Array) return VJS._ᐦi().$rels(f, e, v);  // in case of array of elements
         e = VJS._ᐦo(e);
         if (!e) return;
         e.removeEventListener(v, f);
@@ -1038,7 +1038,7 @@ class VJS
      * @method  remEvtListener
      * @see     read more {@link $rel|$rel()}
      */
-    remEvtListener(f, v = 'load', e = window) { VJS._ᐦi().$rel(f, v, e); }
+    remEvtListener(f, e = window, v = VJS._L) { VJS._ᐦi().$rel(f, e, v); }
 
     /**
      * `addEventListeners` - adds event listener to several elements at once.
@@ -1048,18 +1048,18 @@ class VJS
      * @see     Look also {@link $ael|$ael()} (alias {@link addEvtListen|addEvtListen()})
      * 
      * @param   {Function}                  function       Function to call, if event occurs.
-     * @param   {string}                    event          Name of the event to listen.
      * @param   {(HTMLElement[]|string[])}  [elements=[]]  Array of HTMLElement objects or IDs.
+     * @param   {string}                    [event=click]  Name of the event to listen.
      */
-    $aels(f, v, e = []) {
-        if (e instanceof Array) e.forEach(i => VJS._ᐦi().$ael(f, v, i));
-        else VJS._ᐦi().$ael(f, v, e);  // just-in-case
+    $aels(f, e = [], v = 'click') {
+        if (e instanceof Array) e.forEach(i => VJS._ᐦi().$ael(f, i, v));
+        else VJS._ᐦi().$ael(f, e, v);  // just-in-case
     }
     /**
      * @method  addEvtListeners
      * @see     read more {@link $aels|$aels()}
      */
-    addEvtListeners(f, v, e = []) { VJS._ᐦi().$aels(f, v, e); }
+    addEvtListeners(f, e = [], v = 'click') { VJS._ᐦi().$aels(f, e, v); }
 
     /**
      * `removeEventListeners` - removes event listener from several elements at once.
@@ -1069,18 +1069,18 @@ class VJS
      * @see     Look also {@link $ael|$ael()} (alias {@link remEvtListen|remEvtListen()})
      * 
      * @param   {Function}                  function       Function to call, if event occurs.
-     * @param   {string}                    event          Name of the event to listen.
      * @param   {(HTMLElement[]|string[])}  [elements=[]]  Array of HTMLElement objects or IDs.
+     * @param   {string}                    [event=click]  Name of the event to listen.
      */
-    $rels(f, v, e = []) {
-        if (e instanceof Array) e.forEach(i => VJS._ᐦi().$rel(f, v, i));
-        else VJS._ᐦi().$rel(f, v, e);  // just-in-case
+    $rels(f, e = [], v = 'click') {
+        if (e instanceof Array) e.forEach(i => VJS._ᐦi().$rel(f, i, v));
+        else VJS._ᐦi().$rel(f, e, v);  // just-in-case
     }
     /**
      * @method  remEvtListeners
      * @see     read more {@link $rels|$rels()}
      */
-    remEvtListeners(f, v, e = []) { VJS._ᐦi().$rels(f, v, e); }
+    remEvtListeners(f, e = [], v = 'click') { VJS._ᐦi().$rels(f, e, v); }
 
 
     /**
@@ -1443,7 +1443,7 @@ class VJS
     /** @private */  //* registerEvent  (param: `function`)
     static _ᐦre(f) {
         if (document.readyState !== 'loading') f();
-        else i.$ael(_f, 'DOMContentLoaded');
+        else i.$ael(_f);
     }
 
     /** @private */  //* setOptions  (params: `options`, `change`)
@@ -1481,7 +1481,7 @@ class VJS
                             let _fn = cI.$gda(el, evt);  // get elements data attribute value (function name)
 
                             if (typeof el[`on${evt}`] === 'undefined' || _fn[0] === '_') return;
-                            if (_c.includes(_fn)) cI.$ael(VJS._ㅣo[evt][_fn], evt, el);
+                            if (_c.includes(_fn)) cI.$ael(VJS._ㅣo[evt][_fn], el, evt);
                             else {
                                 el.style.opacity = .25;
                                 el.disabled = true;
@@ -1503,7 +1503,7 @@ class VJS
                         e.preventDefault();
                         b.click();
                         return false;
-                    }, 'submit', f);
+                    }, f, 'submit');
                 }
             });
         });
