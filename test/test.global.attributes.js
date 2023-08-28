@@ -4,13 +4,10 @@ describe('GLOBAL: attributes', () => {
     });
 
 
-    describe('$ha(), hasAttrib()', () => {
+    describe('$ha()', () => {
         it('should return TRUE', () => {
             assert.isTrue( $ha($('@del'), 'name') );
-            assert.isTrue( hasAttrib($('@del'), 'name') );
- 
-            // Has any attribute at all
-            assert.isTrue( $ha($('@del')) );
+            assert.isTrue( $ha($('@del')) );  // any attribute at all
         });
         it('should return FALSE', () => {
             assert.isFalse( $ha($('@kbd'), 'class') );
@@ -22,14 +19,12 @@ describe('GLOBAL: attributes', () => {
         });
     });
 
-    describe('$ga(), getAttrib()', () => {
+    describe('$ga()', () => {
         it('should return "test-name"', () => {
             assert.strictEqual( $ga($('@del'), 'name'), 'test-name' );
-            assert.strictEqual( getAttrib($('@del'), 'name'), 'test-name' );
         });
         it('should return NULL', () => {
             assert.isNull( $ga($('@del'), 'id') );
-            assert.isNull( getAttrib($('@del'), 'id') );
             assert.isNull( $ga($('@del')) );  // without attribute name
             assert.isNull( $ga('test00', 'id') );  // non-existent element
         });
@@ -48,7 +43,7 @@ describe('GLOBAL: attributes', () => {
         });
     });
 
-    describe('$sa(), setAttrib()', () => {
+    describe('$sa()', () => {
         it('should add new attribute', () => {
             var span = $('@span'),
                 kbd = $('@kbd');
@@ -59,7 +54,7 @@ describe('GLOBAL: attributes', () => {
  
             // Add new attribute
             $sa(span, 'title', 'Hello world!');
-            setAttrib(kbd, 'itemscope');  // add boolean value
+            $sa(kbd, 'itemscope');  // add boolean value
  
             // Confirm, that element has now added attribute with new value
             assert.isTrue( $ha(span, 'title') );
@@ -69,7 +64,7 @@ describe('GLOBAL: attributes', () => {
         });
     });
 
-    describe('$ra(), remAttrib()', () => {
+    describe('$ra()', () => {
         it('should remove added attribute', () => {
             var span = $('@span'),
                 kbd = $('@kbd');
@@ -79,7 +74,7 @@ describe('GLOBAL: attributes', () => {
             assert.isTrue( $ha(kbd, 'itemscope') );
  
             $ra(span, 'title');
-            remAttrib(kbd, 'itemscope');
+            $ra(kbd, 'itemscope');
  
             // Confirm, that element doesn't have attribute anymore
             assert.isFalse( $ha(span, 'title') );
@@ -87,10 +82,9 @@ describe('GLOBAL: attributes', () => {
         });
     });
 
-    describe('$hda(), hasDataAttrib()', () => {
+    describe('$hda()', () => {
         it('should return TRUE', () => {
             assert.isTrue( $hda('test-query', 'nameVal') );
-            assert.isTrue( hasDataAttrib('test-query', 'classVal') );
  
             // Verify existence of prefix (should be "prfx")
             assert.isTrue( $ha('test-query', 'data-prfx-nameVal') );
@@ -116,10 +110,9 @@ describe('GLOBAL: attributes', () => {
         });
     });
 
-    describe('$gda(), getDataAttrib()', () => {
+    describe('$gda()', () => {
         it('should return valid value', () => {
             assert.strictEqual( $gda('test-query', 'idVal'), 'test-id' );
-            assert.strictEqual( getDataAttrib('test-query', 'idVal'), 'test-id' );
             assert.strictEqual( $gda('test-id', 'testVal', '', true), 'test-00' );  // ignore prefix
         });
         it('should return NULL', () => {
@@ -142,7 +135,7 @@ describe('GLOBAL: attributes', () => {
         });
     });
 
-    describe('$sda(), setDataAttrib', () => {
+    describe('$sda()', () => {
         it('should set data attribute to the element', () => {
             var del = $('@del'),
                 b = $('@b');
@@ -153,7 +146,7 @@ describe('GLOBAL: attributes', () => {
  
             // Add new data attribute
             $sda(del, 'testVal', 'Hello world!');
-            setDataAttrib(b, 'testVal', 11);  // add numeric value
+            $sda(b, 'testVal', 11);  // add numeric value
  
             // Confirm, that element has now added data attribute with new value
             assert.isTrue( $hda(del, 'testVal') );
@@ -167,7 +160,7 @@ describe('GLOBAL: attributes', () => {
         });
     });
 
-    describe('$rda(), remDataAttrib()', () => {
+    describe('$rda()', () => {
         it('should remove added data attribute', () => {
             var del = $('@del'),
                 b = $('@b');
@@ -177,7 +170,7 @@ describe('GLOBAL: attributes', () => {
             assert.isTrue( $hda(b, 'testVal') );
  
             $rda(del, 'testVal');
-            remDataAttrib(b, 'testVal');
+            $rda(b, 'testVal');
  
             // Confirm, that element doesn't have attribute anymore
             assert.isFalse( $hda(del, 'testVal') );
@@ -185,7 +178,7 @@ describe('GLOBAL: attributes', () => {
         });
     });
 
-    describe('$dav', () => {
+    describe('$dav()', () => {
         it('should return object', () => {
             var obj1 = $dav('test-query', ['idVal', 'classVal', 'nameVal']),
                 obj2 = $dav('test-query', ['classVal', 'nameVal', 'tagVal', 'missingVal'], true);
@@ -200,73 +193,54 @@ describe('GLOBAL: attributes', () => {
         });
     });
 
-    describe('$w(), $h(), width(), height()', () => {
+    describe('$w(), $h()', () => {
         before(() => $('#vjs-test').style.display = 'block');
         after(() => $('#vjs-test').style.display = 'none');
 
         it('should return size of 777 × 555 px', () => {
             assert.strictEqual( $w('test-id'), 777 );
-            assert.strictEqual( width('test-id'), 777 );
-            
             assert.strictEqual( $h('test-id'), 555 );
-            assert.strictEqual( height('test-id'), 555 );
         });
         it('should return "inner" size of 785 × 563 px', () => {
             // Padding is 4px, i.e adds 8px to width and height
             assert.strictEqual( $w('test-id', 'inner'), 785 );
-            assert.strictEqual( width('test-id', 'inner'), 785 );
- 
             assert.strictEqual( $h('test-id', 'inner'), 563 );
-            assert.strictEqual( height('test-id', 'inner'), 563 );
         });
         it('should return "outer" size of 789 × 567 px', () => {
             // Border is 2px, i.e adds extra 4px (totally 12px) to width and height
             assert.strictEqual( $w('test-id', 'outer'), 789 );
-            assert.strictEqual( width('test-id', 'outer'), 789 );
- 
             assert.strictEqual( $h('test-id', 'outer'), 567 );
-            assert.strictEqual( height('test-id', 'outer'), 567 );
         });
         it('should return "with-margin" size of 799 × 577 px', () => {
             // Margin is 5px, i.e adds even more 10px (totally 22px) to width and height
             assert.strictEqual( $w('test-id', 'with-margin'), 799 );
-            assert.strictEqual( width('test-id', 'with-margin'), 799 );
- 
             assert.strictEqual( $h('test-id', 'with-margin'), 577 );
-            assert.strictEqual( height('test-id', 'with-margin'), 577 );
         });
     });
 
-    describe('$s(), size()', () => {
+    describe('size()', () => {
         before(() => $('#vjs-test').style.display = 'block');
         after(() => $('#vjs-test').style.display = 'none');
 
         it('should return "Size" object', () => {
-            var size1 = $s('test-id'),
-                size2 = size('test-id');
+            var s = size('test-id');
  
             // Check if it is object
-            assert.isObject( size1 );
-            assert.isObject( size2 );
+            assert.isObject( s );
  
             // Verify it's structure
-            assert.hasAllKeys( size1, ['width', 'height'] );
-            assert.hasAllKeys( size2, ['width', 'height'] );
+            assert.hasAllKeys( s, ['width', 'height'] );
  
             // Verify it's contents
-            assert.deepEqual( size1, {width: 777, height: 555} );
-            assert.deepEqual( size2, {width: 777, height: 555} );
+            assert.deepEqual( s, {width: 777, height: 555} );
  
             // Verify it's "inner" dimensions (padding 4px, i.e adds 8px to width and height)
-            assert.deepEqual( $s('test-id', 'inner'), {width: 785, height: 563} );
             assert.deepEqual( size('test-id', 'inner'), {width: 785, height: 563} );
  
             // Verify it's "outer" dimensions (border is 2px, i.e adds extra 4px)
-            assert.deepEqual( $s('test-id', 'outer'), {width: 789, height: 567} );
             assert.deepEqual( size('test-id', 'outer'), {width: 789, height: 567} );
  
             // Verify it's "outer" dimensions (margin is 5px, i.e adds even more 10px)
-            assert.deepEqual( $s('test-id', 'with-margin'), {width: 799, height: 577} );
             assert.deepEqual( size('test-id', 'with-margin'), {width: 799, height: 577} );
         });
     });
@@ -324,12 +298,11 @@ describe('GLOBAL: attributes', () => {
         });
     });
 
-    describe('$hcl(), hasClass()', () => {
+    describe('$hcl()', () => {
         it('should return TRUE', () => {
             var el = $n('test-name')[1];  // second element contains also class attribute
  
             assert.isTrue( $hcl(el, 'test-class') );
-            assert.isTrue( hasClass(el, 'test-class') );
  
             // Check, if there has any class names at all
             assert.isTrue( $hcl('test-input') );
@@ -345,19 +318,13 @@ describe('GLOBAL: attributes', () => {
         });
     });
 
-    describe('$gcl(), getClasses()', () => {
+    describe('$gcl()', () => {
         it('should return array of classes', () => {
-            var el = $t('kbd', 'test-id')[1],
-                cls1 = $gcl(el),
-                cls2 = getClasses(el);
+            var cls = $gcl( $t('kbd', 'test-id')[1] );
  
-            assert.isArray( cls1 );
-            assert.lengthOf( cls1, 2 );
-            assert.includeMembers( cls1, ['test-class', 'another-test-class'] );
- 
-            assert.isArray( cls2 );
-            assert.lengthOf( cls2, 2 );
-            assert.includeMembers( cls2, ['test-class', 'another-test-class'] );
+            assert.isArray( cls );
+            assert.lengthOf( cls, 2 );
+            assert.includeMembers( cls, ['test-class', 'another-test-class'] );
         });
         it('should return empty array', () => {
             var cls = $gcl('test-num');
@@ -370,7 +337,7 @@ describe('GLOBAL: attributes', () => {
         });
     });
 
-    describe('$acl(), addClass()', () => {
+    describe('$acl(),', () => {
         it('should add new class to the element', () => {
             var clsList = ['second-new-class', 'third-new-class'],
                 el = $i('test-id');
@@ -383,12 +350,12 @@ describe('GLOBAL: attributes', () => {
             assert.include( $gcl(el), 'new-class' );
  
             // Add array of classes and confirm
-            addClass(el, clsList);
+            $acl(el, clsList);
             assert.includeMembers( $gcl(el), ['new-class', ...clsList] );
         });
     });
 
-    describe('$rcl(), remClass(), replClass()', () => {
+    describe('$rcl()', () => {
         it('should remove added classes from element', () => {
             var clsList = ['second-new-class', 'third-new-class'],
                 el = $i('test-id');
@@ -401,7 +368,7 @@ describe('GLOBAL: attributes', () => {
             assert.includeMembers( $gcl(el), clsList );
  
             // Remove array of classes and confirm, that classes are removed
-            remClass(el, clsList);
+            $rcl(el, clsList);
             assert.isEmpty( $gcl(el) );
         });
         it('should replace existing class with other one', () => {
@@ -416,7 +383,7 @@ describe('GLOBAL: attributes', () => {
             assert.isTrue( $hcl(el, 'replaced-test-class') );
  
             // Change back with alias function and confirm
-            replClass(el, 'replaced-test-class', 'another-test-class');
+            $rcl(el, 'replaced-test-class', 'another-test-class');
             assert.isFalse( $hcl(el, 'replaced-test-class') );
             assert.isTrue( $hcl(el, 'another-test-class') );
         });
@@ -433,7 +400,7 @@ describe('GLOBAL: attributes', () => {
         });
     });
 
-    describe('$tcl(), toggleClass()', () => {
+    describe('$tcl()', () => {
         it('should toggle class', () => {
             var el = $t('kbd', 'test-id')[1];
  
@@ -445,7 +412,7 @@ describe('GLOBAL: attributes', () => {
             assert.isTrue( $hcl(el, 'toggled-test-class') );
  
             // Make another toggle with alias function and confirm
-            toggleClass(el, 'toggled-test-class');
+            $tcl(el, 'toggled-test-class');
             assert.isFalse( $hcl(el, 'toggled-test-class') );
         });
         it('should enforce class to be set', () => {

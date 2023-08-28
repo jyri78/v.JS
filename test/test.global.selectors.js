@@ -4,30 +4,21 @@ describe('GLOBAL: selectors', () => {
     });
 
 
-    describe('$i(), getElemById()', () => {
+    describe('$i()', () => {
         it('should return HTMLElement', () => {
             assert.instanceOf( $i('test-id'), HTMLElement );
             assert.instanceOf( $i('#test-id'), HTMLElement );  // with prefix symbol
- 
-            // Alternative function
-            assert.instanceOf( getElemById('test-id'), HTMLElement );
-            assert.instanceOf( getElemById('#test-id'), HTMLElement );
         });
         it('should return NULL', () => {
             assert.isNull( $i('test00') );  // non-existent ID
         });
     });
 
-    describe('$n(), getElemsByName()', () => {
+    describe('$n()', () => {
         it('should return live(!) NodeList', () => {
             assert.instanceOf( $n('test-name'), NodeList );
             assert.instanceOf( $n('=test-name'), NodeList );  // with prefix symbol
             assert.isTrue( isLive($n('test-name')) );  // confirm that it's live
- 
-            // Alternative function
-            assert.instanceOf( getElemsByName('test-name'), NodeList );
-            assert.instanceOf( getElemsByName('=test-name'), NodeList );
-            assert.isTrue( isLive(getElemsByName('test-name')) );
         });
         it('should have two elements', () => {
             assert.lengthOf( $n('test-name'), 2 );
@@ -48,14 +39,10 @@ describe('GLOBAL: selectors', () => {
         });
     });
 
-    describe('$c(), getElemsByClass()', () => {
+    describe('$c()', () => {
         it('should return HTMLCollection', () => {
             assert.instanceOf( $c('test-class'), HTMLCollection );
             assert.instanceOf( $c('.test-class'), HTMLCollection );  // with prefix symbol
- 
-            // Alternative function
-            assert.instanceOf( getElemsByClass('test-class'), HTMLCollection );
-            assert.instanceOf( getElemsByClass('.test-class'), HTMLCollection );
         });
         it('should have two elements', () => {
             assert.strictEqual( $c('test-class').length, 2 );
@@ -73,14 +60,10 @@ describe('GLOBAL: selectors', () => {
         });
     });
 
-    describe('$t(), getElemsByTag()', () => {
+    describe('$t()', () => {
         it('sould return HTMLCollection', () => {
             assert.instanceOf( $t('kbd'), HTMLCollection );
             assert.instanceOf( $t('@kbd'), HTMLCollection );  // with prefix symbol
- 
-            // Alternative function
-            assert.instanceOf( getElemsByTag('kbd'), HTMLCollection );
-            assert.instanceOf( getElemsByTag('@kbd'), HTMLCollection );
 
         });
         it('should have three elements', () => {
@@ -99,15 +82,13 @@ describe('GLOBAL: selectors', () => {
         });
     });
 
-    describe('$q(), guerySel()', () => {
+    describe('$q()', () => {
         it('should return HTMLElement', () => {
             assert.instanceOf( $q('#test-id>kbd'), HTMLElement );
-            assert.instanceOf( querySel('#test-id>kbd'), HTMLElement );
         });
         it('should return non-live NodeList', () => {
             // Attribute `element` can be set as empty string, in that case it defaults to Document
             assert.instanceOf( $q('#test-id>kbd', '', true), NodeList );
-            assert.instanceOf( querySel('#test-id>kbd', '', true), NodeList );
  
             // Confirm that it's not live
             assert.isFalse( isLive($q('#test-id>kbd', '', true)) );
@@ -221,36 +202,25 @@ describe('GLOBAL: selectors', () => {
         });
     });
 
-    describe('$f(), filter()', () => {
+    describe('$f()', () => {
         it('should return array with two HTMLElements', () => {
             var callback = el => el.innerText === 'elit' || el.innerText === 'amet',
-                filtered1 = $f('@kbd', callback),
-                filtered2 = filter('tagVal', callback, 'test-query|tag');
+                filtered = $f('@kbd', callback);
  
-            assert.instanceOf( filtered1, Array );
-            assert.instanceOf( filtered1[0], HTMLElement );
-            assert.lengthOf( filtered1, 2 );
- 
-            assert.instanceOf( filtered2, Array );
-            assert.instanceOf( filtered2[0], HTMLElement );
-            assert.lengthOf( filtered2, 2 );
+            assert.instanceOf( filtered, Array );
+            assert.instanceOf( filtered[0], HTMLElement );
+            assert.lengthOf( filtered, 2 );
         });
     });
 
-    describe('$cs(), containsSel()', () => {
+    describe('$cs()', () => {
         it('should return array with two HTMLElements', () => {
-            var elems1 = $cs('@b', 'dolor'),
-                elems2 = containsSel('@b', 'dolor');
+            var elems = $cs('@b', 'dolor');
  
-            assert.isArray( elems1 );
-            assert.lengthOf( elems1, 2 );
-            assert.instanceOf( elems1[0], HTMLElement );
-            assert.instanceOf( elems1[1], HTMLElement );
- 
-            assert.isArray( elems2 );
-            assert.lengthOf( elems2, 2 );
-            assert.instanceOf( elems2[0], HTMLElement );
-            assert.instanceOf( elems2[1], HTMLElement );
+            assert.isArray( elems );
+            assert.lengthOf( elems, 2 );
+            assert.instanceOf( elems[0], HTMLElement );
+            assert.instanceOf( elems[1], HTMLElement );
         });
         it('should return empty array', () => {
             var elems1 = $cs('@b', 'elit'),
@@ -264,10 +234,9 @@ describe('GLOBAL: selectors', () => {
         });
     });
 
-    describe('$sp(), selParent()', () => {
+    describe('$sp()', () => {
         it('should return HTMLElement', () => {
             assert.instanceOf( $sp('test-field-1'), HTMLElement );
-            assert.instanceOf( selParent('test-field-2'), HTMLElement );
         });
         it('should return NULL', () => {
             assert.isNull( $sp('test-field-3', 'b') );

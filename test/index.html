@@ -97,11 +97,7 @@
         mocha.setup({
                 checkLeaks: true,
                 ui: 'bdd',
-                globals: [
-                    '$*', 'c*', 'is*', 'add*', 'get*', 'set*', 'rem*', 'has*',
-                    'querySel', 'filter', 'selParent', 'replClass', 'toggleClass', 'dataAttribVals',
-                    'height', 'width', 'size', 'offset', 'position', 'serialize', 'toArray'
-                ]
+                globals: ['$*', 'c*', 'is*', 'size', 'offset', 'position', 'serialize', 'toArray']
             });
 
         let fl = ['instance', 'global.selectors', 'global.attributes', 'global.form', 'global.ajax'],
