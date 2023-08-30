@@ -1,6 +1,6 @@
 # [Vanilla JavaScript](https://github.com/jyri78/v.JS)
 
-> [🇪🇪  Loe eesti keeles]([README.et.md](https://github.com/jyri78/v.JS/blob/master/README.et.md))
+> [🇪🇪  Loe eesti keeles](https://github.com/jyri78/v.JS/blob/master/README.et.md)
 
 Tiny plain Javascript `class` with a set of common functions.
 
