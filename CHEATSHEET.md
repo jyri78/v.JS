@@ -23,10 +23,10 @@
 | Get element(s) | [`$()`](docs/global.html#$) |
 | Get element(s) by **C**lass name | [`$c()`](docs/global.html#$c) |
 | Get element(s) by data attribute value | [`$$()`](docs/global.html#$$) |
-| Get element(s) by data attribute value **: _C_**lass attribute | [`$$c()`](docs/global.html#$$c) |
-| Get element(s) by data attribute value **: _N_**ame attribute | [`$$n()`](docs/global.html#$$n) |
-| Get element(s) by data attribute value **: _Q_**uery string | [`$$q()`](docs/global.html#$$q) |
-| Get element(s) by data attribute value **: _T_**ag name | [`$$t()`](docs/global.html#$$t) |
+| Get element(s) by data attribute value **: *C***lass attribute | [`$$c()`](docs/global.html#$$c) |
+| Get element(s) by data attribute value **: *N***ame attribute | [`$$n()`](docs/global.html#$$n) |
+| Get element(s) by data attribute value **: *Q***uery string | [`$$q()`](docs/global.html#$$q) |
+| Get element(s) by data attribute value **: *T***ag name | [`$$t()`](docs/global.html#$$t) |
 | Get element(s) by **N**ame | [`$n()`](docs/global.html#$n) |
 | Get element(s) by **Q**uery selector | [`$q()`](docs/global.html#$q) |
 | Get element(s) by **T**ag name | [`$t()`](docs/global.html#$t) |
