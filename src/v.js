@@ -376,7 +376,7 @@ class VJS
     }
 
     /**
-     * `setAttribute` - sets elements attribute value; attributes with boolean value don't need value (same for anumerated attributes except for setting falsy value).
+     * `setAttribute` - sets elements attribute value; attributes with boolean value don't need value (same for enumerated attributes except for setting falsy value).
      *
      * @method  $sa
      * 

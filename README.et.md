@@ -38,6 +38,10 @@ Ja oledki valmis neid funktsioone kasutama, näiteks:
 const myElem = $("#myElem");  // või ka `$i("myElem")`
 ```
 
+## Funktsioonid
+
+Funktsioonide nimekirja saad näha [siin](https://github.com/jyri78/v.JS/blob/master/CHEATSHEET.md).
+
 ## Litsents
 
 See projekt on kaitstud GNU General Public License v3.0 või uuem (see [GPL-3.0-or-later](https://github.com/jyri78/v.JS/blob/master/LICENSE)) litsentsiga.
