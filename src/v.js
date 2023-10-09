@@ -1574,7 +1574,7 @@ class VJS
 
         const _p = m === 'POST' || m === 'GET';  // GET for URL search params
         let f, _e, _u,
-            o = {method: m, cache: 'no-cache'},
+            o = {method: m, cache: 'no-cache', headers: {'X-Requested-With': 'XMLHttpRequest'}},
             success = false, data = null;
 
         try {
@@ -1597,9 +1597,7 @@ class VJS
                 else {
                     o.mode = 'cors';
                     o.credentials = 'same-origin';
-                    o.headers = {
-                        'Content-Type': _p ? 'application/x-www-form-urlencoded' : 'application/json'
-                    };
+                    o.headers['Content-Type'] = _p ? 'application/x-www-form-urlencoded' : 'application/json';
                     o.body = b;
                 }
             }
