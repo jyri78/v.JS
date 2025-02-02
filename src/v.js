@@ -58,7 +58,7 @@
  * 
  * Targeted ES11/ES2020 supporting browsers: released since about mid 2020, like Chrome 85+, Edge 85+, Firefox 77+, Opera 71+, and Safari 13.1+. 
  * 
- * @version    0.1
+ * @version    0.1.1
  * @author     Jüri Kormik
  * @license    GPL-3.0-or-later
  * 
@@ -771,16 +771,16 @@ class VJS
      * @method  $val
      * 
      * @param   {(HTMLElement|string)}  element      HTMLElement or ID of element.
-     * @param   {string=}               [value]      Value to be adde to the element; if empty, value will be returned.
+     * @param   {string=}               [value]      Value to be adde to the element; if missing, value will be returned.
      * @param   {boolean}               [all=false]  Return all text, including non-visible (i.e style or script, if present).
      *
      * @return  {(string|number|boolean|string[]|number[]|boolean[]|void)}
      */
-    $val(e, v = '', a = false) {
+    $val(e, v = null, a = false) {
         e = VJS._ᐦo(e, null);
         if (!e) return '';
 
-        if (!v) {
+        if (v === null) {
             if (e.options && e.multiple)
                 return e.options.filter(o => o.selected).map(o => VJS._ᐦvn(o.value));
 
