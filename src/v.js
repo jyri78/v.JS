@@ -58,7 +58,7 @@
  * 
  * Targeted ES11/ES2020 supporting browsers: released since about mid 2020, like Chrome 85+, Edge 85+, Firefox 77+, Opera 71+, and Safari 13.1+. 
  * 
- * @version    0.1.1
+ * @version    0.2.2
  * @author     Jüri Kormik
  * @license    GPL-3.0-or-later
  * 
