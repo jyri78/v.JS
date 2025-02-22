@@ -1,4 +1,4 @@
-// Copyright (C) 2023 Jüri Kormik
+// Copyright (C) 2023-2025 Jüri Kormik
 // 
 // This file is part of v.JS.
 // 
@@ -58,7 +58,7 @@
  * 
  * Targeted ES11/ES2020 supporting browsers: released since about mid 2020, like Chrome 85+, Edge 85+, Firefox 77+, Opera 71+, and Safari 13.1+. 
  * 
- * @version    0.3
+ * @version    0.3.1
  * @author     Jüri Kormik
  * @license    GPL-3.0-or-later
  * 
@@ -771,7 +771,7 @@ class VJS
      * @method  $val
      * 
      * @param   {(HTMLElement|string)}  element      HTMLElement or ID of element.
-     * @param   {string=}               [value]      Value to be adde to the element; if missing, value will be returned.
+     * @param   {string|null=}          [value]      Value to be adde to the element; if missing (or null), value will be returned.
      * @param   {boolean}               [all=false]  Return all text, including non-visible (i.e style or script, if present).
      *
      * @return  {(string|number|boolean|string[]|number[]|boolean[]|void)}
@@ -987,15 +987,15 @@ class VJS
      * @throws  {DOMException}   If no valid element found (or given) and options set to `raiseError = true` (read more {@link register|register()}), method raises DOM exception with the corresponding name.
      *
      * @param   {(HTMLElement|string)}  element     HTMLElement or ID of element.
-     * @param   {string=}               [text]      HTML string to add to the element; if empty, then returns elements content.
+     * @param   {string|null=}          [text]      HTML string to add to the element; if missing (or null), then returns elements content.
      * @param   {string=}               [position]  If empty string, then replaces child elements, or inserts HTML string by next values: `beforebegin` – before element itself; `afterbegin` – before its first child; `beforeend` – after its last child; `afterend` – after element itself.
      *
      * @return  {(string|undefined)}
      */
-    $html(e, t = '', p = '') {
+    $html(e, t = null, p = '') {
         e = VJS._ᐦo(e, null);
         if (e) {
-            if (t) {
+            if (t === null) {
                 if (e instanceof Element) {
                     try {
                         if (p) {
