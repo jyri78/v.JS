@@ -995,7 +995,8 @@ class VJS
     $html(e, t = null, p = '') {
         e = VJS._ᐦo(e, null);
         if (e) {
-            if (t === null) {
+            if (t === null) return e.innerHTML;
+            else {
                 if (e instanceof Element) {
                     try {
                         if (p) {
@@ -1008,7 +1009,6 @@ class VJS
                 }
                 else VJS._ᐦde(VJS._E6, 1);
             }
-            else return e.innerHTML;
         }
         else if (t) VJS._ᐦde();
     }
